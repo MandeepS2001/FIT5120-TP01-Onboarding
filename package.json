@@ -1,0 +1,44 @@
+{
+  "name": "melbourne-parking-accessibility",
+  "version": "1.0.0",
+  "description": "Enhancing parking accessibility and predictability in Melbourne's CBD for working parents",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run frontend:dev\" \"npm run backend:dev\"",
+    "frontend:dev": "cd frontend && npm run dev",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend:build": "cd frontend && npm run build",
+    "backend:build": "cd backend && npm run build",
+    "frontend:install": "cd frontend && npm install",
+    "backend:install": "cd backend && npm install",
+    "install-all": "npm install && npm run frontend:install && npm run backend:install",
+    "start": "npm run backend:start",
+    "backend:start": "cd backend && npm start",
+    "test": "npm run frontend:test && npm run backend:test",
+    "frontend:test": "cd frontend && npm test",
+    "backend:test": "cd backend && npm test",
+    "lint": "npm run frontend:lint && npm run backend:lint",
+    "frontend:lint": "cd frontend && npm run lint",
+    "backend:lint": "cd backend && npm run lint",
+    "data-science:setup": "cd data-science && python -m venv venv && source venv/bin/activate && pip install -r requirements.txt"
+  },
+  "keywords": [
+    "parking",
+    "melbourne",
+    "accessibility",
+    "react",
+    "nodejs",
+    "express",
+    "monash",
+    "fit5120"
+  ],
+  "author": "FIT5120 Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}

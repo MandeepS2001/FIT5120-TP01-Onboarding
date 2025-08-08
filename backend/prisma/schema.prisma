@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model ParkingLocation {
+  id          Int       @id @default(autoincrement())
+  externalId  String?   @unique
+  name        String
+  latitude    Float
+  longitude   Float
+  type        String     // on_street, off_street
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  availabilities ParkingAvailability[]
+}
+
+model ParkingAvailability {
+  id          Int       @id @default(autoincrement())
+  location    ParkingLocation @relation(fields: [locationId], references: [id])
+  locationId  Int
+  available   Int
+  capacity    Int?
+  timestamp   DateTime  @default(now())
+}
+
