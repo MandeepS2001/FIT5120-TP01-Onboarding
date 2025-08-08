@@ -1,26 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from 'react-router-dom';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import HomePage from './pages/HomePage';
+import MapPage from './pages/MapPage';
+import LearnMorePage from './pages/LearnMorePage';
+import AppHeader from './components/AppHeader';
+import AppFooter from './components/AppFooter';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box display="flex" minHeight="100vh" flexDirection="column">
+      <AppHeader />
+      <Container maxWidth="lg" sx={{ flex: 1, py: 4 }}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/map" element={<MapPage />} />
+          <Route path="/learn-more" element={<LearnMorePage />} />
+        </Routes>
+      </Container>
+      <AppFooter />
+    </Box>
   );
-}
+};
 
 export default App;
