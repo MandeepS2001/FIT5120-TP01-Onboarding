@@ -1,0 +1,15 @@
+explanation for datasets:
+
+### on-street-parking-bay-sensors.json
+on-street parking sensor data showing location and usage status (occupied or not)
+source: https://data.melbourne.vic.gov.au/explore/dataset/on-street-parking-bay-sensors/information/?dataChart=eyJxdWVyaWVzIjpbeyJjaGFydHMiOlt7InR5cGUiOiJjb2x1bW4iLCJmdW5jIjoiQ09VTlQiLCJ5QXhpcyI6ImJheV9pZCIsInNjaWVudGlmaWNEaXNwbGF5Ijp0cnVlLCJjb2xvciI6IiNFNTBFNTYifV0sInhBeGlzIjoibGFzdHVwZGF0ZWQiLCJtYXhwb2ludHMiOjUwLCJzb3J0IjoiIiwidGltZXNjYWxlIjoiZGF5IiwiY29uZmlnIjp7ImRhdGFzZXQiOiJvbi1zdHJlZXQtcGFya2luZy1iYXktc2Vuc29ycyIsIm9wdGlvbnMiOnt9fX1dLCJ0aW1lc2NhbGUiOiIiLCJkaXNwbGF5TGVnZW5kIjp0cnVlLCJhbGlnbk1vbnRoIjp0cnVlfQ%3D%3D
+
+### sign-plates-located-in-each-parking-zones (csv and json)
+A sign plate is where the parking restrictions are displayed. 
+Can be used to add more information about on-street parkign spot (if needed)
+source: https://data.melbourne.vic.gov.au/explore/dataset/sign-plates-located-in-each-parking-zone/information/?dataChart=eyJxdWVyaWVzIjpbeyJjaGFydHMiOlt7InR5cGUiOiJjb2x1bW4iLCJmdW5jIjoiQ09VTlQiLCJ5QXhpcyI6InBhcmtpbmdfem9uZSIsInNjaWVudGlmaWNEaXNwbGF5Ijp0cnVlLCJjb2xvciI6IiNFNTBFNTYiLCJwb3NpdGlvbiI6ImNlbnRlciJ9XSwieEF4aXMiOiJyZXN0cmljdGlvbl9hbmRfcGF5bWVudF9kaXNwbGF5IiwibWF4cG9pbnRzIjo1MCwic29ydCI6InNlcmllMS0xIiwic2VyaWVzQnJlYWtkb3duIjoiIiwic2VyaWVzQnJlYWtkb3duVGltZXNjYWxlIjoiIiwiY29uZmlnIjp7ImRhdGFzZXQiOiJzaWduLXBsYXRlcy1sb2NhdGVkLWluLWVhY2gtcGFya2luZy16b25lIiwib3B0aW9ucyI6e319fV0sInRpbWVzY2FsZSI6IiIsImRpc3BsYXlMZWdlbmQiOnRydWUsImFsaWduTW9udGgiOnRydWV9
+
+### Off-street car parks with capacity and type (csv and json)
+The number of off-street car parking spaces/capacity per property. 
+This dataset has been wrangled and cleaned, resulting only commercial parking type and retrieving only Melbourne CBD parking spot only 
+source: https://data.melbourne.vic.gov.au/explore/dataset/off-street-car-parks-with-capacity-and-type/table/?disjunctive.clue_small_area&disjunctive.parking_type&disjunctive.block_id&disjunctive.parking_spaces&location=13,-37.81298,144.94529&basemap=mbs-7a7333
