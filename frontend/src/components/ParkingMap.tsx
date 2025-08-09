@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ParkingLocation } from '../types/parking';
-import { GoogleMap, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, InfoWindow, useJsApiLoader, Libraries } from '@react-google-maps/api';
 
 type Props = {
   locations: ParkingLocation[];
@@ -19,10 +19,13 @@ const ParkingMap: React.FC<Props> = ({
 }) => {
   const center = useMemo(() => ({ lat: initialCenter[0], lng: initialCenter[1] }), [initialCenter]);
 
+  // Static libraries array to prevent re-creation on each render
+  const libraries: Libraries = useMemo(() => ['marker'], []);
+
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '',
-    libraries: ['marker'],
+    libraries,
   });
 
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -63,17 +66,15 @@ const ParkingMap: React.FC<Props> = ({
           center={center}
           zoom={initialZoom}
           options={{
-            mapTypeControl: false,
+            mapTypeControl: true,
             streetViewControl: false,
-            fullscreenControl: false,
+            fullscreenControl: true,
             clickableIcons: true,
+            zoomControl: true,
             styles: [
-              { elementType: 'geometry', stylers: [{ color: '#f5f5f5' }] },
-              { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+              // Keep some basic styling but don't hide essential map elements
               { elementType: 'labels.text.fill', stylers: [{ color: '#616161' }] },
-              { elementType: 'labels.text.stroke', stylers: [{ color: '#f5f5f5' }] },
-              { featureType: 'poi', stylers: [{ visibility: 'off' }] },
-              { featureType: 'transit.station', stylers: [{ visibility: 'off' }] },
+              { elementType: 'labels.text.stroke', stylers: [{ color: '#ffffff' }] },
             ],
           }}
           onLoad={(map) => {

@@ -5,9 +5,27 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Global overflow handling */
+#root {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Ensure containers don't cause horizontal overflow */
+.MuiContainer-root {
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* Prevent floating elements from causing overflow */
+.MuiBox-root {
+  box-sizing: border-box;
 }

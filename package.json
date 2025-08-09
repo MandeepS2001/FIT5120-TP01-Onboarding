@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run frontend:dev\" \"npm run backend:dev\"",
-    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:dev": "cd frontend && npm start",
     "backend:dev": "cd backend && npm run dev",
     "frontend:build": "cd frontend && npm run build",
     "backend:build": "cd backend && npm run build",
@@ -40,5 +40,9 @@
   "workspaces": [
     "frontend",
     "backend"
-  ]
+  ],
+  "dependencies": {
+    "@types/recharts": "^1.8.29",
+    "recharts": "^3.1.2"
+  }
 }
