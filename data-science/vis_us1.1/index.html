@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vehicle Ownership (VIC) — 2021–2024</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script defer src="script.js"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
+    h2 { margin: 0 0 8px; }
+    .controls { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin: 12px 0 20px; }
+    label { font-weight: 600; }
+    select { padding: 6px 8px; }
+    #chart { position: relative; }
+    #chart svg { width: 100%; height: 460px; }
+    .bar { fill: steelblue; }
+    .line { stroke: steelblue; fill: none; stroke-width: 2; }
+    .pt { fill: steelblue; }
+    .x-axis text, .y-axis text { font-size: 12px; }
+    .title { font: 600 14px system-ui, sans-serif; }
+    .axis-label { font: 12px system-ui, sans-serif; fill: #333; }
+    .tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font: 12px system-ui, sans-serif;
+      line-height: 1.3;
+      transform: translate(-50%, -100%);
+      white-space: nowrap;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity .15s ease;
+    }
+  </style>
+</head>
+<body>
+  <h2>Vehicle Ownership in Victoria (2021–2024)</h2>
+  <div class="controls">
+    <div>
+      <label for="vizType">Visualization:</label>
+      <select id="vizType">
+        <option value="bar">Number car ownerships</option>
+        <option value="line">Vehicle growth trend</option>
+      </select>
+    </div>
+    <div>
+      <label for="vehicleGroup">Vehicle group:</label>
+      <select id="vehicleGroup"></select>
+    </div>
+  </div>
+
+  <div id="chart">
+    <div id="tooltip" class="tooltip"></div>
+  </div>
+</body>
+</html>

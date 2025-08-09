@@ -1,0 +1,45 @@
+year,vehicle_type,value,vehicle_group
+2021,Articulated trucks,31343,Others
+2022,Articulated trucks,32635,Others
+2023,Articulated trucks,33793,Others
+2024,Articulated trucks,34927,Others
+2021,Buses,20053,Others
+2022,Buses,20145,Others
+2021,Campervans,21449,Others
+2022,Campervans,22779,Others
+2023,Campervans,24222,Others
+2024,Campervans,24805,Others
+2022,Heavy buses,9759,Others
+2023,Heavy buses,9945,Others
+2024,Heavy buses,10085,Others
+2021,Heavy rigid trucks,88649,Others
+2022,Heavy rigid trucks,90883,Others
+2023,Heavy rigid trucks,92895,Others
+2024,Heavy rigid trucks,94582,Others
+2022,Light buses,10386,Others
+2023,Light buses,10549,Others
+2024,Light buses,10531,Others
+2021,Light commercial vehicles,807194,Light commercial vehicles
+2022,Light commercial vehicles,842658,Light commercial vehicles
+2023,Light commercial vehicles,873216,Light commercial vehicles
+2024,Light commercial vehicles,900444,Light commercial vehicles
+2021,Light rigid trucks,42770,Others
+2022,Light rigid trucks,45479,Others
+2023,Light rigid trucks,50136,Others
+2024,Light rigid trucks,55655,Others
+2021,Motorcycles,196521,Motorcycles
+2022,Motorcycles,202501,Motorcycles
+2023,Motorcycles,206967,Motorcycles
+2024,Motorcycles,209583,Motorcycles
+2021,Non-freight-carrying vehicles,10612,Others
+2022,Non-freight-carrying vehicles,10916,Others
+2023,Non-freight-carrying vehicles,11283,Others
+2024,Non-freight-carrying vehicles,11783,Others
+2021,Passenger vehicles,3956393,Passenger vehicles
+2022,Passenger vehicles,4000138,Passenger vehicles
+2023,Passenger vehicles,4071171,Passenger vehicles
+2024,Passenger vehicles,4162325,Passenger vehicles
+2021,Total motor vehicles,5174984,All types
+2022,Total motor vehicles,5268134,All types
+2023,Total motor vehicles,5384177,All types
+2024,Total motor vehicles,5514720,All types
