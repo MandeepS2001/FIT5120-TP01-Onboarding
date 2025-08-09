@@ -41,7 +41,7 @@ const MapPage: React.FC = () => {
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 4, md: 6 } }}>
-      <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+              <Container maxWidth="xl" sx={{ px: { xs: 3, sm: 4, md: 5 } }}>
         <Typography variant="h4" gutterBottom>
           Parking Map
         </Typography>
@@ -49,7 +49,7 @@ const MapPage: React.FC = () => {
         <Paper sx={{ p: 2, mb: 2 }}>
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <TextField
-              label="Search by name"
+              label="Filter parking by name"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               sx={{ minWidth: 240 }}
@@ -89,6 +89,12 @@ const MapPage: React.FC = () => {
             />
           </Stack>
         </Paper>
+
+        <Box sx={{ mb: 2, p: 2, bgcolor: 'info.50', borderRadius: 2, border: '1px solid', borderColor: 'info.200' }}>
+          <Typography variant="body2" color="info.700">
+            💡 <strong>Search Tips:</strong> Use the filters above to find specific parking locations, or use the search bar below the map to find any location in Melbourne and center the map on it.
+          </Typography>
+        </Box>
 
         <ParkingMap locations={filtered} height={560} />
       </Container>

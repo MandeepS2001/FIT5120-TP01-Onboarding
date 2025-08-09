@@ -160,7 +160,7 @@ const AppFooter: React.FC = () => {
         }}
       />
 
-      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, px: { xs: 2, sm: 3, md: 4 } }}>
+              <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, px: { xs: 3, sm: 4, md: 5 } }}>
         {/* Main Footer Content */}
         <Grid container spacing={6} sx={{ mb: 6, pt: 6 }}>
           {/* Brand Section */}
@@ -210,13 +210,13 @@ const AppFooter: React.FC = () => {
                     </Typography>
                   </Box>
                 </Box>
-                <Typography variant="body1" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
+                <Typography variant="body1" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6, pl: { xs: 2, sm: 3 } }}>
                   Empowering Melbourne families with real-time parking intelligence, 
                   accessibility features, and stress-free CBD navigation.
                 </Typography>
                 
                 {/* Enhanced Contact Info */}
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pl: { xs: 1, sm: 2 } }}>
                   {contactInfo.map((contact, index) => (
                     <Grow in timeout={1000 + index * 200} key={index}>
                       <Link

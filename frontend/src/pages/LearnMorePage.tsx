@@ -7,7 +7,7 @@ import Container from '@mui/material/Container';
 const LearnMorePage: React.FC = () => {
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 4, md: 6 } }}>
-      <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+              <Container maxWidth="xl" sx={{ px: { xs: 3, sm: 4, md: 5 } }}>
         <Typography variant="h4" gutterBottom>About the Project</Typography>
         <Paper sx={{ p: 3 }}>
           <Typography variant="body1" paragraph>

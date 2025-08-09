@@ -158,7 +158,7 @@ const HomePage: React.FC = () => {
           }}
         />
         
-        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, px: { xs: 2, sm: 3, md: 4 } }}>
+        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, px: { xs: 3, sm: 4, md: 5 } }}>
           <Grid container spacing={6} alignItems="center">
             <Grid xs={12} md={6}>
               <Fade in timeout={1000}>
@@ -410,7 +410,7 @@ const HomePage: React.FC = () => {
       </Box>
 
       {/* Enhanced Stats Section */}
-      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 2, sm: 3, md: 4 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 3, sm: 4, md: 5 } }}>
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Fade in timeout={800}>
             <Typography
@@ -501,7 +501,7 @@ const HomePage: React.FC = () => {
       </Container>
 
       {/* Enhanced Features Section */}
-      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 2, sm: 3, md: 4 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 3, sm: 4, md: 5 } }}>
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Fade in timeout={800}>
             <Typography
@@ -607,7 +607,7 @@ const HomePage: React.FC = () => {
           },
         }}
       >
-        <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+        <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 5 } }}>
           <Box sx={{ textAlign: 'center', color: 'white', position: 'relative', zIndex: 1 }}>
             <Fade in timeout={800}>
               <Typography variant="h3" component="h2" fontWeight="bold" gutterBottom>

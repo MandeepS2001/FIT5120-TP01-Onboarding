@@ -197,7 +197,7 @@ const DataInsightsPage: React.FC = () => {
           }}
         />
         
-        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, px: { xs: 2, sm: 3, md: 4 } }}>
+        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, px: { xs: 3, sm: 4, md: 5 } }}>
           <Box sx={{ textAlign: 'center', mb: 8 }}>
             <Fade in timeout={800}>
               <Chip
@@ -333,8 +333,8 @@ const DataInsightsPage: React.FC = () => {
         </Container>
       </Box>
 
-      {/* Insights Section */}
-      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 2, sm: 3, md: 4 } }}>
+              {/* Insights Section */}
+        <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 3, sm: 4, md: 5 } }}>
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Fade in timeout={800}>
             <Typography
@@ -443,8 +443,8 @@ const DataInsightsPage: React.FC = () => {
         </Grid>
       </Container>
 
-      {/* Trends Analysis Section */}
-      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 2, sm: 3, md: 4 } }}>
+              {/* Trends Analysis Section */}
+        <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 3, sm: 4, md: 5 } }}>
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Fade in timeout={800}>
             <Typography
@@ -656,7 +656,7 @@ const DataInsightsPage: React.FC = () => {
           },
         }}
       >
-        <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+        <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 5 } }}>
           <Box sx={{ textAlign: 'center', color: 'white', position: 'relative', zIndex: 1 }}>
             <Fade in timeout={800}>
               <Typography variant="h3" component="h2" fontWeight="bold" gutterBottom>
