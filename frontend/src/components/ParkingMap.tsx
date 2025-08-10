@@ -19,7 +19,7 @@ type Props = {
 
 const ParkingMap: React.FC<Props> = ({
   locations,
-  height = 1500,
+  height = 600,
   initialCenter = [-37.8136, 144.9631], // Melbourne CBD
   initialZoom = 14,
 }) => {
