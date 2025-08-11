@@ -17,20 +17,29 @@ import {
   useTheme,
 } from '@mui/material';
 import {
-  TrendingUp as TrendingIcon,
-  DirectionsCar as CarIcon,
-  AccessTime as TimeIcon,
-  LocationOn as LocationIcon,
-  Speed as SpeedIcon,
-  FamilyRestroom as FamilyIcon,
-  Accessibility as AccessibilityIcon,
-  Star as StarIcon,
-  FlashOn as FlashIcon,
-  Analytics as AnalyticsIcon,
-  Insights as InsightsIcon,
-  DataUsage as DataIcon,
+  TrendingUp,
+  TrendingDown,
+  DirectionsCar,
+  LocalParking,
+  People,
+  Speed,
+  Assessment,
+  Analytics,
+  ShowChart,
+  BarChart,
+  PieChart,
+  Timeline,
+  AccessTime,
+  LocationOn,
+  FamilyRestroom,
+  Accessibility,
+  Star,
+  FlashOn,
+  Insights,
+  DataUsage,
 } from '@mui/icons-material';
 import { colors } from '../theme';
+import VehicleOwnershipChart from '../components/VehicleOwnershipChart';
 
 // Custom keyframe animations
 const float = keyframes`
@@ -73,7 +82,7 @@ const DataInsightsPage: React.FC = () => {
     {
       title: 'Peak Congestion Patterns',
       description: 'Morning rush peaks at 8:30 AM with 89% occupancy, while evening peaks at 5:15 PM with 92% occupancy.',
-      icon: <TrendingIcon />,
+                    icon: <TrendingUp />,
       color: colors.warning,
       metric: '89%',
       trend: '+12%',
@@ -82,7 +91,7 @@ const DataInsightsPage: React.FC = () => {
     {
       title: 'Family-Friendly Zones',
       description: '23 designated areas with stroller access, changing facilities, and extended time limits.',
-      icon: <FamilyIcon />,
+              icon: <FamilyRestroom />,
       color: colors.accent[600],
       metric: '23',
       trend: '+3',
@@ -206,7 +215,7 @@ const DataInsightsPage: React.FC = () => {
                 variant="filled"
                 sx={{ 
                   mb: 3, 
-                  fontWeight: 600, 
+                  fontWeight: 600,
                   fontSize: '0.9rem',
                   animation: `${pulse} 2s ease-in-out infinite`,
                   background: `linear-gradient(45deg, ${colors.primary[500]} 30%, ${colors.secondary[500]} 90%)`,
@@ -249,87 +258,158 @@ const DataInsightsPage: React.FC = () => {
           </Box>
 
           {/* Key Metrics Overview */}
-          <Grid container spacing={3} sx={{ mb: 6 }}>
-            {[
-              { label: 'Total Spots', value: parkingData.totalSpots, icon: <CarIcon />, color: colors.primary[500] },
-              { label: 'Available Now', value: parkingData.availableSpots, icon: <LocationIcon />, color: colors.success },
-              { label: 'Occupancy Rate', value: `${parkingData.occupancyRate}%`, icon: <TrendingIcon />, color: colors.warning },
-              { label: 'Avg Wait Time', value: `${parkingData.averageWaitTime}min`, icon: <TimeIcon />, color: colors.info },
-            ].map((metric, index) => (
-              <Grid xs={6} md={3} key={index}>
-                <Grow in timeout={800 + index * 200}>
-                  <Card
-                    elevation={0}
-                    sx={{
-                      p: 3,
-                      textAlign: 'center',
-                      background: `linear-gradient(135deg, ${alpha(metric.color, 0.05)} 0%, ${alpha(metric.color, 0.1)} 100%)`,
-                      border: `1px solid ${alpha(metric.color, 0.2)}`,
-                      borderRadius: 4,
-                      transition: 'all 0.3s ease-in-out',
-                      cursor: 'pointer',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: 3,
-                        background: `linear-gradient(90deg, ${metric.color}, ${alpha(metric.color, 0.7)})`,
-                        backgroundSize: '200% 100%',
-                        animation: `${shimmer} 3s ease-in-out infinite`,
-                      },
-                      '&:hover': {
-                        transform: 'translateY(-8px) scale(1.02)',
-                        boxShadow: `0 12px 40px ${alpha(metric.color, 0.15)}`,
-                        background: `linear-gradient(135deg, ${alpha(metric.color, 0.08)} 0%, ${alpha(metric.color, 0.15)} 100%)`,
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        mb: 2,
-                        animation: `${float} 3s ease-in-out infinite`,
-                        animationDelay: `${index * 0.5}s`,
-                      }}
-                    >
-                      <Avatar
-                        sx={{
-                          bgcolor: alpha(metric.color, 0.1),
-                          color: metric.color,
-                          width: 56,
-                          height: 56,
-                          fontSize: '1.5rem',
-                        }}
-                      >
-                        {metric.icon}
-                      </Avatar>
+          <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid item xs={12} md={3}>
+              <Card sx={{ 
+                background: `linear-gradient(135deg, ${colors.primary[500]}, ${colors.primary[700]})`,
+                color: 'white',
+                position: 'relative',
+                overflow: 'hidden',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                  opacity: 0.3,
+                }
+              }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Box>
+                      <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+                        5.5M+
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                        Total Vehicles in Victoria
+                      </Typography>
                     </Box>
-                    <Typography
-                      variant="h3"
-                      component="div"
-                      fontWeight="bold"
-                      sx={{
-                        color: metric.color,
-                        mb: 1,
-                        animation: `${pulse} 2s ease-in-out infinite`,
-                        animationDelay: `${index * 0.3}s`,
-                      }}
-                    >
-                      {metric.value}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" fontWeight="500">
-                      {metric.label}
-                    </Typography>
-                  </Card>
-                </Grow>
-              </Grid>
-            ))}
+                    <DirectionsCar sx={{ fontSize: 48, opacity: 0.8 }} />
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                    <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
+                    <Typography variant="body2">+2.8% from 2023</Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <Card sx={{ 
+                background: `linear-gradient(135deg, ${colors.secondary[500]}, ${colors.secondary[700]})`,
+                color: 'white',
+                position: 'relative',
+                overflow: 'hidden',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                  opacity: 0.3,
+                }
+              }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Box>
+                      <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+                        4.2M
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                        Passenger Vehicles
+                      </Typography>
+                    </Box>
+                    <DirectionsCar sx={{ fontSize: 48, opacity: 0.8 }} />
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                    <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
+                    <Typography variant="body2">+2.2% growth</Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <Card sx={{ 
+                background: `linear-gradient(135deg, ${colors.success[500]}, ${colors.success[700]})`,
+                color: 'white',
+                position: 'relative',
+                overflow: 'hidden',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                  opacity: 0.3,
+                }
+              }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Box>
+                      <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+                        900K
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                        Commercial Vehicles
+                      </Typography>
+                    </Box>
+                    <LocalParking sx={{ fontSize: 48, opacity: 0.8 }} />
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                    <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
+                    <Typography variant="body2">+3.1% growth</Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <Card sx={{ 
+                background: `linear-gradient(135deg, ${colors.warning[500]}, ${colors.warning[700]})`,
+                color: 'white',
+                position: 'relative',
+                overflow: 'hidden',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                  opacity: 0.3,
+                }
+              }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Box>
+                      <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+                        210K
+                      </Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                        Motorcycles
+                      </Typography>
+                    </Box>
+                    <Speed sx={{ fontSize: 48, opacity: 0.8 }} />
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                    <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
+                    <Typography variant="body2">+1.3% growth</Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
+
+          {/* Vehicle Ownership Visualization */}
+          <VehicleOwnershipChart />
         </Container>
       </Box>
 

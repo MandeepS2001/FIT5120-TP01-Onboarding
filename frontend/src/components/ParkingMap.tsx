@@ -713,17 +713,11 @@ const ParkingMap: React.FC<Props> = ({
           center={center}
           zoom={initialZoom}
           options={{
-            mapId: process.env.REACT_APP_GOOGLE_MAPS_MAP_ID || 'DEMO_MAP_ID',
             mapTypeControl: true,
             streetViewControl: false,
             fullscreenControl: true,
             clickableIcons: true,
             zoomControl: true,
-            styles: [
-              // Keep some basic styling but don't hide essential map elements
-              { elementType: 'labels.text.fill', stylers: [{ color: '#616161' }] },
-              { elementType: 'labels.text.stroke', stylers: [{ color: '#ffffff' }] },
-            ],
           }}
           onLoad={(map) => {
             mapRef.current = map;
