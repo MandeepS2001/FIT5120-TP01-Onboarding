@@ -179,7 +179,7 @@ const HomePage: React.FC = () => {
             {/* Left Content - Hero Text */}
             <Grid xs={12} md={6}>
               <Fade in timeout={1000}>
-                <Box>
+                <Box sx={{ pl: { xs: 2, md: 4, lg: 6 } }}>
                   <Chip
                     label={isLoadingMetrics ? "🔄 Loading Real Data..." : "🚀 Live Data Connected"}
                     sx={{ 
@@ -205,7 +205,10 @@ const HomePage: React.FC = () => {
                       fontWeight: 800,
                       lineHeight: 1.1,
                       mb: 3,
-                      color: 'text.primary',
+                      background: `linear-gradient(135deg, ${colors.primary[600]} 0%, ${colors.primary[800]} 100%)`,
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
                       fontSize: { xs: '2.5rem', md: '3.5rem', lg: '4rem' },
                       textShadow: '0 4px 20px rgba(33, 150, 243, 0.1)',
                     }}
@@ -440,7 +443,10 @@ const HomePage: React.FC = () => {
               fontWeight="bold"
               gutterBottom
               sx={{
-                color: 'text.primary',
+                background: `linear-gradient(135deg, ${colors.primary[600]} 0%, ${colors.secondary[600]} 100%)`,
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
                 fontSize: { xs: '2rem', md: '3rem' },
                 textShadow: '0 4px 20px rgba(33, 150, 243, 0.1)',
               }}
@@ -462,18 +468,21 @@ const HomePage: React.FC = () => {
               title: 'Real-time Availability',
               description: 'Live updates from 3,309+ CBD parking sensors and car parks across Melbourne.',
               color: colors.primary[500],
+              gradient: `linear-gradient(135deg, ${colors.primary[50]} 0%, ${colors.primary[100]} 100%)`,
             },
             {
               icon: <TrendingIcon sx={{ fontSize: 40, color: colors.secondary[500] }} />,
               title: 'AI Predictions',
               description: 'Smart forecasts for peak hours, events, and optimal parking times.',
               color: colors.secondary[500],
+              gradient: `linear-gradient(135deg, ${colors.secondary[50]} 0%, ${colors.secondary[100]} 100%)`,
             },
             {
               icon: <FamilyIcon sx={{ fontSize: 40, color: colors.accent[500] }} />,
               title: 'Family-Focused',
               description: 'Highlighted childcare-friendly zones and accessible parking bays.',
               color: colors.accent[500],
+              gradient: `linear-gradient(135deg, ${colors.accent[50]} 0%, ${colors.accent[100]} 100%)`,
             },
           ].map((feature, index) => (
             <Grid xs={12} md={4} key={index}>
@@ -483,7 +492,7 @@ const HomePage: React.FC = () => {
                   sx={{
                     height: '100%',
                     p: 4,
-                    background: 'rgba(255, 255, 255, 0.8)',
+                    background: feature.gradient,
                     backdropFilter: 'blur(20px)',
                     border: `1px solid ${alpha(feature.color, 0.2)}`,
                     borderRadius: 4,
@@ -505,7 +514,7 @@ const HomePage: React.FC = () => {
                     '&:hover': {
                       transform: 'translateY(-8px) scale(1.02)',
                       boxShadow: `0 16px 48px ${alpha(feature.color, 0.2)}`,
-                      background: 'rgba(255, 255, 255, 0.9)',
+                      background: feature.gradient,
                       '& .feature-icon': {
                         transform: 'scale(1.1) rotate(5deg)',
                       },
