@@ -100,7 +100,7 @@ const DataInsightsPage: React.FC = () => {
     {
       title: 'Accessibility Coverage',
       description: '156 accessible parking bays across the CBD, with real-time availability tracking.',
-      icon: <AccessibilityIcon />,
+              icon: <Accessibility />,
       color: colors.info,
       metric: '156',
       trend: '100%',
@@ -109,7 +109,7 @@ const DataInsightsPage: React.FC = () => {
     {
       title: 'Smart Predictions',
       description: 'AI-powered forecasting with 94% accuracy for parking availability up to 2 hours ahead.',
-      icon: <SpeedIcon />,
+              icon: <Speed />,
       color: colors.success,
       metric: '94%',
       trend: '+8%',
@@ -583,7 +583,7 @@ const DataInsightsPage: React.FC = () => {
                       animation: `${pulse} 2s ease-in-out infinite`,
                     }}
                   >
-                    <AnalyticsIcon />
+                    <Analytics />
                   </Avatar>
                   <Box>
                     <Typography variant="h5" component="h3" fontWeight="bold" color="text.primary">
