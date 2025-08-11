@@ -30,6 +30,9 @@ import {
   FlashOn as FlashIcon,
   Map as MapIcon,
   Analytics as AnalyticsIcon,
+  Park as ParkIcon,
+  Security as SecurityIcon,
+  Wifi as WifiIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import { fetchParkingLocations } from '../services/api';
@@ -57,6 +60,11 @@ const shimmer = keyframes`
 const fadeInUp = keyframes`
   0% { opacity: 0; transform: translateY(30px); }
   100% { opacity: 1; transform: translateY(0); }
+`;
+
+const rotate = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 `;
 
 const HomePage: React.FC = () => {
@@ -178,7 +186,7 @@ const HomePage: React.FC = () => {
         }}
       />
 
-      {/* Hero Section with Image */}
+      {/* Hero Section with Enhanced Image */}
       <Box
         sx={{
           background: `linear-gradient(135deg, ${colors.primary[50]} 0%, ${colors.neutral[50]} 100%)`,
@@ -313,7 +321,7 @@ const HomePage: React.FC = () => {
               </Fade>
             </Grid>
 
-            {/* Hero Image Section */}
+            {/* Enhanced Hero Image Section */}
             <Grid xs={12} md={6}>
               <Slide direction="left" in timeout={1200}>
                 <Box sx={{ position: 'relative' }}>
@@ -340,7 +348,7 @@ const HomePage: React.FC = () => {
                       },
                     }}
                   >
-                    {/* Hero Image Placeholder */}
+                    {/* Enhanced Hero Image */}
                     <Box
                       sx={{
                         height: { xs: 300, md: 400 },
@@ -362,42 +370,92 @@ const HomePage: React.FC = () => {
                         },
                       }}
                     >
-                      {/* Melbourne City Skyline Icon */}
-                      <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                        <Box
-                          sx={{
-                            fontSize: { xs: '4rem', md: '6rem' },
-                            color: colors.primary[500],
-                            mb: 2,
-                            animation: `${float} 4s ease-in-out infinite`,
-                          }}
-                        >
-                          🏙️
+                      {/* Melbourne City Skyline with Parking Elements */}
+                      <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center', width: '100%' }}>
+                        {/* Melbourne City Image */}
+                        <Box sx={{ mb: 3 }}>
+                          <Box
+                            sx={{
+                              width: '100%',
+                              height: { xs: 120, md: 160 },
+                              background: `linear-gradient(135deg, ${colors.primary[200]} 0%, ${colors.secondary[200]} 100%)`,
+                              borderRadius: 3,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              position: 'relative',
+                              overflow: 'hidden',
+                              mb: 2,
+                              '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                background: `url("data:image/svg+xml,%3Csvg width='200' height='100' viewBox='0 0 200 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='sky' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234A90E2;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23F5A623;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='200' height='100' fill='url(%23sky)'/%3E%3C!-- Buildings --%3E%3Crect x='10' y='40' width='15' height='60' fill='%23333'/%3E%3Crect x='30' y='30' width='12' height='70' fill='%23444'/%3E%3Crect x='50' y='20' width='18' height='80' fill='%23555'/%3E%3Crect x='75' y='25' width='14' height='75' fill='%23333'/%3E%3Crect x='95' y='15' width='20' height='85' fill='%23444'/%3E%3Crect x='120' y='35' width='16' height='65' fill='%23555'/%3E%3Crect x='140' y='10' width='25' height='90' fill='%23333'/%3E%3Crect x='170' y='45' width='12' height='55' fill='%23444'/%3E%3C!-- Windows --%3E%3Crect x='12' y='45' width='3' height='3' fill='%23FFD700'/%3E%3Crect x='18' y='45' width='3' height='3' fill='%23FFD700'/%3E%3Crect x='12' y='55' width='3' height='3' fill='%23FFD700'/%3E%3Crect x='18' y='55' width='3' height='3' fill='%23FFD700'/%3E%3Crect x='32' y='35' width='3' height='3' fill='%23FFD700'/%3E%3Crect x='38' y='35' width='3' height='3' fill='%23FFD700'/%3E%3Crect x='32' y='45' width='3' height='3' fill='%23FFD700'/%3E%3Crect x='38' y='45' width='3' height='3' fill='%23FFD700'/%3E%3Crect x='32' y='55' width='3' height='3' fill='%23FFD700'/%3E%3Crect x='38' y='55' width='3' height='3' fill='%23FFD700'/%3E%3Crect x='32' y='65' width='3' height='3' fill='%23FFD700'/%3E%3Crect x='38' y='65' width='3' height='3' fill='%23FFD700'/%3E%3C!-- Parking Spots --%3E%3Ccircle cx='25' cy='85' r='2' fill='%234CAF50'/%3E%3Ccircle cx='35' cy='85' r='2' fill='%23FF9800'/%3E%3Ccircle cx='45' cy='85' r='2' fill='%234CAF50'/%3E%3Ccircle cx='55' cy='85' r='2' fill='%23FF5722'/%3E%3Ccircle cx='65' cy='85' r='2' fill='%234CAF50'/%3E%3Ccircle cx='75' cy='85' r='2' fill='%23FF9800'/%3E%3Ccircle cx='85' cy='85' r='2' fill='%234CAF50'/%3E%3Ccircle cx='95' cy='85' r='2' fill='%23FF5722'/%3E%3Ccircle cx='105' cy='85' r='2' fill='%234CAF50'/%3E%3Ccircle cx='115' cy='85' r='2' fill='%23FF9800'/%3E%3Ccircle cx='125' cy='85' r='2' fill='%234CAF50'/%3E%3Ccircle cx='135' cy='85' r='2' fill='%23FF5722'/%3E%3Ccircle cx='145' cy='85' r='2' fill='%234CAF50'/%3E%3Ccircle cx='155' cy='85' r='2' fill='%23FF9800'/%3E%3Ccircle cx='165' cy='85' r='2' fill='%234CAF50'/%3E%3Ccircle cx='175' cy='85' r='2' fill='%23FF5722'/%3E%3Ccircle cx='185' cy='85' r='2' fill='%234CAF50'/%3E%3C/svg%3E")`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                opacity: 0.8,
+                              },
+                            }}
+                          />
+                          <Typography
+                            variant="h4"
+                            sx={{
+                              color: colors.primary[700],
+                              fontWeight: 700,
+                              animation: `${fadeInUp} 1s ease-out`,
+                            }}
+                          >
+                            Melbourne CBD
+                          </Typography>
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              color: colors.primary[600],
+                              opacity: 0.8,
+                              animation: `${fadeInUp} 1s ease-out 0.2s both`,
+                            }}
+                          >
+                            Smart Parking Infrastructure
+                          </Typography>
                         </Box>
-                        <Typography
-                          variant="h6"
-                          sx={{
-                            color: colors.primary[700],
-                            fontWeight: 600,
-                            animation: `${fadeInUp} 1s ease-out`,
-                          }}
-                        >
-                          Melbourne CBD
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: colors.primary[600],
-                            opacity: 0.8,
-                            animation: `${fadeInUp} 1s ease-out 0.2s both`,
-                          }}
-                        >
-                          Smart Parking Infrastructure
-                        </Typography>
+
+                        {/* Parking Icons Grid */}
+                        <Grid container spacing={2} sx={{ maxWidth: 300, mx: 'auto' }}>
+                          {[
+                            { icon: '🚗', label: 'On-Street', color: colors.success },
+                            { icon: '🏢', label: 'Off-Street', color: colors.primary[500] },
+                            { icon: '♿', label: 'Accessible', color: colors.accent[500] },
+                            { icon: '👨‍👩‍👧‍👦', label: 'Family', color: colors.secondary[500] },
+                          ].map((item, index) => (
+                            <Grid xs={6} key={index}>
+                              <Box
+                                sx={{
+                                  textAlign: 'center',
+                                  p: 1,
+                                  borderRadius: 2,
+                                  background: alpha(item.color, 0.1),
+                                  border: `1px solid ${alpha(item.color, 0.2)}`,
+                                  animation: `${float} 3s ease-in-out infinite`,
+                                  animationDelay: `${index * 0.5}s`,
+                                }}
+                              >
+                                <Typography variant="h4" sx={{ mb: 0.5 }}>
+                                  {item.icon}
+                                </Typography>
+                                <Typography variant="caption" sx={{ color: item.color, fontWeight: 600 }}>
+                                  {item.label}
+                                </Typography>
+                              </Box>
+                            </Grid>
+                          ))}
+                        </Grid>
                       </Box>
                     </Box>
                     
-                    {/* Quick Stats Overlay */}
+                    {/* Enhanced Quick Stats Overlay */}
                     <Box
                       sx={{
                         position: 'absolute',
@@ -478,7 +536,7 @@ const HomePage: React.FC = () => {
                   p: 4,
                   height: '100%',
                   background: `linear-gradient(135deg, ${alpha(colors.warning, 0.1)} 0%, ${alpha(colors.warning, 0.05)} 100%)`,
-                                          border: `1px solid ${alpha(colors.warning, 0.2)}`,
+                  border: `1px solid ${alpha(colors.warning, 0.2)}`,
                   borderRadius: 4,
                   position: 'relative',
                   overflow: 'hidden',
@@ -530,7 +588,7 @@ const HomePage: React.FC = () => {
                   p: 4,
                   height: '100%',
                   background: `linear-gradient(135deg, ${alpha(colors.success, 0.1)} 0%, ${alpha(colors.success, 0.05)} 100%)`,
-                                          border: `1px solid ${alpha(colors.success, 0.2)}`,
+                  border: `1px solid ${alpha(colors.success, 0.2)}`,
                   borderRadius: 4,
                   position: 'relative',
                   overflow: 'hidden',
@@ -582,7 +640,7 @@ const HomePage: React.FC = () => {
                   p: 4,
                   height: '100%',
                   background: `linear-gradient(135deg, ${alpha(colors.info, 0.1)} 0%, ${alpha(colors.info, 0.05)} 100%)`,
-                                          border: `1px solid ${alpha(colors.info, 0.2)}`,
+                  border: `1px solid ${alpha(colors.info, 0.2)}`,
                   borderRadius: 4,
                   position: 'relative',
                   overflow: 'hidden',
@@ -803,6 +861,185 @@ const HomePage: React.FC = () => {
               </Zoom>
             </Grid>
           ))}
+        </Grid>
+      </Container>
+
+      {/* Visual Enhancement Section */}
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 3, sm: 4, md: 5 } }}>
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
+          <Fade in timeout={800}>
+            <Typography
+              variant="h2"
+              component="h2"
+              fontWeight="bold"
+              gutterBottom
+              sx={{
+                background: `linear-gradient(135deg, ${colors.primary[600]} 0%, ${colors.accent[600]} 100%)`,
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              Smart Parking Technology
+            </Typography>
+          </Fade>
+          <Fade in timeout={1000}>
+            <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
+              Advanced sensors and AI-powered insights for seamless parking
+            </Typography>
+          </Fade>
+        </Box>
+
+        <Grid container spacing={4}>
+          <Grid xs={12} md={4}>
+            <Grow in timeout={800}>
+              <Card
+                elevation={0}
+                sx={{
+                  p: 4,
+                  height: '100%',
+                  background: `linear-gradient(135deg, ${alpha(colors.primary[100], 0.5)} 0%, ${alpha(colors.primary[50], 0.3)} 100%)`,
+                  border: `1px solid ${alpha(colors.primary[200], 0.3)}`,
+                  borderRadius: 4,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 4,
+                    background: colors.primary[500],
+                  },
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: colors.primary[500],
+                      width: 48,
+                      height: 48,
+                      animation: `${rotate} 4s linear infinite`,
+                    }}
+                  >
+                    <WifiIcon />
+                  </Avatar>
+                  <Box>
+                    <Typography variant="h6" fontWeight="bold" color="text.primary">
+                      IoT Sensors
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Real-time monitoring
+                    </Typography>
+                  </Box>
+                </Box>
+                <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                  Advanced IoT sensors embedded throughout Melbourne's CBD provide instant availability updates and occupancy tracking.
+                </Typography>
+              </Card>
+            </Grow>
+          </Grid>
+
+          <Grid xs={12} md={4}>
+            <Grow in timeout={1000}>
+              <Card
+                elevation={0}
+                sx={{
+                  p: 4,
+                  height: '100%',
+                  background: `linear-gradient(135deg, ${alpha(colors.secondary[100], 0.5)} 0%, ${alpha(colors.secondary[50], 0.3)} 100%)`,
+                  border: `1px solid ${alpha(colors.secondary[200], 0.3)}`,
+                  borderRadius: 4,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 4,
+                    background: colors.secondary[500],
+                  },
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: colors.secondary[500],
+                      width: 48,
+                      height: 48,
+                      animation: `${pulse} 2s ease-in-out infinite`,
+                    }}
+                  >
+                    <SecurityIcon />
+                  </Avatar>
+                  <Box>
+                    <Typography variant="h6" fontWeight="bold" color="text.primary">
+                      Secure & Reliable
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Data protection
+                    </Typography>
+                  </Box>
+                </Box>
+                <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                  Enterprise-grade security ensures your parking data is protected while providing reliable, accurate information.
+                </Typography>
+              </Card>
+            </Grow>
+          </Grid>
+
+          <Grid xs={12} md={4}>
+            <Grow in timeout={1200}>
+              <Card
+                elevation={0}
+                sx={{
+                  p: 4,
+                  height: '100%',
+                  background: `linear-gradient(135deg, ${alpha(colors.accent[100], 0.5)} 0%, ${alpha(colors.accent[50], 0.3)} 100%)`,
+                  border: `1px solid ${alpha(colors.accent[200], 0.3)}`,
+                  borderRadius: 4,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 4,
+                    background: colors.accent[500],
+                  },
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: colors.accent[500],
+                      width: 48,
+                      height: 48,
+                      animation: `${float} 3s ease-in-out infinite`,
+                    }}
+                  >
+                    <ParkIcon />
+                  </Avatar>
+                  <Box>
+                    <Typography variant="h6" fontWeight="bold" color="text.primary">
+                      Smart Infrastructure
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Future-ready
+                    </Typography>
+                  </Box>
+                </Box>
+                <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                  Built on Melbourne's smart city infrastructure, providing scalable solutions for growing parking demands.
+                </Typography>
+              </Card>
+            </Grow>
+          </Grid>
         </Grid>
       </Container>
 
