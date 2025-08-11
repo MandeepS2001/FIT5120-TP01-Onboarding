@@ -580,7 +580,7 @@ const ParkingMap: React.FC<Props> = ({
             marker.setAnimation(null);
           });
 
-          markersRef.current.push(marker);
+      markersRef.current.push(marker);
           console.log(`Marker ${index + 1} created successfully for ${loc.name}`);
         } catch (error) {
           console.error(`Error creating marker for ${loc.name}:`, error);

@@ -172,56 +172,56 @@ const AppFooter: React.FC = () => {
           {/* Brand Section */}
           <Grid xs={12} md={4}>
             <Fade in timeout={800}>
-              <Box sx={{ mb: 4 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                  <Box
-                    sx={{
+            <Box sx={{ mb: 4 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                <Box
+                  sx={{
                       width: 56,
                       height: 56,
-                      borderRadius: '50%',
-                      background: `linear-gradient(135deg, ${colors.primary[500]} 0%, ${colors.primary[600]} 100%)`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                    borderRadius: '50%',
+                    background: `linear-gradient(135deg, ${colors.primary[500]} 0%, ${colors.primary[600]} 100%)`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                       color: 'white',
-                      fontSize: '1.5rem',
-                      fontWeight: 'bold',
-                      boxShadow: `0 4px 20px ${alpha(colors.primary[500], 0.3)}`,
+                    fontSize: '1.5rem',
+                    fontWeight: 'bold',
+                    boxShadow: `0 4px 20px ${alpha(colors.primary[500], 0.3)}`,
                       animation: `${float} 4s ease-in-out infinite`,
                       '&:hover': {
                         animation: `${pulse} 0.6s ease-in-out`,
                       },
-                    }}
-                  >
+                  }}
+                >
                     P
-                  </Box>
-                  <Box>
-                    <Typography
+                </Box>
+                <Box>
+                  <Typography
                       variant="h4"
                       component="h2"
-                      fontWeight="bold"
-                      sx={{
+                    fontWeight="bold"
+                    sx={{
                         background: `linear-gradient(135deg, ${colors.primary[600]} 0%, ${colors.primary[700]} 100%)`,
-                        backgroundClip: 'text',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
                         animation: `${shimmer} 3s ease-in-out infinite`,
                         backgroundSize: '200% 100%',
-                      }}
-                    >
+                    }}
+                  >
                       Park Pal
-                    </Typography>
+                  </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
-                      Smart • Accessible • Family-Friendly
-                    </Typography>
-                  </Box>
+                    Smart • Accessible • Family-Friendly
+                  </Typography>
                 </Box>
+              </Box>
                 <Typography variant="body1" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6, pl: { xs: 2, sm: 3 } }}>
                   Empowering Melbourne families with real-time parking intelligence, 
                   accessibility features, and stress-free CBD navigation. 
                   Smart parking solutions for a better city experience.
-                </Typography>
-                
+              </Typography>
+              
                 {/* Enhanced Contact Info */}
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pl: { xs: 1, sm: 2 } }}>
                   {contactInfo.map((contact, index) => (
@@ -260,10 +260,10 @@ const AppFooter: React.FC = () => {
                           }}
                         >
                           {contact.icon}
-                        </Box>
+                </Box>
                         <Typography variant="body2" fontWeight="500">
                           {contact.label}
-                        </Typography>
+                  </Typography>
                       </Link>
                     </Grow>
                   ))}
@@ -277,14 +277,14 @@ const AppFooter: React.FC = () => {
             <Grid xs={12} sm={6} md={2} key={index}>
               <Zoom in timeout={1000 + index * 200}>
                 <Box>
-                  <Typography
-                    variant="h6"
-                    component="h3"
+              <Typography
+                variant="h6"
+                component="h3"
                     fontWeight="bold"
                     gutterBottom
-                    sx={{
+                sx={{
                       color: colors.primary[700],
-                      mb: 3,
+                  mb: 3,
                       position: 'relative',
                       '&::after': {
                         content: '""',
@@ -298,31 +298,31 @@ const AppFooter: React.FC = () => {
                         animation: `${shimmer} 3s ease-in-out infinite`,
                         backgroundSize: '200% 100%',
                       },
-                    }}
-                  >
-                    {section.title}
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                    {section.links.map((link, linkIndex) => (
+                }}
+              >
+                {section.title}
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                {section.links.map((link, linkIndex) => (
                       <Grow in timeout={1200 + linkIndex * 100} key={linkIndex}>
-                        <Link
-                          href={link.href}
-                          sx={{
+                  <Link
+                    href={link.href}
+                    sx={{
                             color: 'text.secondary',
                             textDecoration: 'none',
                             fontWeight: 500,
                             transition: 'all 0.3s ease-in-out',
-                            '&:hover': {
+                      '&:hover': {
                               color: colors.primary[600],
-                              transform: 'translateX(4px)',
-                            },
-                          }}
-                        >
-                          {link.label}
-                        </Link>
+                        transform: 'translateX(4px)',
+                      },
+                    }}
+                  >
+                    {link.label}
+                  </Link>
                       </Grow>
-                    ))}
-                  </Box>
+                ))}
+              </Box>
                 </Box>
               </Zoom>
             </Grid>
@@ -338,15 +338,15 @@ const AppFooter: React.FC = () => {
               © {currentYear} Park Pal. All rights reserved.
             </Typography>
           </Fade>
-          
+
           <Fade in timeout={1600}>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              {socialLinks.map((social, index) => (
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            {socialLinks.map((social, index) => (
                 <Grow in timeout={1800 + index * 100} key={index}>
-                  <IconButton
-                    href={social.href}
-                    aria-label={social.label}
-                    sx={{
+              <IconButton
+                href={social.href}
+                aria-label={social.label}
+                sx={{
                       width: 40,
                       height: 40,
                       bgcolor: alpha(colors.primary[500], 0.1),
@@ -354,14 +354,14 @@ const AppFooter: React.FC = () => {
                       transition: 'all 0.3s ease-in-out',
                       '&:hover': {
                         bgcolor: colors.primary[500],
-                        color: 'white',
+                  color: 'white',
                         transform: 'translateY(-4px) scale(1.1)',
                         boxShadow: `0 8px 25px ${alpha(colors.primary[500], 0.3)}`,
                       },
-                    }}
-                  >
-                    {social.icon}
-                  </IconButton>
+                }}
+              >
+                {social.icon}
+              </IconButton>
                 </Grow>
               ))}
             </Box>
@@ -482,7 +482,7 @@ const AppFooter: React.FC = () => {
                   Subscribe
                 </Button>
               </Box>
-            </Box>
+          </Box>
           </Fade>
         </Box>
 
@@ -582,7 +582,7 @@ const AppFooter: React.FC = () => {
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Get instant notifications about parking availability
-                      </Typography>
+          </Typography>
                     </Box>
                   </Box>
                 </Box>
