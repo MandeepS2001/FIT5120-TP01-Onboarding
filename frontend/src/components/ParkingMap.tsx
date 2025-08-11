@@ -33,11 +33,7 @@ const ParkingMap: React.FC<Props> = ({
   // Log map configuration for debugging
   useEffect(() => {
     if (isLoaded) {
-      const mapId = process.env.REACT_APP_GOOGLE_MAPS_MAP_ID || 'DEMO_MAP_ID';
-      console.log('Google Maps loaded with Map ID:', mapId);
-      if (mapId === 'DEMO_MAP_ID') {
-        console.warn('Using demo Map ID. For production, set REACT_APP_GOOGLE_MAPS_MAP_ID in your .env file');
-      }
+      console.log('Google Maps loaded successfully');
     }
   }, [isLoaded]);
 
