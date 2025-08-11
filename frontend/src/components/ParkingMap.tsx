@@ -850,6 +850,7 @@ const ParkingMap: React.FC<Props> = ({
             fullscreenControl: true,
             clickableIcons: true,
             zoomControl: true,
+            mapId: process.env.REACT_APP_GOOGLE_MAPS_MAP_ID,
           }}
           onLoad={(map) => {
             console.log('Map loaded successfully');
