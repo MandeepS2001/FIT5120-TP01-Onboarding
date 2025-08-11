@@ -100,16 +100,16 @@ const HomePage: React.FC = () => {
       <Box
         sx={{
           position: 'absolute',
-          top: '10%',
-          right: '3%',
+          top: '5%',
+          right: '5%',
           width: 200,
           height: 200,
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${alpha(colors.primary[200], 0.3)} 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${alpha(colors.primary[200], 0.2)} 0%, transparent 70%)`,
           animation: `${float} 6s ease-in-out infinite`,
           zIndex: 0,
           '@media (max-width: 1200px)': {
-            right: '1%',
+            right: '2%',
             width: 150,
             height: 150,
           },
@@ -118,16 +118,16 @@ const HomePage: React.FC = () => {
       <Box
         sx={{
           position: 'absolute',
-          bottom: '20%',
-          left: '5%',
+          bottom: '15%',
+          left: '8%',
           width: 150,
           height: 150,
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${alpha(colors.secondary[200], 0.2)} 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${alpha(colors.secondary[200], 0.15)} 0%, transparent 70%)`,
           animation: `${float} 8s ease-in-out infinite reverse`,
           zIndex: 0,
           '@media (max-width: 1200px)': {
-            left: '2%',
+            left: '3%',
             width: 120,
             height: 120,
           },
@@ -138,8 +138,6 @@ const HomePage: React.FC = () => {
       <Box
         sx={{
           background: `linear-gradient(135deg, ${colors.primary[50]} 0%, ${colors.neutral[50]} 100%)`,
-          pt: { xs: 6, md: 12 },
-          pb: { xs: 8, md: 16 },
           position: 'relative',
           overflow: 'visible',
         }}
@@ -158,11 +156,16 @@ const HomePage: React.FC = () => {
           }}
         />
         
-        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, px: { xs: 3, sm: 4, md: 5 } }}>
+        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, px: { xs: 4, sm: 6, md: 8, lg: 10 } }}>
           <Grid container spacing={6} alignItems="center">
             <Grid xs={12} md={6}>
               <Fade in timeout={1000}>
-                <Box>
+                <Box sx={{ 
+                  pl: { xs: 0, sm: 2, md: 4, lg: 6 },
+                  pr: { xs: 2, sm: 2, md: 2, lg: 2 },
+                  maxWidth: '100%',
+                  overflow: 'hidden'
+                }}>
                   <Chip
                     label="🚀 Live Data Connected"
                     color="success"
@@ -264,9 +267,9 @@ const HomePage: React.FC = () => {
               </Fade>
             </Grid>
 
-            <Grid xs={12} md={6}>
+            <Grid xs={12} md={6} sx={{ display: 'flex', alignItems: 'center', position: 'relative', zIndex: 2 }}>
               <Slide direction="left" in timeout={1200}>
-                <Box>
+                <Box sx={{ width: '100%', mt: { xs: 2, sm: 3, md: 4 } }}>
                   <Card
                     elevation={0}
                     sx={{
@@ -277,6 +280,8 @@ const HomePage: React.FC = () => {
                       borderRadius: 4,
                       position: 'relative',
                       overflow: 'hidden',
+                      zIndex: 3,
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
                       '&::before': {
                         content: '""',
                         position: 'absolute',
@@ -367,6 +372,8 @@ const HomePage: React.FC = () => {
                       borderRadius: 4,
                       position: 'relative',
                       overflow: 'hidden',
+                      zIndex: 3,
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
                       '&::before': {
                         content: '""',
                         position: 'absolute',
@@ -410,7 +417,7 @@ const HomePage: React.FC = () => {
       </Box>
 
       {/* Enhanced Stats Section */}
-      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 3, sm: 4, md: 5 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 4, sm: 6, md: 8, lg: 10 } }}>
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Fade in timeout={800}>
             <Typography
@@ -501,7 +508,7 @@ const HomePage: React.FC = () => {
       </Container>
 
       {/* Enhanced Features Section */}
-      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 3, sm: 4, md: 5 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 4, sm: 6, md: 8, lg: 10 } }}>
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Fade in timeout={800}>
             <Typography
@@ -607,7 +614,7 @@ const HomePage: React.FC = () => {
           },
         }}
       >
-        <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 5 } }}>
+        <Container maxWidth="lg" sx={{ px: { xs: 4, sm: 6, md: 8, lg: 10 } }}>
           <Box sx={{ textAlign: 'center', color: 'white', position: 'relative', zIndex: 1 }}>
             <Fade in timeout={800}>
               <Typography variant="h3" component="h2" fontWeight="bold" gutterBottom>
