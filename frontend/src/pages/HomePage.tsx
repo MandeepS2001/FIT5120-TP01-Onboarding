@@ -67,6 +67,7 @@ const glow = keyframes`
   50% { box-shadow: 0 0 40px rgba(33, 150, 243, 0.6); }
 `;
 
+// Light theme HomePage with ABBASS-inspired glassmorphism effects
 const HomePage: React.FC = () => {
   const [locations, setLocations] = useState<ParkingLocation[]>([]);
   const [parkingMetrics, setParkingMetrics] = useState<ParkingMetrics | null>(null);
@@ -122,7 +123,7 @@ const HomePage: React.FC = () => {
   return (
     <Box sx={{ 
       minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)',
+      background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%)',
       position: 'relative',
       overflow: 'hidden',
       '&::before': {
