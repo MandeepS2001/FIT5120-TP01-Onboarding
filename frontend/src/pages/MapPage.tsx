@@ -36,7 +36,11 @@ const MapPage: React.FC = () => {
   
   // Planner state
   const [plannedDateTime, setPlannedDateTime] = useState<Date | null>(new Date());
+  const [duration, setDuration] = useState<number>(2);
   const [isPlannerActive, setIsPlannerActive] = useState(false);
+  
+  console.log('Current planned date time:', plannedDateTime);
+  console.log('Is planner active:', isPlannerActive);
   const [predictedAvailability, setPredictedAvailability] = useState<{
     good: number;
     moderate: number;
@@ -66,16 +70,29 @@ const MapPage: React.FC = () => {
     });
   }, [locations, query, type, onlyAccessible, onlyFamilyFriendly, maxPrice]);
 
+  // Update prediction when filtered locations change (if planner is active)
+  useEffect(() => {
+    if (plannedDateTime && isPlannerActive) {
+      const prediction = predictAvailability(plannedDateTime);
+      setPredictedAvailability(prediction);
+    }
+  }, [filtered, plannedDateTime, isPlannerActive]);
+
   // Predict parking availability based on time
   const predictAvailability = (dateTime: Date) => {
+    console.log('Predicting availability for:', dateTime);
     const hour = dateTime.getHours();
     const dayOfWeek = dateTime.getDay(); // 0 = Sunday, 6 = Saturday
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     const isPeakHour = (hour >= 8 && hour <= 10) || (hour >= 17 && hour <= 19);
     
+    console.log('Hour:', hour, 'Day of week:', dayOfWeek, 'Is weekend:', isWeekend, 'Is peak hour:', isPeakHour);
+    
     let good = 0, moderate = 0, low = 0, none = 0;
     
-    filtered.forEach(location => {
+    console.log('Processing', filtered.length, 'locations');
+    
+    filtered.forEach((location, index) => {
       let availabilityRate = location.available / (location.capacity || 1) * 100;
       
       // Adjust based on time patterns
@@ -97,24 +114,53 @@ const MapPage: React.FC = () => {
       else if (availabilityRate > 20) moderate++;
       else if (availabilityRate > 0) low++;
       else none++;
+      
+      if (index < 5) {
+        console.log(`Location ${index}: available=${location.available}, capacity=${location.capacity}, rate=${availabilityRate.toFixed(1)}%`);
+      }
     });
     
-    return { good, moderate, low, none, total: filtered.length };
+    const result = { good, moderate, low, none, total: filtered.length };
+    console.log('Final prediction result:', result);
+    return result;
   };
 
-  const handlePlannerToggle = () => {
-    setIsPlannerActive(!isPlannerActive);
-    if (!isPlannerActive && plannedDateTime) {
-      setPredictedAvailability(predictAvailability(plannedDateTime));
+  const handlePredictAvailability = () => {
+    console.log('Predict button clicked');
+    console.log('Planned date time:', plannedDateTime);
+    console.log('Filtered locations count:', filtered.length);
+    
+    if (plannedDateTime) {
+      const prediction = predictAvailability(plannedDateTime);
+      console.log('Prediction result:', prediction);
+      setPredictedAvailability(prediction);
+      setIsPlannerActive(true);
     } else {
-      setPredictedAvailability(null);
+      console.log('No planned date time set');
     }
   };
 
   const handleDateTimeChange = (newDateTime: Date | null) => {
     setPlannedDateTime(newDateTime);
     if (newDateTime && isPlannerActive) {
-      setPredictedAvailability(predictAvailability(newDateTime));
+      // Update prediction immediately when date/time changes
+      const prediction = predictAvailability(newDateTime);
+      setPredictedAvailability(prediction);
+    } else {
+      setIsPlannerActive(false);
+      setPredictedAvailability(null);
+    }
+  };
+
+  const handleDurationChange = (newDuration: number) => {
+    setDuration(newDuration);
+    if (plannedDateTime && isPlannerActive) {
+      // Update prediction immediately when duration changes
+      const prediction = predictAvailability(plannedDateTime);
+      setPredictedAvailability(prediction);
+    } else {
+      setIsPlannerActive(false);
+      setPredictedAvailability(null);
     }
   };
 
@@ -177,129 +223,168 @@ const MapPage: React.FC = () => {
 
         {/* Parking Planner Section */}
         <Paper sx={{ p: 3, mb: 3, bgcolor: 'background.paper' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-            <EventIcon sx={{ color: 'primary.main', fontSize: 28 }} />
-            <Typography variant="h5" fontWeight="bold">
-              Parking Planner
-            </Typography>
-            <Chip 
-              label={isPlannerActive ? "Active" : "Inactive"} 
-              color={isPlannerActive ? "success" : "default"}
-              size="small"
-            />
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <AccessTimeIcon sx={{ color: 'primary.main', fontSize: 28 }} />
+              <Typography variant="h5" fontWeight="bold">
+                Parking Planner
+              </Typography>
+            </Box>
+            <Box sx={{ cursor: 'pointer' }}>
+              <Typography variant="h6">⌄</Typography>
+            </Box>
           </Box>
           
           <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            Plan your CBD visit and see predicted parking availability for any date and time. Our AI analyzes historical patterns to help you choose the best time to park.
+            Plan your CBD visit and see predicted parking availability for your chosen time.
           </Typography>
 
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} alignItems="center">
-              <DateTimePicker
-                label="When are you planning to park?"
-                value={plannedDateTime}
-                onChange={handleDateTimeChange}
-                disablePast
-                slotProps={{
-                  textField: {
-                    sx: { minWidth: 280 },
-                    disabled: !isPlannerActive
-                  }
-                }}
-              />
+              <Box sx={{ minWidth: 280 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  When will you arrive?
+                </Typography>
+                <DateTimePicker
+                  value={plannedDateTime}
+                  onChange={handleDateTimeChange}
+                  disablePast
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      size: "small"
+                    }
+                  }}
+                />
+              </Box>
+              
+              <Box sx={{ minWidth: 200 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  How long will you stay?
+                </Typography>
+                <FormControl fullWidth size="small">
+                  <Select
+                    value={duration}
+                    onChange={(e) => handleDurationChange(e.target.value as number)}
+                    displayEmpty
+                  >
+                    <MenuItem value={1}>1 hour</MenuItem>
+                    <MenuItem value={2}>2 hours</MenuItem>
+                    <MenuItem value={3}>3 hours</MenuItem>
+                    <MenuItem value={4}>4 hours</MenuItem>
+                    <MenuItem value={6}>6 hours</MenuItem>
+                    <MenuItem value={8}>8 hours</MenuItem>
+                    <MenuItem value={12}>12 hours</MenuItem>
+                    <MenuItem value={24}>24 hours</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
               
               <Button
-                variant={isPlannerActive ? "outlined" : "contained"}
-                onClick={handlePlannerToggle}
+                variant="contained"
+                onClick={handlePredictAvailability}
                 startIcon={<TrendingUpIcon />}
                 sx={{ 
                   px: 3, 
                   py: 1.5,
-                  minWidth: 140,
-                  borderRadius: 2
+                  minWidth: 180,
+                  borderRadius: 2,
+                  mt: { xs: 2, md: 3 }
                 }}
               >
-                {isPlannerActive ? "Disable Planner" : "Enable Planner"}
+                Predict Availability
               </Button>
             </Stack>
           </LocalizationProvider>
 
           {/* Prediction Results */}
           {isPlannerActive && predictedAvailability && (
-            <Card sx={{ mt: 3, bgcolor: 'primary.50', border: '1px solid', borderColor: 'primary.200' }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                  <AccessTimeIcon sx={{ color: 'primary.main' }} />
-                  <Typography variant="h6" fontWeight="bold">
-                    Predicted Availability for {plannedDateTime?.toLocaleDateString()} at {plannedDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Predicted Parking Availability
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Based on {plannedDateTime?.toLocaleDateString()} at {plannedDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </Typography>
+              
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 3 }}>
+                <Card sx={{ 
+                  flex: 1, 
+                  bgcolor: '#4CAF50', 
+                  color: 'white',
+                  textAlign: 'center',
+                  py: 2
+                }}>
+                  <Typography variant="h4" fontWeight="bold">
+                    {predictedAvailability.good}
+                  </Typography>
+                  <Typography variant="body2">
+                    Good Availability
+                  </Typography>
+                </Card>
+                <Card sx={{ 
+                  flex: 1, 
+                  bgcolor: '#FF9800', 
+                  color: 'white',
+                  textAlign: 'center',
+                  py: 2
+                }}>
+                  <Typography variant="h4" fontWeight="bold">
+                    {predictedAvailability.moderate}
+                  </Typography>
+                  <Typography variant="body2">
+                    Moderate Availability
+                  </Typography>
+                </Card>
+                <Card sx={{ 
+                  flex: 1, 
+                  bgcolor: '#FF5722', 
+                  color: 'white',
+                  textAlign: 'center',
+                  py: 2
+                }}>
+                  <Typography variant="h4" fontWeight="bold">
+                    {predictedAvailability.low}
+                  </Typography>
+                  <Typography variant="body2">
+                    Low Availability
+                  </Typography>
+                </Card>
+                <Card sx={{ 
+                  flex: 1, 
+                  bgcolor: '#FF4444', 
+                  color: 'white',
+                  textAlign: 'center',
+                  py: 2
+                }}>
+                  <Typography variant="h4" fontWeight="bold">
+                    {predictedAvailability.none}
+                  </Typography>
+                  <Typography variant="body2">
+                    No Availability
+                  </Typography>
+                </Card>
+              </Stack>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ 
+                  width: 16, 
+                  height: 16, 
+                  borderRadius: '50%', 
+                  bgcolor: 'black',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Typography variant="caption" sx={{ color: 'white', fontWeight: 'bold' }}>
+                    i
                   </Typography>
                 </Box>
-                
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 2 }}>
-                  <Chip 
-                    label={`${predictedAvailability.good} Good (${Math.round(predictedAvailability.good / predictedAvailability.total * 100)}%)`}
-                    sx={{ bgcolor: '#4CAF50', color: 'white', fontWeight: 'bold' }}
-                  />
-                  <Chip 
-                    label={`${predictedAvailability.moderate} Moderate (${Math.round(predictedAvailability.moderate / predictedAvailability.total * 100)}%)`}
-                    sx={{ bgcolor: '#FF9800', color: 'white', fontWeight: 'bold' }}
-                  />
-                  <Chip 
-                    label={`${predictedAvailability.low} Low (${Math.round(predictedAvailability.low / predictedAvailability.total * 100)}%)`}
-                    sx={{ bgcolor: '#FF5722', color: 'white', fontWeight: 'bold' }}
-                  />
-                  <Chip 
-                    label={`${predictedAvailability.none} None (${Math.round(predictedAvailability.none / predictedAvailability.total * 100)}%)`}
-                    sx={{ bgcolor: '#FF4444', color: 'white', fontWeight: 'bold' }}
-                  />
-                </Stack>
-                
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  Based on {predictedAvailability.total} parking locations and historical patterns for this time of day and day of week.
+                <Typography variant="body2" color="text.secondary">
+                  Tip: These predictions are based on historical patterns and current data. For the most accurate information, check real-time availability closer to your visit time.
                 </Typography>
-                
-                {/* Time-based recommendations */}
-                {plannedDateTime && (
-                  <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}>
-                    <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                      💡 Recommendations:
-                    </Typography>
-                    <Box component="ul" sx={{ m: 0, pl: 2 }}>
-                      {plannedDateTime.getHours() >= 8 && plannedDateTime.getHours() <= 10 && (
-                        <Typography component="li" variant="body2" color="text.secondary">
-                          Morning peak hours (8-10 AM) - Consider arriving 30 minutes earlier for better availability
-                        </Typography>
-                      )}
-                      {plannedDateTime.getHours() >= 17 && plannedDateTime.getHours() <= 19 && (
-                        <Typography component="li" variant="body2" color="text.secondary">
-                          Evening peak hours (5-7 PM) - Parking will be challenging, consider public transport
-                        </Typography>
-                      )}
-                      {(plannedDateTime.getHours() >= 22 || plannedDateTime.getHours() <= 6) && (
-                        <Typography component="li" variant="body2" color="text.secondary">
-                          Late night/early morning - Excellent parking availability expected
-                        </Typography>
-                      )}
-                      {(plannedDateTime.getDay() === 0 || plannedDateTime.getDay() === 6) && (
-                        <Typography component="li" variant="body2" color="text.secondary">
-                          Weekend parking - Generally better availability than weekdays
-                        </Typography>
-                      )}
-                      {predictedAvailability.good / predictedAvailability.total > 0.6 && (
-                        <Typography component="li" variant="body2" color="text.secondary">
-                          Great time to visit! High parking availability expected
-                        </Typography>
-                      )}
-                      {predictedAvailability.none / predictedAvailability.total > 0.3 && (
-                        <Typography component="li" variant="body2" color="text.secondary">
-                          Consider alternative times - Limited parking availability expected
-                        </Typography>
-                      )}
-                    </Box>
-                  </Box>
-                )}
-              </CardContent>
-            </Card>
+              </Box>
+            </Box>
           )}
         </Paper>
 
