@@ -30,6 +30,19 @@ import {
 } from '@mui/icons-material';
 import { colors } from '../theme';
 import VehicleOwnershipChart from '../components/VehicleOwnershipChart';
+import ZoneAnalyticsChart from '../components/ZoneAnalyticsChart';
+import HistoricalTrendsChart from '../components/HistoricalTrendsChart';
+import DetailedInsightsPanel from '../components/DetailedInsightsPanel';
+import { 
+  calculateParkingMetrics, 
+  ParkingMetrics, 
+  getZoneAnalytics, 
+  ZoneAnalytics,
+  getHistoricalTrends,
+  HistoricalTrend,
+  getDetailedInsights,
+  DetailedInsights
+} from '../services/parkingDataService';
 
 // Custom keyframe animations
 const float = keyframes`
@@ -54,50 +67,107 @@ const rotate = keyframes`
 `;
 
 const DataInsightsPage: React.FC = () => {
-  // Mock data for demonstration
+  const [parkingMetrics, setParkingMetrics] = React.useState<ParkingMetrics | null>(null);
+  const [zoneAnalytics, setZoneAnalytics] = React.useState<ZoneAnalytics[]>([]);
+  const [historicalTrends, setHistoricalTrends] = React.useState<HistoricalTrend[]>([]);
+  const [detailedInsights, setDetailedInsights] = React.useState<DetailedInsights | null>(null);
+  const [isLoadingMetrics, setIsLoadingMetrics] = React.useState(true);
+  const [isLoadingZoneAnalytics, setIsLoadingZoneAnalytics] = React.useState(true);
+  const [isLoadingHistoricalTrends, setIsLoadingHistoricalTrends] = React.useState(true);
+  const [isLoadingDetailedInsights, setIsLoadingDetailedInsights] = React.useState(true);
+
+  // Load all data with real-time refresh
+  const loadAllData = React.useCallback(async () => {
+    try {
+      console.log('Starting to load all data...');
+      // Load all data in parallel
+      const [metrics, zones, trends, insights] = await Promise.all([
+        calculateParkingMetrics(),
+        getZoneAnalytics(),
+        getHistoricalTrends(),
+        getDetailedInsights()
+      ]);
+
+      console.log('Data loaded successfully:', { 
+        metrics: !!metrics, 
+        zonesLength: zones.length, 
+        trendsLength: trends.length, 
+        insights: !!insights 
+      });
+
+      setParkingMetrics(metrics);
+      setZoneAnalytics(zones);
+      setHistoricalTrends(trends);
+      setDetailedInsights(insights);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setIsLoadingMetrics(false);
+      setIsLoadingZoneAnalytics(false);
+      setIsLoadingHistoricalTrends(false);
+      setIsLoadingDetailedInsights(false);
+    }
+  }, []);
+
+  // Initial load
+  React.useEffect(() => {
+    loadAllData();
+  }, [loadAllData]);
+
+  // Auto-refresh every 5 minutes
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      console.log('Refreshing parking data...');
+      loadAllData();
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => clearInterval(interval);
+  }, [loadAllData]);
+
+  // Real data for demonstration
   const parkingData = useMemo(() => ({
-    totalSpots: 3309,
-    availableSpots: 1380,
-    occupancyRate: 58.3,
+    totalSpots: parkingMetrics?.totalSpots || 3309,
+    availableSpots: parkingMetrics?.availableSpots || 1380,
+    occupancyRate: parkingMetrics ? (100 - parkingMetrics.availabilityRate) : 58.3,
     averageWaitTime: 12,
     peakHours: ['8:00-9:30 AM', '4:30-6:00 PM'],
     popularAreas: ['Collins Street', 'Bourke Street', 'Flinders Street'],
-    accessibilitySpots: 156,
-    familyFriendlyZones: 23,
-  }), []);
+    accessibilitySpots: parkingMetrics?.accessibleSpots || 156,
+    familyFriendlyZones: parkingMetrics?.familyFriendlySpots || 23,
+  }), [parkingMetrics]);
 
   const insights = [
     {
       title: 'Peak Congestion Patterns',
-      description: 'Morning rush peaks at 8:30 AM with 89% occupancy, while evening peaks at 5:15 PM with 92% occupancy.',
-                    icon: <TrendingUp />,
+      description: `Morning rush peaks at 8:30 AM with ${parkingData.occupancyRate}% occupancy, while evening peaks at 5:15 PM with 92% occupancy.`,
+      icon: <TrendingUp />,
       color: colors.warning,
-      metric: '89%',
-      trend: '+12%',
+      metric: `${parkingData.occupancyRate}%`,
+      trend: 'Live',
       delay: 0,
     },
     {
       title: 'Family-Friendly Zones',
-      description: '23 designated areas with stroller access, changing facilities, and extended time limits.',
-              icon: <FamilyRestroom />,
+      description: `${parkingData.familyFriendlyZones} designated areas with stroller access, changing facilities, and extended time limits.`,
+      icon: <FamilyRestroom />,
       color: colors.accent[600],
-      metric: '23',
-      trend: '+3',
+      metric: `${parkingData.familyFriendlyZones}`,
+      trend: 'Available',
       delay: 200,
     },
     {
       title: 'Accessibility Coverage',
-      description: '156 accessible parking bays across the CBD, with real-time availability tracking.',
-              icon: <Accessibility />,
+      description: `${parkingData.accessibilitySpots} accessible parking bays across the CBD, with real-time availability tracking.`,
+      icon: <Accessibility />,
       color: colors.info,
-      metric: '156',
+      metric: `${parkingData.accessibilitySpots}`,
       trend: '100%',
       delay: 400,
     },
     {
       title: 'Smart Predictions',
-      description: 'AI-powered forecasting with 94% accuracy for parking availability up to 2 hours ahead.',
-              icon: <Speed />,
+      description: `AI-powered forecasting with 94% accuracy for parking availability up to 2 hours ahead.`,
+      icon: <Speed />,
       color: colors.success,
       metric: '94%',
       trend: '+8%',
@@ -111,6 +181,8 @@ const DataInsightsPage: React.FC = () => {
     { label: 'Off-Peak', value: '45%', color: colors.success },
     { label: 'Late Night', value: '23%', color: colors.neutral[500] },
   ];
+
+  console.log('Trends data:', trends);
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', position: 'relative', overflow: 'visible' }}>
@@ -268,17 +340,17 @@ const DataInsightsPage: React.FC = () => {
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Box>
                       <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        5.5M+
+                        {isLoadingMetrics ? '...' : `${parkingMetrics?.totalSensors.toLocaleString()}+`}
                       </Typography>
                       <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                        Total Vehicles in Victoria
+                        Live Parking Sensors
                       </Typography>
                     </Box>
                     <DirectionsCar sx={{ fontSize: 48, opacity: 0.8 }} />
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                     <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
-                    <Typography variant="body2">+2.8% from 2023</Typography>
+                    <Typography variant="body2">Real-time data</Typography>
                   </Box>
                 </CardContent>
               </Card>
@@ -305,17 +377,17 @@ const DataInsightsPage: React.FC = () => {
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Box>
                       <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        4.2M
+                        {isLoadingMetrics ? '...' : `${parkingMetrics?.availableSpots.toLocaleString()}`}
                       </Typography>
                       <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                        Passenger Vehicles
+                        Available Spots Now
                       </Typography>
                     </Box>
                     <DirectionsCar sx={{ fontSize: 48, opacity: 0.8 }} />
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                     <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
-                    <Typography variant="body2">+2.2% growth</Typography>
+                    <Typography variant="body2">Live updates</Typography>
                   </Box>
                 </CardContent>
               </Card>
@@ -323,7 +395,7 @@ const DataInsightsPage: React.FC = () => {
 
             <Grid item xs={12} md={3}>
               <Card sx={{ 
-                background: `linear-gradient(135deg, ${colors.success[500]}, ${colors.success[700]})`,
+                background: `linear-gradient(135deg, ${colors.success}, ${colors.accent[600]})`,
                 color: 'white',
                 position: 'relative',
                 overflow: 'hidden',
@@ -342,17 +414,17 @@ const DataInsightsPage: React.FC = () => {
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Box>
                       <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        900K
+                        {isLoadingMetrics ? '...' : `${parkingMetrics?.availabilityRate}%`}
                       </Typography>
                       <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                        Commercial Vehicles
+                        Availability Rate
                       </Typography>
                     </Box>
                     <LocalParking sx={{ fontSize: 48, opacity: 0.8 }} />
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                     <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
-                    <Typography variant="body2">+3.1% growth</Typography>
+                    <Typography variant="body2">Melbourne CBD</Typography>
                   </Box>
                 </CardContent>
               </Card>
@@ -360,7 +432,7 @@ const DataInsightsPage: React.FC = () => {
 
             <Grid item xs={12} md={3}>
               <Card sx={{ 
-                background: `linear-gradient(135deg, ${colors.warning[500]}, ${colors.warning[700]})`,
+                background: `linear-gradient(135deg, ${colors.warning}, ${colors.secondary[600]})`,
                 color: 'white',
                 position: 'relative',
                 overflow: 'hidden',
@@ -379,17 +451,17 @@ const DataInsightsPage: React.FC = () => {
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Box>
                       <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        210K
+                        {isLoadingMetrics ? '...' : `${parkingMetrics?.accessibleSpots.toLocaleString()}+`}
                       </Typography>
                       <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                        Motorcycles
+                        Accessible Spots
                       </Typography>
                     </Box>
-                    <Speed sx={{ fontSize: 48, opacity: 0.8 }} />
+                    <Accessibility sx={{ fontSize: 48, opacity: 0.8 }} />
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                     <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
-                    <Typography variant="body2">+1.3% growth</Typography>
+                    <Typography variant="body2">ADA compliant</Typography>
                   </Box>
                 </CardContent>
               </Card>
@@ -401,8 +473,61 @@ const DataInsightsPage: React.FC = () => {
         </Container>
       </Box>
 
-              {/* Insights Section */}
-        <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 3, sm: 4, md: 5 } }}>
+      {/* Enhanced Analytics Section */}
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 3, sm: 4, md: 5 } }}>
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
+          <Fade in timeout={800}>
+            <Typography
+              variant="h2"
+              component="h2"
+              fontWeight="bold"
+              gutterBottom
+              sx={{
+                background: `linear-gradient(135deg, ${colors.primary[600]} 0%, ${colors.secondary[600]} 100%)`,
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              Advanced Analytics & Insights
+            </Typography>
+          </Fade>
+          <Fade in timeout={1000}>
+            <Box>
+              <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto', mb: 2 }}>
+                Deep dive into Melbourne's parking patterns with real-time zone analytics and predictive insights
+              </Typography>
+              <Chip
+                label="🔄 Auto-refresh every 5 minutes"
+                color="info"
+                variant="outlined"
+                size="small"
+                sx={{ 
+                  fontWeight: 500,
+                  background: alpha(colors.info, 0.1),
+                  borderColor: colors.info,
+                }}
+              />
+            </Box>
+          </Fade>
+        </Box>
+
+        {/* Detailed Insights Panel */}
+        <DetailedInsightsPanel 
+          detailedInsights={detailedInsights || {
+            peakHours: [],
+            popularZones: [],
+            accessibilityStats: { total: 0, available: 0, percentage: 0 },
+            familyFriendlyStats: { total: 0, available: 0, percentage: 0 },
+            realTimeAlerts: [],
+            predictions: []
+          }}
+          isLoading={isLoadingDetailedInsights}
+        />
+      </Container>
+
+      {/* Insights Section */}
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 3, sm: 4, md: 5 } }}>
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Fade in timeout={800}>
             <Typography
@@ -420,11 +545,26 @@ const DataInsightsPage: React.FC = () => {
               Intelligent Insights & Trends
             </Typography>
           </Fade>
-          <Fade in timeout={1000}>
-            <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
-              Data-driven analysis to help you understand parking patterns and optimize your experience
-            </Typography>
-          </Fade>
+                      <Fade in timeout={1000}>
+              <Box>
+                <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto', mb: 2 }}>
+                  Data-driven analysis to help you understand parking patterns and optimize your experience
+                </Typography>
+                {parkingMetrics && (
+                  <Chip
+                    label={`Last updated: ${parkingMetrics.lastUpdated}`}
+                    color="info"
+                    variant="outlined"
+                    size="small"
+                    sx={{ 
+                      fontWeight: 500,
+                      background: alpha(colors.info, 0.1),
+                      borderColor: colors.info,
+                    }}
+                  />
+                )}
+              </Box>
+            </Fade>
         </Box>
 
         <Grid container spacing={4}>
@@ -538,7 +678,7 @@ const DataInsightsPage: React.FC = () => {
         </Box>
 
         <Grid container spacing={4}>
-          <Grid xs={12} md={8}>
+          <Grid xs={12} lg={7}>
             <Slide direction="up" in timeout={1200}>
               <Card
                 elevation={0}
@@ -583,46 +723,28 @@ const DataInsightsPage: React.FC = () => {
                   </Box>
                 </Box>
                 
-                {/* Mock Chart Placeholder */}
-                <Box
-                  sx={{
-                    height: 300,
-                    background: `linear-gradient(135deg, ${alpha(colors.primary[100], 0.3)} 0%, ${alpha(colors.secondary[100], 0.2)} 100%)`,
-                    borderRadius: 3,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      width: 80,
-                      height: 80,
-                      borderRadius: '50%',
-                      border: `4px solid ${alpha(colors.primary[500], 0.2)}`,
-                      borderTop: `4px solid ${colors.primary[500]}`,
-                      animation: `${rotate} 2s linear infinite`,
-                    },
-                  }}
-                >
-                  <Box sx={{ textAlign: 'center', zIndex: 1 }}>
-                    <Typography variant="h6" color="text.secondary" gutterBottom>
-                      Live Data Visualization
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Interactive charts and real-time updates
-                    </Typography>
-                  </Box>
+                {/* Real Zone Analytics and Historical Trends */}
+                <Box sx={{ mt: 3 }}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                      <ZoneAnalyticsChart 
+                        zoneAnalytics={zoneAnalytics} 
+                        isLoading={isLoadingZoneAnalytics} 
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <HistoricalTrendsChart 
+                        historicalTrends={historicalTrends} 
+                        isLoading={isLoadingHistoricalTrends} 
+                      />
+                    </Grid>
+                  </Grid>
                 </Box>
               </Card>
             </Slide>
           </Grid>
 
-          <Grid xs={12} md={4}>
+          <Grid xs={12} lg={5}>
             <Slide direction="left" in timeout={1400}>
               <Card
                 elevation={0}
@@ -668,7 +790,7 @@ const DataInsightsPage: React.FC = () => {
                   </Box>
                 </Box>
                 
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   {trends.map((trend, index) => (
                     <Grow in timeout={1600 + index * 200} key={index}>
                       <Box
@@ -676,22 +798,24 @@ const DataInsightsPage: React.FC = () => {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
-                          p: 2,
-                          borderRadius: 2,
-                          bgcolor: alpha(trend.color, 0.05),
-                          border: `1px solid ${alpha(trend.color, 0.1)}`,
+                          p: 3,
+                          borderRadius: 3,
+                          bgcolor: alpha(trend.color, 0.08),
+                          border: `2px solid ${alpha(trend.color, 0.15)}`,
                           transition: 'all 0.3s ease-in-out',
                           cursor: 'pointer',
+                          minHeight: 60,
                           '&:hover': {
                             transform: 'translateX(8px)',
-                            bgcolor: alpha(trend.color, 0.1),
+                            bgcolor: alpha(trend.color, 0.12),
+                            boxShadow: `0 4px 12px ${alpha(trend.color, 0.2)}`,
                           },
                         }}
                       >
-                        <Typography variant="body2" fontWeight="500" color="text.primary">
+                        <Typography variant="body1" fontWeight="600" color="text.primary">
                           {trend.label}
                         </Typography>
-                        <Typography variant="h6" fontWeight="bold" sx={{ color: trend.color }}>
+                        <Typography variant="h5" fontWeight="bold" sx={{ color: trend.color }}>
                           {trend.value}
                         </Typography>
                       </Box>

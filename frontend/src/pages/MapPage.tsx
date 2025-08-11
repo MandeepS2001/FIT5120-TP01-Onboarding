@@ -25,7 +25,13 @@ const MapPage: React.FC = () => {
   const [onlyFamilyFriendly, setOnlyFamilyFriendly] = useState(false);
 
   useEffect(() => {
-    fetchParkingLocations().then(setLocations).catch(() => setLocations([]));
+    fetchParkingLocations().then((locations) => {
+      console.log('Loaded parking locations:', locations.length, locations);
+      setLocations(locations);
+    }).catch((error) => {
+      console.error('Error loading parking locations:', error);
+      setLocations([]);
+    });
   }, []);
 
   const filtered = useMemo(() => {
@@ -97,6 +103,67 @@ const MapPage: React.FC = () => {
         </Box>
 
         <ParkingMap locations={filtered} height={560} />
+        
+        {/* Parking Legend */}
+        <Paper sx={{ p: 2, mt: 2, bgcolor: 'background.paper' }}>
+          <Typography variant="h6" fontWeight="bold" gutterBottom>
+            Parking Availability Legend
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: '#4CAF50',
+                  border: '2px solid white',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                }}
+              />
+              <Typography variant="body2">Good availability (&gt;50%)</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: '#FF9800',
+                  border: '2px solid white',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                }}
+              />
+              <Typography variant="body2">Moderate availability (20-50%)</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: '#FF5722',
+                  border: '2px solid white',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                }}
+              />
+              <Typography variant="body2">Low availability (1-20%)</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: '#FF4444',
+                  border: '2px solid white',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                }}
+              />
+              <Typography variant="body2">No availability (0%)</Typography>
+            </Box>
+          </Box>
+        </Paper>
       </Container>
     </Box>
   );

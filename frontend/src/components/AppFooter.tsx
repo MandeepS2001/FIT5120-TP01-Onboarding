@@ -12,6 +12,8 @@ import {
   Fade,
   Grow,
   Zoom,
+  TextField,
+  Button,
 } from '@mui/material';
 import {
   Facebook as FacebookIcon,
@@ -26,6 +28,10 @@ import {
   TrendingUp as TrendingIcon,
   Security as SecurityIcon,
   Support as SupportIcon,
+  Download as DownloadIcon,
+  QrCode as QrCodeIcon,
+  Notifications as NotificationsIcon,
+  Speed as SpeedIcon,
 } from '@mui/icons-material';
 import { colors } from '../theme';
 
@@ -96,7 +102,7 @@ const AppFooter: React.FC = () => {
   ];
 
   const contactInfo = [
-    { icon: <EmailIcon />, label: 'info@melbourneparking.com', href: 'mailto:info@melbourneparking.com' },
+    { icon: <EmailIcon />, label: 'hello@parkpal.com.au', href: 'mailto:hello@parkpal.com.au' },
     { icon: <PhoneIcon />, label: '+61 3 9000 0000', href: 'tel:+61390000000' },
     { icon: <LocationIcon />, label: 'Melbourne CBD, VIC 3000', href: '#' },
     { icon: <TimeIcon />, label: '24/7 Support Available', href: '#' },
@@ -187,7 +193,7 @@ const AppFooter: React.FC = () => {
                       },
                     }}
                   >
-                    M
+                    P
                   </Box>
                   <Box>
                     <Typography
@@ -203,7 +209,7 @@ const AppFooter: React.FC = () => {
                         backgroundSize: '200% 100%',
                       }}
                     >
-                      Melbourne Parking
+                      Park Pal
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
                       Smart • Accessible • Family-Friendly
@@ -212,7 +218,8 @@ const AppFooter: React.FC = () => {
                 </Box>
                 <Typography variant="body1" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6, pl: { xs: 2, sm: 3 } }}>
                   Empowering Melbourne families with real-time parking intelligence, 
-                  accessibility features, and stress-free CBD navigation.
+                  accessibility features, and stress-free CBD navigation. 
+                  Smart parking solutions for a better city experience.
                 </Typography>
                 
                 {/* Enhanced Contact Info */}
@@ -328,7 +335,7 @@ const AppFooter: React.FC = () => {
         <Box sx={{ py: 3, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
           <Fade in timeout={1400}>
             <Typography variant="body2" color="text.secondary" sx={{ textAlign: { xs: 'center', md: 'left' } }}>
-              © {currentYear} Melbourne Parking. All rights reserved.
+              © {currentYear} Park Pal. All rights reserved.
             </Typography>
           </Fade>
           
@@ -432,6 +439,156 @@ const AppFooter: React.FC = () => {
               </Grid>
             ))}
           </Grid>
+        </Box>
+
+        {/* Newsletter Subscription */}
+        <Box sx={{ py: 4, mt: 4, bgcolor: alpha(colors.secondary[50], 0.3), borderRadius: 4, px: 4 }}>
+          <Fade in timeout={2200}>
+            <Box sx={{ textAlign: 'center', mb: 4 }}>
+              <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom>
+                Stay Updated with Park Pal
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                Get the latest parking tips, CBD updates, and exclusive offers delivered to your inbox
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap', maxWidth: 500, mx: 'auto' }}>
+                <TextField
+                  placeholder="Enter your email"
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    flex: 1,
+                    minWidth: 250,
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 3,
+                      bgcolor: 'white',
+                    },
+                  }}
+                />
+                <Button
+                  variant="contained"
+                  sx={{
+                    borderRadius: 3,
+                    px: 3,
+                    py: 1.5,
+                    background: `linear-gradient(135deg, ${colors.primary[500]} 0%, ${colors.primary[600]} 100%)`,
+                    '&:hover': {
+                      background: `linear-gradient(135deg, ${colors.primary[600]} 0%, ${colors.primary[700]} 100%)`,
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
+                    },
+                  }}
+                >
+                  Subscribe
+                </Button>
+              </Box>
+            </Box>
+          </Fade>
+        </Box>
+
+        {/* Mobile App Section */}
+        <Box sx={{ py: 4, mt: 4, bgcolor: alpha(colors.primary[50], 0.3), borderRadius: 4, px: 4 }}>
+          <Fade in timeout={2400}>
+            <Grid container spacing={4} alignItems="center">
+              <Grid xs={12} md={6}>
+                <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+                  <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom>
+                    Get the Park Pal Mobile App
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                    Download our mobile app for real-time parking updates, notifications, and seamless navigation. 
+                    Available on iOS and Android.
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 2, justifyContent: { xs: 'center', md: 'flex-start' }, flexWrap: 'wrap' }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        p: 2,
+                        borderRadius: 3,
+                        bgcolor: 'white',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease-in-out',
+                        '&:hover': {
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 8px 30px rgba(0,0,0,0.15)',
+                        },
+                      }}
+                    >
+                      <DownloadIcon sx={{ color: colors.primary[600] }} />
+                      <Typography variant="body2" fontWeight="600">
+                        Download App
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        p: 2,
+                        borderRadius: 3,
+                        bgcolor: 'white',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease-in-out',
+                        '&:hover': {
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 8px 30px rgba(0,0,0,0.15)',
+                        },
+                      }}
+                    >
+                      <QrCodeIcon sx={{ color: colors.secondary[600] }} />
+                      <Typography variant="body2" fontWeight="600">
+                        Scan QR Code
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Grid>
+              <Grid xs={12} md={6}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Box
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 2,
+                      p: 3,
+                      borderRadius: 4,
+                      bgcolor: 'white',
+                      boxShadow: '0 8px 40px rgba(0,0,0,0.1)',
+                      animation: `${float} 6s ease-in-out infinite`,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: '50%',
+                        bgcolor: alpha(colors.primary[500], 0.1),
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: colors.primary[600],
+                        fontSize: '2rem',
+                      }}
+                    >
+                      <SpeedIcon />
+                    </Box>
+                    <Box sx={{ textAlign: 'left' }}>
+                      <Typography variant="h6" fontWeight="bold" color="text.primary">
+                        Real-Time Updates
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Get instant notifications about parking availability
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Grid>
+            </Grid>
+          </Fade>
         </Box>
       </Container>
     </Box>

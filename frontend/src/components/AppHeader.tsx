@@ -94,8 +94,8 @@ const AppHeader: React.FC = () => {
   const navItems = [
     { path: '/', label: 'Home', icon: <HomeIcon />, description: 'Dashboard & Overview' },
     { path: '/map', label: 'Parking Map', icon: <MapIcon />, description: 'Find Parking Spots' },
-    { path: '/learn-more', label: 'Learn More', icon: <InfoIcon />, description: 'About the Project' },
     { path: '/data-insights', label: 'Data Insights', icon: <AnalyticsIcon />, description: 'Analytics & Trends' },
+    { path: '/learn-more', label: 'Learn More', icon: <InfoIcon />, description: 'About the Project' },
   ];
 
   const handleDrawerToggle = () => {
@@ -128,15 +128,15 @@ const AppHeader: React.FC = () => {
               boxShadow: `0 4px 20px ${alpha(colors.primary[500], 0.3)}`,
             }}
           >
-            M
+            P
           </Avatar>
           <Box>
             <Typography variant="h6" fontWeight="bold" color="primary">
-              Melbourne Parking
+              Park Pal
             </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
-              Smart • Accessible • Family-Friendly
-            </Typography>
+                              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
+                    Smart Parking Solutions
+                  </Typography>
           </Box>
         </Box>
         <IconButton 
@@ -234,6 +234,40 @@ const AppHeader: React.FC = () => {
 
       <Divider sx={{ my: 2, mx: 3 }} />
 
+      {/* Live Data Status */}
+      <Box sx={{ px: 3, mb: 3 }}>
+        <Chip
+          icon={<FlashIcon />}
+          label="Live Data"
+          color="success"
+          variant="filled"
+          component={RouterLink}
+          to="/data-insights"
+          clickable
+          onClick={handleDrawerToggle}
+          sx={{
+            fontWeight: 600,
+            background: `linear-gradient(45deg, ${colors.success} 30%, ${colors.accent[500]} 90%)`,
+            color: 'white',
+            boxShadow: `0 4px 15px ${alpha(colors.success, 0.4)}`,
+            animation: `${glow} 3s ease-in-out infinite`,
+            cursor: 'pointer',
+            textDecoration: 'none',
+            width: '100%',
+            justifyContent: 'center',
+            '&:hover': {
+              transform: 'scale(1.02)',
+              boxShadow: `0 6px 20px ${alpha(colors.success, 0.6)}`,
+              animation: `${pulse} 1s ease-in-out infinite`,
+              textDecoration: 'none',
+            },
+            '& .MuiChip-icon': {
+              color: 'inherit',
+            },
+          }}
+        />
+      </Box>
+
       {/* Quick Actions */}
       <Box sx={{ px: 3 }}>
         <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, fontWeight: 600 }}>
@@ -326,7 +360,7 @@ const AppHeader: React.FC = () => {
                     },
                   }}
                 >
-                  M
+                  P
                 </Avatar>
                 <Box>
                   <Typography
@@ -347,7 +381,7 @@ const AppHeader: React.FC = () => {
                       },
                     }}
                   >
-                    Melbourne Parking
+                    Park Pal
                   </Typography>
                   <Typography
                     variant="caption"
@@ -358,7 +392,7 @@ const AppHeader: React.FC = () => {
                       color: colors.primary[600],
                     }}
                   >
-                    Smart • Accessible • Family-Friendly
+                    Smart Parking Solutions
                   </Typography>
                 </Box>
               </Box>
@@ -367,7 +401,7 @@ const AppHeader: React.FC = () => {
             {/* Desktop Navigation */}
             {!isMobile && (
               <>
-                <Box sx={{ display: 'flex', gap: 1 }}>
+                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 2 }}>
                   {navItems.map((item, index) => (
                     <Grow in timeout={800 + index * 100} key={item.path}>
                       <Tooltip title={item.description} arrow>
@@ -456,16 +490,22 @@ const AppHeader: React.FC = () => {
                       label="Live Data"
                       color="success"
                       variant="filled"
+                      component={RouterLink}
+                      to="/data-insights"
+                      clickable
                       sx={{
                         fontWeight: 600,
                         background: `linear-gradient(45deg, ${colors.success} 30%, ${colors.accent[500]} 90%)`,
                         color: 'white',
                         boxShadow: `0 4px 15px ${alpha(colors.success, 0.4)}`,
                         animation: `${glow} 3s ease-in-out infinite`,
+                        cursor: 'pointer',
+                        textDecoration: 'none',
                         '&:hover': {
                           transform: 'scale(1.05)',
                           boxShadow: `0 6px 20px ${alpha(colors.success, 0.6)}`,
                           animation: `${pulse} 1s ease-in-out infinite`,
+                          textDecoration: 'none',
                         },
                         '& .MuiChip-icon': {
                           color: 'inherit',

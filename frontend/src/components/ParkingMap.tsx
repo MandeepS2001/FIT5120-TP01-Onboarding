@@ -8,7 +8,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { ParkingLocation } from '../types/parking';
-import { GoogleMap, InfoWindow, useJsApiLoader, Libraries } from '@react-google-maps/api';
+import { GoogleMap, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 
 type Props = {
   locations: ParkingLocation[];
@@ -25,13 +25,9 @@ const ParkingMap: React.FC<Props> = ({
 }) => {
   const center = useMemo(() => ({ lat: initialCenter[0], lng: initialCenter[1] }), [initialCenter]);
 
-  // Static libraries array to prevent re-creation on each render
-  const libraries: Libraries = useMemo(() => ['marker'], []);
-
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '',
-    libraries,
   });
 
   // Log map configuration for debugging
@@ -465,9 +461,26 @@ const ParkingMap: React.FC<Props> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Create Advanced Markers when map or locations change
+    // Create Enhanced Markers when map or locations change
   useEffect(() => {
-    if (!isLoaded || !mapRef.current || !(window as any).google) return;
+    console.log('Marker useEffect triggered:', { 
+      isLoaded, 
+      hasMapRef: !!mapRef.current, 
+      hasGoogle: !!(window as any).google,
+      locationsLength: locations.length 
+    });
+    
+    // Wait for all dependencies to be ready
+    if (!isLoaded || !mapRef.current || !(window as any).google) {
+      console.log('Marker creation blocked - waiting for dependencies:', { 
+        isLoaded, 
+        hasMapRef: !!mapRef.current, 
+        hasGoogle: !!(window as any).google 
+      });
+      return;
+    }
+
+    console.log('Creating markers for', locations.length, 'locations');
 
     // Clear existing markers
     markersRef.current.forEach((m) => {
@@ -476,33 +489,102 @@ const ParkingMap: React.FC<Props> = ({
     markersRef.current = [];
 
     const g = (window as any).google as typeof google;
-    const AdvancedMarker = (g.maps as any).marker?.AdvancedMarkerElement;
     
-    // Fallback to regular markers if Advanced Markers are not available
-    if (!AdvancedMarker) {
-      console.warn('Advanced Markers not available, falling back to regular markers');
-      locations.forEach((loc) => {
-        const marker = new g.maps.Marker({
-          map: mapRef.current,
-          position: { lat: loc.latitude, lng: loc.longitude },
-          title: loc.name,
-        });
-        marker.addListener('click', () => setActiveId(loc.id));
-        markersRef.current.push(marker);
-      });
-      return;
-    }
-
-    // Use Advanced Markers when available
-    locations.forEach((loc) => {
-      const marker = new AdvancedMarker({
+    // Force use of regular markers for better compatibility
+    console.log('Using regular markers for better visibility');
+    console.log('Locations to create markers for:', locations);
+    
+    // Add a test marker if no locations are provided
+    if (locations.length === 0) {
+      console.log('No locations provided, adding test marker');
+      const testMarker = new g.maps.Marker({
         map: mapRef.current,
-        position: { lat: loc.latitude, lng: loc.longitude },
-        title: loc.name,
+        position: { lat: -37.8136, lng: 144.9631 }, // Melbourne CBD
+        title: 'Test Marker - Melbourne CBD',
+        icon: {
+          path: g.maps.SymbolPath.CIRCLE,
+          fillColor: '#4CAF50',
+          fillOpacity: 0.8,
+          strokeColor: '#FFFFFF',
+          strokeWeight: 2,
+          scale: 3,
+        },
       });
-      // AdvancedMarker uses 'gmp-click'
-      marker.addListener('gmp-click', () => setActiveId(loc.id));
-      markersRef.current.push(marker);
+      markersRef.current.push(testMarker);
+    }
+    
+    // Always add a simple test marker to verify marker creation works
+    console.log('Adding simple test marker');
+    try {
+      const simpleTestMarker = new g.maps.Marker({
+        map: mapRef.current,
+        position: { lat: -37.8136, lng: 144.9631 }, // Melbourne CBD
+        title: 'Simple Test Marker',
+      });
+      console.log('Simple test marker created successfully:', simpleTestMarker);
+      markersRef.current.push(simpleTestMarker);
+    } catch (error) {
+      console.error('Error creating simple test marker:', error);
+    }
+    
+    console.log('Creating parking location markers for', locations.length, 'locations');
+    locations.forEach((loc, index) => {
+      console.log(`Creating marker ${index + 1}/${locations.length}:`, loc.name, 'at', loc.latitude, loc.longitude);
+      
+      // Create enhanced marker with availability status
+      const availabilityRate = loc.capacity && loc.capacity > 0 ? (loc.available / loc.capacity) * 100 : 0;
+      
+      // Determine marker color and size based on availability
+      let markerColor = '#FF4444'; // Red for no availability
+      let markerSize = 20;
+      
+      if (availabilityRate > 50) {
+        markerColor = '#4CAF50'; // Green for good availability
+        markerSize = 28;
+      } else if (availabilityRate > 20) {
+        markerColor = '#FF9800'; // Orange for moderate availability
+        markerSize = 24;
+      } else if (availabilityRate > 0) {
+        markerColor = '#FF5722'; // Red-orange for low availability
+        markerSize = 22;
+      }
+
+      // Create custom marker icon
+      const markerIcon = {
+        path: g.maps.SymbolPath.CIRCLE,
+        fillColor: markerColor,
+        fillOpacity: 0.8,
+        strokeColor: '#FFFFFF',
+        strokeWeight: 2,
+        scale: markerSize / 10,
+      };
+
+              try {
+          const marker = new g.maps.Marker({
+            map: mapRef.current,
+            position: { lat: loc.latitude, lng: loc.longitude },
+            title: `${loc.name} - ${loc.available} available`,
+            icon: markerIcon,
+            animation: g.maps.Animation.DROP,
+          });
+
+          // Add click listener
+          marker.addListener('click', () => setActiveId(loc.id));
+          
+          // Add hover effects
+          marker.addListener('mouseover', () => {
+            marker.setAnimation(g.maps.Animation.BOUNCE);
+          });
+          
+          marker.addListener('mouseout', () => {
+            marker.setAnimation(null);
+          });
+
+          markersRef.current.push(marker);
+          console.log(`Marker ${index + 1} created successfully for ${loc.name}`);
+        } catch (error) {
+          console.error(`Error creating marker for ${loc.name}:`, error);
+        }
     });
   }, [isLoaded, locations]);
 
@@ -720,12 +802,21 @@ const ParkingMap: React.FC<Props> = ({
             zoomControl: true,
           }}
           onLoad={(map) => {
+            console.log('Map loaded successfully');
             mapRef.current = map;
+            console.log('Map center:', map.getCenter());
+            console.log('Map zoom:', map.getZoom());
+            
             if (locations.length && (window as any).google) {
+              console.log('Fitting bounds for', locations.length, 'locations');
               const g = (window as any).google as typeof google;
               const b = new g.maps.LatLngBounds();
-              locations.forEach((l) => b.extend({ lat: l.latitude, lng: l.longitude }));
+              locations.forEach((l) => {
+                console.log('Adding location to bounds:', l.name, l.latitude, l.longitude);
+                b.extend({ lat: l.latitude, lng: l.longitude });
+              });
               map.fitBounds(b, { top: 40, bottom: 40, left: 40, right: 40 } as any);
+              console.log('Bounds fitted, new center:', map.getCenter(), 'new zoom:', map.getZoom());
             }
           }}
         >
@@ -738,13 +829,93 @@ const ParkingMap: React.FC<Props> = ({
                   position={{ lat: loc.latitude, lng: loc.longitude }}
                   onCloseClick={() => setActiveId(null)}
                 >
-                  <Box>
-                    <Typography variant="subtitle2">{loc.name}</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {loc.type === 'on_street' ? 'On-street' : 'Off-street'} · {loc.available} available
-                      {loc.capacity ? ` / ${loc.capacity}` : ''}
-                      {loc.pricePerHour ? ` · $${loc.pricePerHour.toFixed(2)}/hr` : ''}
+                  <Box sx={{ p: 1, minWidth: 200 }}>
+                    <Typography variant="h6" fontWeight="bold" gutterBottom>
+                      {loc.name}
                     </Typography>
+                    
+                    {/* Availability Status */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <Box
+                        sx={{
+                          width: 12,
+                          height: 12,
+                          borderRadius: '50%',
+                          bgcolor: loc.available > 0 ? '#4CAF50' : '#FF4444',
+                        }}
+                      />
+                      <Typography variant="body2" fontWeight="600">
+                        {loc.available} spots available
+                        {loc.capacity ? ` of ${loc.capacity}` : ''}
+                      </Typography>
+                    </Box>
+                    
+                    {/* Type and Price */}
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      {loc.type === 'on_street' ? '🚗 On-street' : '🏢 Off-street'} parking
+                      {loc.pricePerHour ? ` · $${loc.pricePerHour.toFixed(2)}/hour` : ' · Free'}
+                    </Typography>
+                    
+                    {/* Features */}
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                      {loc.accessible && (
+                        <Box
+                          sx={{
+                            px: 1,
+                            py: 0.5,
+                            bgcolor: '#E3F2FD',
+                            color: '#1976D2',
+                            borderRadius: 1,
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                          }}
+                        >
+                          ♿ Accessible
+                        </Box>
+                      )}
+                      {loc.familyFriendly && (
+                        <Box
+                          sx={{
+                            px: 1,
+                            py: 0.5,
+                            bgcolor: '#E8F5E8',
+                            color: '#2E7D32',
+                            borderRadius: 1,
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                          }}
+                        >
+                          👨‍👩‍👧‍👦 Family-friendly
+                        </Box>
+                      )}
+                    </Box>
+                    
+                    {/* Availability Rate */}
+                    {loc.capacity && loc.capacity > 0 && (
+                      <Box sx={{ mt: 1 }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                          Availability: {Math.round((loc.available / loc.capacity) * 100)}%
+                        </Typography>
+                        <Box
+                          sx={{
+                            width: '100%',
+                            height: 6,
+                            bgcolor: '#E0E0E0',
+                            borderRadius: 3,
+                            overflow: 'hidden',
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              width: `${(loc.available / loc.capacity) * 100}%`,
+                              height: '100%',
+                              bgcolor: loc.available > 0 ? '#4CAF50' : '#FF4444',
+                              transition: 'width 0.3s ease',
+                            }}
+                          />
+                        </Box>
+                      </Box>
+                    )}
                   </Box>
                 </InfoWindow>
               )
