@@ -128,7 +128,7 @@ const VehicleOwnershipChart: React.FC = () => {
 
     // Get scales
     const getScales = (data: ChartData[], innerW: number, innerH: number, kind: string) => {
-      const years = [...new Set(data.map(d => d.year))].sort((a, b) => a - b);
+      const years = Array.from(new Set(data.map(d => d.year))).sort((a, b) => a - b).map(String);
 
       const xBand = d3.scaleBand().domain(years).range([0, innerW]).padding(0.2);
       const xPoint = d3.scalePoint().domain(years).range([0, innerW]).padding(0.5);
@@ -154,18 +154,18 @@ const VehicleOwnershipChart: React.FC = () => {
     // Render axes
     const renderAxes = (scales: any, innerH: number, viz: string) => {
       gx.attr("transform", `translate(0,${innerH})`)
-        .call(d3.axisBottom(scales.xBand).tickFormat(d3.format("d")));
+        .call(d3.axisBottom(scales.xBand).tickFormat((d: any) => d3.format("d")(d)));
 
       if (viz === "bar") {
-        gy.call(d3.axisLeft(scales.y).ticks(6).tickFormat(fmt));
+        gy.call(d3.axisLeft(scales.y).ticks(6).tickFormat((d: any) => fmt(d)));
       } else {
-        gy.call(d3.axisLeft(scales.yGrowth).ticks(6).tickFormat((d: number) => `${fmtPct(d)}%`));
+        gy.call(d3.axisLeft(scales.yGrowth).ticks(6).tickFormat((d: any) => `${fmtPct(d)}%`));
       }
     };
 
     // Render bars
     const renderBars = (data: ChartData[], scales: any, innerH: number) => {
-      const bars = gContent.selectAll("rect.bar").data(data, (d: any) => d.year);
+      const bars = gContent.selectAll("rect.bar").data(data, (d: any) => String(d.year));
 
       bars.exit()
         .transition().duration(200)
@@ -174,14 +174,14 @@ const VehicleOwnershipChart: React.FC = () => {
         .remove();
 
       bars.transition().duration(400)
-        .attr("x", (d: ChartData) => scales.xBand(d.year))
+        .attr("x", (d: ChartData) => scales.xBand(String(d.year)))
         .attr("width", scales.xBand.bandwidth())
         .attr("y", (d: ChartData) => scales.y(d.value))
         .attr("height", (d: ChartData) => innerH - scales.y(d.value));
 
       const enter = bars.enter().append("rect")
         .attr("class", "bar")
-        .attr("x", (d: ChartData) => scales.xBand(d.year))
+        .attr("x", (d: ChartData) => scales.xBand(String(d.year)))
         .attr("width", scales.xBand.bandwidth())
         .attr("y", innerH)
         .attr("height", 0)
@@ -203,7 +203,7 @@ const VehicleOwnershipChart: React.FC = () => {
     // Render line
     const renderLine = (data: ChartData[], scales: any) => {
       const line = d3.line<ChartData>()
-        .x(d => scales.xPoint(d.year))
+        .x(d => scales.xPoint(String(d.year)))
         .y(d => scales.yGrowth(d.growth || 0));
 
       const path = gContent.selectAll("path.line").data([data]);
@@ -213,7 +213,7 @@ const VehicleOwnershipChart: React.FC = () => {
         .attr("d", line);
       path.exit().remove();
 
-      const pts = gContent.selectAll("circle.pt").data(data, (d: any) => d.year);
+      const pts = gContent.selectAll("circle.pt").data(data, (d: any) => String(d.year));
       pts.exit().remove();
 
       pts.enter().append("circle")
@@ -229,7 +229,7 @@ const VehicleOwnershipChart: React.FC = () => {
         })
         .on("mouseleave", () => tooltip.style("opacity", 0))
         .merge(pts as any)
-        .attr("cx", (d: ChartData) => scales.xPoint(d.year))
+        .attr("cx", (d: ChartData) => scales.xPoint(String(d.year)))
         .attr("cy", (d: ChartData) => scales.yGrowth(d.growth || 0));
     };
 
@@ -267,8 +267,8 @@ const VehicleOwnershipChart: React.FC = () => {
 
         // Axes: x uses point scale for line; y uses growth scale
         gx.attr("transform", `translate(0,${innerH})`)
-          .call(d3.axisBottom(growthScales.xPoint).tickFormat(d3.format("d")));
-        gy.call(d3.axisLeft(growthScales.yGrowth).ticks(6).tickFormat((d: number) => `${fmtPct(d)}%`));
+          .call(d3.axisBottom(growthScales.xPoint).tickFormat((d: any) => d3.format("d")(d)));
+        gy.call(d3.axisLeft(growthScales.yGrowth).ticks(6).tickFormat((d: any) => `${fmtPct(d)}%`));
 
         renderLine(growthData, growthScales);
       }
@@ -283,7 +283,7 @@ const VehicleOwnershipChart: React.FC = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [data, vizType, vehicleGroup]);
+  }, [data, vizType, vehicleGroup, filterData]);
 
   return (
     <Paper sx={{ p: 3, mb: 3 }}>

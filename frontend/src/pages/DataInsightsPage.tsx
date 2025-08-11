@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   Box,
   Container,
@@ -18,22 +18,12 @@ import {
 } from '@mui/material';
 import {
   TrendingUp,
-  TrendingDown,
   DirectionsCar,
   LocalParking,
-  People,
   Speed,
-  Assessment,
   Analytics,
-  ShowChart,
-  BarChart,
-  PieChart,
-  Timeline,
-  AccessTime,
-  LocationOn,
   FamilyRestroom,
   Accessibility,
-  Star,
   FlashOn,
   Insights,
   DataUsage,
@@ -64,8 +54,6 @@ const rotate = keyframes`
 `;
 
 const DataInsightsPage: React.FC = () => {
-  const theme = useTheme();
-
   // Mock data for demonstration
   const parkingData = useMemo(() => ({
     totalSpots: 3309,
@@ -668,7 +656,7 @@ const DataInsightsPage: React.FC = () => {
                       animation: `${pulse} 2s ease-in-out infinite`,
                     }}
                   >
-                    <InsightsIcon />
+                    <Insights />
                   </Avatar>
                   <Box>
                     <Typography variant="h5" component="h3" fontWeight="bold" color="text.primary">
@@ -751,7 +739,7 @@ const DataInsightsPage: React.FC = () => {
             <Fade in timeout={1200}>
               <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
                 <Chip
-                  icon={<DataIcon />}
+                  icon={<DataUsage />}
                   label="Explore Live Data"
                   variant="filled"
                   sx={{
@@ -775,7 +763,7 @@ const DataInsightsPage: React.FC = () => {
                   }}
                 />
                 <Chip
-                  icon={<FlashIcon />}
+                  icon={<FlashOn />}
                   label="Get Smart Alerts"
                   variant="outlined"
                   sx={{
