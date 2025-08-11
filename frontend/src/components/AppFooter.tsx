@@ -30,7 +30,7 @@ import {
   Support as SupportIcon,
   Download as DownloadIcon,
   QrCode as QrCodeIcon,
-  Notifications as NotificationsIcon,
+  // Notifications as NotificationsIcon,
   Speed as SpeedIcon,
 } from '@mui/icons-material';
 import { colors } from '../theme';

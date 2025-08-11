@@ -32,14 +32,14 @@ import {
   Map as MapIcon,
   Info as InfoIcon,
   Analytics as AnalyticsIcon,
-  DirectionsCar as CarIcon,
+  // DirectionsCar as CarIcon,
   Close as CloseIcon,
   FlashOn as FlashIcon,
   Notifications as NotificationsIcon,
-  AccountCircle as AccountIcon,
+  // AccountCircle as AccountIcon,
   LocationOn as LocationIcon,
   TrendingUp as TrendingIcon,
-  Security as SecurityIcon,
+  // Security as SecurityIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { colors } from '../theme';
@@ -63,10 +63,10 @@ const shimmer = keyframes`
   100% { background-position: 200% 0; }
 `;
 
-const slideIn = keyframes`
-  0% { transform: translateX(-100%); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
-`;
+// const slideIn = keyframes`
+//   0% { transform: translateX(-100%); opacity: 0; }
+//   100% { transform: translateX(0); opacity: 1; }
+// `;
 
 const glow = keyframes`
   0%, 100% { box-shadow: 0 0 20px ${alpha('#4CAF50', 0.5)}; }
