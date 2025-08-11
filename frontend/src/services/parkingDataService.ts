@@ -170,11 +170,9 @@ export const loadOnStreetSensorData = async (): Promise<OnStreetSensor[]> => {
     }
     const data = await response.json();
     
-    // If data is too large, use a sample
-    if (data.length > 100) {
-      console.log('Large dataset detected, using sample data for performance');
-      return SAMPLE_ON_STREET_DATA;
-    }
+    // Use all real data - no artificial limits
+    console.log('Loading', data.length, 'on-street parking sensors');
+    return data;
     
     return data;
   } catch (error) {
@@ -192,11 +190,9 @@ export const loadOffStreetParkingData = async (): Promise<OffStreetParking[]> =>
     }
     const data = await response.json();
     
-    // If data is too large, use a sample
-    if (data.length > 50) {
-      console.log('Large dataset detected, using sample data for performance');
-      return SAMPLE_OFF_STREET_DATA;
-    }
+    // Use all real data - no artificial limits
+    console.log('Loading', data.length, 'off-street parking locations');
+    return data;
     
     return data;
   } catch (error) {

@@ -515,10 +515,10 @@ const ParkingMap: React.FC<Props> = ({
       const testMarkerIcon = {
         path: g.maps.SymbolPath.CIRCLE,
         fillColor: '#2196F3',
-        fillOpacity: 0.9,
+        fillOpacity: 0.95,
         strokeColor: '#FFFFFF',
-        strokeWeight: 3,
-        scale: 4.5, // 45px equivalent
+        strokeWeight: 4,
+        scale: 8, // 80px equivalent
       };
       
       const simpleTestMarker = new g.maps.Marker({
@@ -543,26 +543,26 @@ const ParkingMap: React.FC<Props> = ({
       
       // Determine marker color and size based on availability
       let markerColor = '#FF4444'; // Red for no availability
-      let markerSize = 35;
+      let markerSize = 60;
       
       if (availabilityRate > 50) {
         markerColor = '#4CAF50'; // Green for good availability
-        markerSize = 45;
+        markerSize = 80;
       } else if (availabilityRate > 20) {
         markerColor = '#FF9800'; // Orange for moderate availability
-        markerSize = 40;
+        markerSize = 70;
       } else if (availabilityRate > 0) {
         markerColor = '#FF5722'; // Red-orange for low availability
-        markerSize = 38;
+        markerSize = 65;
       }
 
       // Create custom marker icon
       const markerIcon = {
         path: g.maps.SymbolPath.CIRCLE,
         fillColor: markerColor,
-        fillOpacity: 0.9,
+        fillOpacity: 0.95,
         strokeColor: '#FFFFFF',
-        strokeWeight: 3,
+        strokeWeight: 4,
         scale: markerSize / 10,
       };
 
