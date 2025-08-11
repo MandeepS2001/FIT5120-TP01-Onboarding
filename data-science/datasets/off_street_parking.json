@@ -1,0 +1,1182 @@
+[
+    {
+        "block_id":735,
+        "property_id":110444,
+        "base_property_id":110444,
+        "building_address":"100-110 Kings Way SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":15,
+        "longitude":144.961664454,
+        "latitude":-37.8279496529
+    },
+    {
+        "block_id":76,
+        "property_id":589841,
+        "base_property_id":105749,
+        "building_address":"QV Retail & Parking 221 Little Lonsdale Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":1150,
+        "longitude":144.965725053,
+        "latitude":-37.8106786171
+    },
+    {
+        "block_id":113,
+        "property_id":110685,
+        "base_property_id":108118,
+        "building_address":"Queen Victoria Market Car Park Queen Victoria Market 391 Queen Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":564,
+        "longitude":144.9576272223,
+        "latitude":-37.8078325742
+    },
+    {
+        "block_id":115,
+        "property_id":104101,
+        "base_property_id":104101,
+        "building_address":"58-64 Franklin Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":360,
+        "longitude":144.9608155281,
+        "latitude":-37.8074170505
+    },
+    {
+        "block_id":241,
+        "property_id":573377,
+        "base_property_id":573377,
+        "building_address":"Carpark Melbourne University 220 Berkeley Street CARLTON VIC 3053",
+        "postcode":"3053",
+        "parking_spaces":1136,
+        "longitude":144.9607011261,
+        "latitude":-37.8002509946
+    },
+    {
+        "block_id":801,
+        "property_id":110325,
+        "base_property_id":110325,
+        "building_address":"2 Riverside Quay SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":575,
+        "longitude":144.9632910684,
+        "latitude":-37.8213172316
+    },
+    {
+        "block_id":802,
+        "property_id":613006,
+        "base_property_id":613006,
+        "building_address":"28 Freshwater Place SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":247,
+        "longitude":144.9622895954,
+        "latitude":-37.8226720979
+    },
+    {
+        "block_id":1105,
+        "property_id":598590,
+        "base_property_id":598590,
+        "building_address":"720-750 Collins Street DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":430,
+        "longitude":144.9493337587,
+        "latitude":-37.8199994827
+    },
+    {
+        "block_id":1110,
+        "property_id":608355,
+        "base_property_id":608355,
+        "building_address":"364-378 Docklands Drive DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":144,
+        "longitude":144.9418709102,
+        "latitude":-37.8128637798
+    },
+    {
+        "block_id":12,
+        "property_id":103998,
+        "base_property_id":103998,
+        "building_address":"452-470 Flinders Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":296,
+        "longitude":144.9585996854,
+        "latitude":-37.8194652581
+    },
+    {
+        "block_id":17,
+        "property_id":103592,
+        "base_property_id":103592,
+        "building_address":"11-37 Exhibition Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":200,
+        "longitude":144.9717264012,
+        "latitude":-37.8154612672
+    },
+    {
+        "block_id":24,
+        "property_id":102092,
+        "base_property_id":102092,
+        "building_address":"359-373 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":265,
+        "longitude":144.9624424626,
+        "latitude":-37.8172818455
+    },
+    {
+        "block_id":25,
+        "property_id":110857,
+        "base_property_id":110857,
+        "building_address":"233-239 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":75,
+        "longitude":144.9661032842,
+        "latitude":-37.8159922039
+    },
+    {
+        "block_id":97,
+        "property_id":105491,
+        "base_property_id":105491,
+        "building_address":"58-66 La Trobe Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":23,
+        "longitude":144.9669434142,
+        "latitude":-37.8082965036
+    },
+    {
+        "block_id":1101,
+        "property_id":110843,
+        "base_property_id":110843,
+        "building_address":"Spencer Outlet Centre 163-261 Spencer Street DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":583,
+        "longitude":144.9505641313,
+        "latitude":-37.8145089567
+    },
+    {
+        "block_id":1110,
+        "property_id":618853,
+        "base_property_id":618853,
+        "building_address":"396-416 Docklands Drive DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":238,
+        "longitude":144.9400482272,
+        "latitude":-37.8133266242
+    },
+    {
+        "block_id":14,
+        "property_id":104007,
+        "base_property_id":104007,
+        "building_address":"300-316 Flinders Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":574,
+        "longitude":144.9639958441,
+        "latitude":-37.8180576365
+    },
+    {
+        "block_id":17,
+        "property_id":104025,
+        "base_property_id":104025,
+        "building_address":"114-128 Flinders Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":1275,
+        "longitude":144.970755226,
+        "latitude":-37.8159413935
+    },
+    {
+        "block_id":22,
+        "property_id":705123,
+        "base_property_id":102104,
+        "building_address":"Podium Rialto 525 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":536,
+        "longitude":144.957470255,
+        "latitude":-37.8186607232
+    },
+    {
+        "block_id":27,
+        "property_id":597183,
+        "base_property_id":102071,
+        "building_address":"Grand Hyatt Melbourne Retail 121-131 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":620,
+        "longitude":144.9698079665,
+        "latitude":-37.8151156516
+    },
+    {
+        "block_id":28,
+        "property_id":102063,
+        "base_property_id":102060,
+        "building_address":"Collins Place 45 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":552,
+        "longitude":144.9726255727,
+        "latitude":-37.8143051812
+    },
+    {
+        "block_id":28,
+        "property_id":103969,
+        "base_property_id":103969,
+        "building_address":"12-20 Flinders Lane MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":126,
+        "longitude":144.973572883,
+        "latitude":-37.8142418756
+    },
+    {
+        "block_id":43,
+        "property_id":110146,
+        "base_property_id":110146,
+        "building_address":"130-148 William Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":232,
+        "longitude":144.958905428,
+        "latitude":-37.816010873
+    },
+    {
+        "block_id":53,
+        "property_id":108074,
+        "base_property_id":108074,
+        "building_address":"185-199 Queen Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":98,
+        "longitude":144.9599687986,
+        "latitude":-37.8142863053
+    },
+    {
+        "block_id":93,
+        "property_id":105477,
+        "base_property_id":105477,
+        "building_address":"378-392 La Trobe Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":262,
+        "longitude":144.9580506964,
+        "latitude":-37.8109125957
+    },
+    {
+        "block_id":104,
+        "property_id":108088,
+        "base_property_id":108088,
+        "building_address":"382-406 Queen Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":548,
+        "longitude":144.9586835205,
+        "latitude":-37.8094332322
+    },
+    {
+        "block_id":131,
+        "property_id":103979,
+        "base_property_id":103979,
+        "building_address":"Melbourne Convention Centre Carpark 671-701 Flinders Street DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":588,
+        "longitude":144.9521680992,
+        "latitude":-37.8223274234
+    },
+    {
+        "block_id":217,
+        "property_id":106193,
+        "base_property_id":106193,
+        "building_address":"368-386 Lygon Street CARLTON VIC 3053",
+        "postcode":"3053",
+        "parking_spaces":154,
+        "longitude":144.968148466,
+        "latitude":-37.7980396031
+    },
+    {
+        "block_id":748,
+        "property_id":108658,
+        "base_property_id":108658,
+        "building_address":"312-318 St Kilda Road SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":240,
+        "longitude":144.9706855039,
+        "latitude":-37.829090212
+    },
+    {
+        "block_id":803,
+        "property_id":111175,
+        "base_property_id":110477,
+        "building_address":"Crown Entertainment Complex 8 Whiteman Street SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":1390,
+        "longitude":144.9583341532,
+        "latitude":-37.8231615915
+    },
+    {
+        "block_id":806,
+        "property_id":110469,
+        "base_property_id":640947,
+        "building_address":"Crown Casino Carpark 25-29 Clarke Street SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":3100,
+        "longitude":144.9584422154,
+        "latitude":-37.8254040289
+    },
+    {
+        "block_id":17,
+        "property_id":574438,
+        "base_property_id":574438,
+        "building_address":"84-94 Flinders Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":38,
+        "longitude":144.97168701,
+        "latitude":-37.8159483692
+    },
+    {
+        "block_id":28,
+        "property_id":102057,
+        "base_property_id":102057,
+        "building_address":"1-9 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":18,
+        "longitude":144.9737140468,
+        "latitude":-37.8137227573
+    },
+    {
+        "block_id":37,
+        "property_id":102155,
+        "base_property_id":102155,
+        "building_address":"106-120 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":327,
+        "longitude":144.9693156901,
+        "latitude":-37.814000349
+    },
+    {
+        "block_id":44,
+        "property_id":597186,
+        "base_property_id":101146,
+        "building_address":"Galleria 385 Bourke Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":213,
+        "longitude":144.9629215495,
+        "latitude":-37.8149294395
+    },
+    {
+        "block_id":62,
+        "property_id":105862,
+        "base_property_id":105862,
+        "building_address":"542-546 Little Bourke Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":373,
+        "longitude":144.9563998715,
+        "latitude":-37.8147983482
+    },
+    {
+        "block_id":735,
+        "property_id":110637,
+        "base_property_id":110637,
+        "building_address":"31-49 Moray Street SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":180,
+        "longitude":144.9614012105,
+        "latitude":-37.8276216315
+    },
+    {
+        "block_id":736,
+        "property_id":706735,
+        "base_property_id":110408,
+        "building_address":"18 Hoff Boulevard SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":117,
+        "longitude":144.963573578,
+        "latitude":-37.8257254335
+    },
+    {
+        "block_id":813,
+        "property_id":110411,
+        "base_property_id":110411,
+        "building_address":"The Primrose Potter Australian Ballet Centre 2-6 Kavanagh Street SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":436,
+        "longitude":144.9673597847,
+        "latitude":-37.8219694094
+    },
+    {
+        "block_id":12,
+        "property_id":110091,
+        "base_property_id":110091,
+        "building_address":"15-33 William Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":300,
+        "longitude":144.9591980656,
+        "latitude":-37.8192939062
+    },
+    {
+        "block_id":56,
+        "property_id":101204,
+        "base_property_id":101204,
+        "building_address":"194-200 Bourke Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":130,
+        "longitude":144.9672689638,
+        "latitude":-37.81241904
+    },
+    {
+        "block_id":67,
+        "property_id":105679,
+        "base_property_id":105679,
+        "building_address":"131-137 Lonsdale Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":56,
+        "longitude":144.9685148093,
+        "latitude":-37.8109271651
+    },
+    {
+        "block_id":752,
+        "property_id":110736,
+        "base_property_id":110736,
+        "building_address":"NGV International 130-200 St Kilda Road SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":850,
+        "longitude":144.9686269057,
+        "latitude":-37.8227379235
+    },
+    {
+        "block_id":23,
+        "property_id":102099,
+        "base_property_id":102099,
+        "building_address":"419-429 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":33,
+        "longitude":144.9606526789,
+        "latitude":-37.8175282385
+    },
+    {
+        "block_id":42,
+        "property_id":105950,
+        "base_property_id":105950,
+        "building_address":"520-536 Little Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":41,
+        "longitude":144.9571099545,
+        "latitude":-37.8168797463
+    },
+    {
+        "block_id":46,
+        "property_id":105963,
+        "base_property_id":105963,
+        "building_address":"Council House 196-212 Little Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":109,
+        "longitude":144.9671529606,
+        "latitude":-37.8139012558
+    },
+    {
+        "block_id":48,
+        "property_id":105970,
+        "base_property_id":105970,
+        "building_address":"22-32 Little Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":25,
+        "longitude":144.9725479173,
+        "latitude":-37.8124312284
+    },
+    {
+        "block_id":73,
+        "property_id":559301,
+        "base_property_id":559301,
+        "building_address":"458-468 Lonsdale Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":294,
+        "longitude":144.9583507532,
+        "latitude":-37.813056538
+    },
+    {
+        "block_id":804,
+        "property_id":110527,
+        "base_property_id":110484,
+        "building_address":"South Wharf Carpark 15 Convention Centre Place SOUTH WHARF VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":1150,
+        "longitude":144.9523192943,
+        "latitude":-37.8254299844
+    },
+    {
+        "block_id":1108,
+        "property_id":609481,
+        "base_property_id":609481,
+        "building_address":"EXO Apartments 33-61 Merchant Street DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":573,
+        "longitude":144.9436818718,
+        "latitude":-37.8209284493
+    },
+    {
+        "block_id":57,
+        "property_id":108584,
+        "base_property_id":108584,
+        "building_address":"170-190 Russell Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":409,
+        "longitude":144.9681393674,
+        "latitude":-37.8119932802
+    },
+    {
+        "block_id":78,
+        "property_id":603923,
+        "base_property_id":580091,
+        "building_address":"The Urban Workshop 32-54 Lonsdale Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":148,
+        "longitude":144.9707289534,
+        "latitude":-37.8091961511
+    },
+    {
+        "block_id":801,
+        "property_id":570659,
+        "base_property_id":570659,
+        "building_address":"64-78 City Road SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":667,
+        "longitude":144.9651350055,
+        "latitude":-37.8217540827
+    },
+    {
+        "block_id":1105,
+        "property_id":578096,
+        "base_property_id":578096,
+        "building_address":"715-727 Bourke Street DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":300,
+        "longitude":144.9502450189,
+        "latitude":-37.8186575352
+    },
+    {
+        "block_id":1,
+        "property_id":108843,
+        "base_property_id":108843,
+        "building_address":"2-92 Rebecca Walk MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":50,
+        "longitude":144.9568283987,
+        "latitude":-37.8212053979
+    },
+    {
+        "block_id":1,
+        "property_id":611394,
+        "base_property_id":611394,
+        "building_address":"545-557 Flinders Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":139,
+        "longitude":144.9565137522,
+        "latitude":-37.8209790437
+    },
+    {
+        "block_id":14,
+        "property_id":103947,
+        "base_property_id":103947,
+        "building_address":"317-323 Flinders Lane MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":55,
+        "longitude":144.9637556804,
+        "latitude":-37.8177316545
+    },
+    {
+        "block_id":43,
+        "property_id":108068,
+        "base_property_id":108068,
+        "building_address":"111-129 Queen Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":69,
+        "longitude":144.9606360202,
+        "latitude":-37.8158122844
+    },
+    {
+        "block_id":52,
+        "property_id":101173,
+        "base_property_id":101173,
+        "building_address":"562-574 Bourke Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":445,
+        "longitude":144.9567555518,
+        "latitude":-37.8155095179
+    },
+    {
+        "block_id":753,
+        "property_id":110606,
+        "base_property_id":110380,
+        "building_address":"Southgate 3 Southgate Avenue SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":581,
+        "longitude":144.9663030855,
+        "latitude":-37.8207182429
+    },
+    {
+        "block_id":1102,
+        "property_id":588807,
+        "base_property_id":588807,
+        "building_address":"208-226 Harbour Esplanade DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":134,
+        "longitude":144.9451557021,
+        "latitude":-37.8131583397
+    },
+    {
+        "block_id":26,
+        "property_id":102073,
+        "base_property_id":102073,
+        "building_address":"141-165 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":350,
+        "longitude":144.9687615272,
+        "latitude":-37.815451518
+    },
+    {
+        "block_id":31,
+        "property_id":105945,
+        "base_property_id":105945,
+        "building_address":"601-611 Little Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":55,
+        "longitude":144.954904368,
+        "latitude":-37.8180284282
+    },
+    {
+        "block_id":48,
+        "property_id":105969,
+        "base_property_id":105969,
+        "building_address":"34-60 Little Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":932,
+        "longitude":144.9719617691,
+        "latitude":-37.8123740506
+    },
+    {
+        "block_id":57,
+        "property_id":101219,
+        "base_property_id":101219,
+        "building_address":"The Paramount 100-116 Bourke Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":418,
+        "longitude":144.9697608847,
+        "latitude":-37.8117267956
+    },
+    {
+        "block_id":66,
+        "property_id":105693,
+        "base_property_id":105693,
+        "building_address":"217-231 Lonsdale Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":390,
+        "longitude":144.9658674604,
+        "latitude":-37.8117993249
+    },
+    {
+        "block_id":85,
+        "property_id":105746,
+        "base_property_id":105746,
+        "building_address":"Melbourne Central 183-265 La Trobe Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":722,
+        "longitude":144.9628388706,
+        "latitude":-37.8109017475
+    },
+    {
+        "block_id":218,
+        "property_id":102675,
+        "base_property_id":102675,
+        "building_address":"Carlton Clocktower Complex 247-253 Drummond Street CARLTON VIC 3053",
+        "postcode":"3053",
+        "parking_spaces":244,
+        "longitude":144.9678065493,
+        "latitude":-37.7998239881
+    },
+    {
+        "block_id":1105,
+        "property_id":578095,
+        "base_property_id":578095,
+        "building_address":"694-704 Collins Street DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":265,
+        "longitude":144.9508556217,
+        "latitude":-37.8194886598
+    },
+    {
+        "block_id":1108,
+        "property_id":604124,
+        "base_property_id":604124,
+        "building_address":"816-828 Bourke Street DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":40,
+        "longitude":144.9439708833,
+        "latitude":-37.8192660405
+    },
+    {
+        "block_id":18,
+        "property_id":513723,
+        "base_property_id":513723,
+        "building_address":"1-17 Flinders Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":60,
+        "longitude":144.9746638172,
+        "latitude":-37.8155608131
+    },
+    {
+        "block_id":21,
+        "property_id":103960,
+        "base_property_id":103960,
+        "building_address":"522-552 Flinders Lane MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":1001,
+        "longitude":144.9559213784,
+        "latitude":-37.8194277185
+    },
+    {
+        "block_id":83,
+        "property_id":105457,
+        "base_property_id":105457,
+        "building_address":"371-389 La Trobe Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":447,
+        "longitude":144.9581376418,
+        "latitude":-37.811639847
+    },
+    {
+        "block_id":94,
+        "property_id":105484,
+        "base_property_id":105484,
+        "building_address":"296-310 La Trobe Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":531,
+        "longitude":144.9603663952,
+        "latitude":-37.8099814724
+    },
+    {
+        "block_id":207,
+        "property_id":109553,
+        "base_property_id":109553,
+        "building_address":"6-30 Tyne Street CARLTON VIC 3053",
+        "postcode":"3053",
+        "parking_spaces":215,
+        "longitude":144.9666871505,
+        "latitude":-37.7976725714
+    },
+    {
+        "block_id":13,
+        "property_id":104002,
+        "base_property_id":104002,
+        "building_address":"376-388 Flinders Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":315,
+        "longitude":144.9615539836,
+        "latitude":-37.8188413196
+    },
+    {
+        "block_id":31,
+        "property_id":108968,
+        "base_property_id":108968,
+        "building_address":"613-639 Little Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":300,
+        "longitude":144.9543647977,
+        "latitude":-37.8181841629
+    },
+    {
+        "block_id":82,
+        "property_id":105460,
+        "base_property_id":105460,
+        "building_address":"479-495 La Trobe Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":208,
+        "longitude":144.9549226031,
+        "latitude":-37.8127072397
+    },
+    {
+        "block_id":83,
+        "property_id":110757,
+        "base_property_id":110142,
+        "building_address":"Carpark Rear 280-318 William Street, MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":152,
+        "longitude":144.9573593038,
+        "latitude":-37.8120900551
+    },
+    {
+        "block_id":204,
+        "property_id":591507,
+        "base_property_id":591507,
+        "building_address":"MU Eastern Precinct Carpark 375 Cardigan Street CARLTON VIC 3053",
+        "postcode":"3053",
+        "parking_spaces":722,
+        "longitude":144.9657332898,
+        "latitude":-37.7975093199
+    },
+    {
+        "block_id":206,
+        "property_id":101688,
+        "base_property_id":101683,
+        "building_address":"96 Grattan Street CARLTON VIC 3053",
+        "postcode":"3053",
+        "parking_spaces":600,
+        "longitude":144.9660251635,
+        "latitude":-37.7996804285
+    },
+    {
+        "block_id":250,
+        "property_id":623345,
+        "base_property_id":108266,
+        "building_address":"Melbourne Museum 11 Nicholson Street CARLTON VIC 3053",
+        "postcode":"3053",
+        "parking_spaces":848,
+        "longitude":144.9716287509,
+        "latitude":-37.8039744604
+    },
+    {
+        "block_id":1101,
+        "property_id":108973,
+        "base_property_id":108973,
+        "building_address":"Southern Cross Station 85-161 Spencer Street DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":154,
+        "longitude":144.9522268897,
+        "latitude":-37.8184117274
+    },
+    {
+        "block_id":1104,
+        "property_id":598658,
+        "base_property_id":576023,
+        "building_address":"The Podium Building 2-24 Waterview Walk DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":113,
+        "longitude":144.9479920043,
+        "latitude":-37.8193808719
+    },
+    {
+        "block_id":1109,
+        "property_id":601815,
+        "base_property_id":601815,
+        "building_address":"Aquavista 397-407 Docklands Drive DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":329,
+        "longitude":144.9402116114,
+        "latitude":-37.8142880964
+    },
+    {
+        "block_id":1110,
+        "property_id":620312,
+        "base_property_id":593737,
+        "building_address":"NW Building 23-37 Star Crescent DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":680,
+        "longitude":144.9379983351,
+        "latitude":-37.8132875139
+    },
+    {
+        "block_id":65,
+        "property_id":103312,
+        "base_property_id":103312,
+        "building_address":"222-260 Elizabeth Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":205,
+        "longitude":144.9628888512,
+        "latitude":-37.8127002364
+    },
+    {
+        "block_id":67,
+        "property_id":108582,
+        "base_property_id":108582,
+        "building_address":"Mantra On Russell 210-222 Russell Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":427,
+        "longitude":144.9679605734,
+        "latitude":-37.8113382192
+    },
+    {
+        "block_id":72,
+        "property_id":110708,
+        "base_property_id":110707,
+        "building_address":"535 Little Lonsdale Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":800,
+        "longitude":144.9560015803,
+        "latitude":-37.8134626106
+    },
+    {
+        "block_id":205,
+        "property_id":642282,
+        "base_property_id":642282,
+        "building_address":"265-281 Faraday Street CARLTON VIC 3053",
+        "postcode":"3053",
+        "parking_spaces":460,
+        "longitude":144.9653345398,
+        "latitude":-37.7988985808
+    },
+    {
+        "block_id":247,
+        "property_id":106237,
+        "base_property_id":106237,
+        "building_address":"204-218 Lygon Street CARLTON VIC 3053",
+        "postcode":"3053",
+        "parking_spaces":408,
+        "longitude":144.9671430804,
+        "latitude":-37.8021876401
+    },
+    {
+        "block_id":734,
+        "property_id":110465,
+        "base_property_id":110465,
+        "building_address":"71-75 Clarke Street SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":253,
+        "longitude":144.960072781,
+        "latitude":-37.8280003958
+    },
+    {
+        "block_id":1108,
+        "property_id":573414,
+        "base_property_id":573414,
+        "building_address":"National@Docklands 788-812 Bourke Street DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":60,
+        "longitude":144.9450799726,
+        "latitude":-37.8188510467
+    },
+    {
+        "block_id":11,
+        "property_id":103957,
+        "base_property_id":103957,
+        "building_address":"517-537 Flinders Lane MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":117,
+        "longitude":144.9564863878,
+        "latitude":-37.8198754458
+    },
+    {
+        "block_id":16,
+        "property_id":104018,
+        "base_property_id":104018,
+        "building_address":"172-192 Flinders Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":895,
+        "longitude":144.96856314,
+        "latitude":-37.8166026714
+    },
+    {
+        "block_id":24,
+        "property_id":102089,
+        "base_property_id":102089,
+        "building_address":"327-343 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":169,
+        "longitude":144.9632685535,
+        "latitude":-37.8170490641
+    },
+    {
+        "block_id":47,
+        "property_id":625840,
+        "base_property_id":103597,
+        "building_address":"111-129 Bourke Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":398,
+        "longitude":144.9701093755,
+        "latitude":-37.8128141915
+    },
+    {
+        "block_id":54,
+        "property_id":101187,
+        "base_property_id":101187,
+        "building_address":"392-406 Bourke Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":308,
+        "longitude":144.9617382406,
+        "latitude":-37.8142202402
+    },
+    {
+        "block_id":64,
+        "property_id":108102,
+        "base_property_id":108102,
+        "building_address":"200-222 Queen Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":427,
+        "longitude":144.9604724598,
+        "latitude":-37.8134575234
+    },
+    {
+        "block_id":68,
+        "property_id":103620,
+        "base_property_id":103620,
+        "building_address":"196-226 Exhibition Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":479,
+        "longitude":144.9704816701,
+        "latitude":-37.810474703
+    },
+    {
+        "block_id":83,
+        "property_id":106036,
+        "base_property_id":106036,
+        "building_address":"364-378 Little Lonsdale Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":107,
+        "longitude":144.9584262199,
+        "latitude":-37.8120004369
+    },
+    {
+        "block_id":114,
+        "property_id":109493,
+        "base_property_id":109493,
+        "building_address":"452-468 Queen Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":507,
+        "longitude":144.9584857015,
+        "latitude":-37.8078698963
+    },
+    {
+        "block_id":265,
+        "property_id":109845,
+        "base_property_id":109845,
+        "building_address":"RMIT Building 91 110-120 Victoria Street CARLTON VIC 3053",
+        "postcode":"3053",
+        "parking_spaces":200,
+        "longitude":144.9636984819,
+        "latitude":-37.806324267
+    },
+    {
+        "block_id":736,
+        "property_id":110412,
+        "base_property_id":110412,
+        "building_address":"127-129 Kavanagh Street SOUTHBANK VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":60,
+        "longitude":144.962028568,
+        "latitude":-37.8266002264
+    },
+    {
+        "block_id":804,
+        "property_id":623557,
+        "base_property_id":110484,
+        "building_address":"Melbourne Exhibition Centre 2 Clarendon Street SOUTH WHARF VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":1696,
+        "longitude":144.9523192943,
+        "latitude":-37.8254299844
+    },
+    {
+        "block_id":804,
+        "property_id":110538,
+        "base_property_id":110538,
+        "building_address":"112-168 Normanby Road SOUTH WHARF VIC 3006",
+        "postcode":"3006",
+        "parking_spaces":688,
+        "longitude":144.9499375923,
+        "latitude":-37.8268072741
+    },
+    {
+        "block_id":1110,
+        "property_id":593729,
+        "base_property_id":593729,
+        "building_address":"The District Docklands East Car Park 50-94 Waterfront Way DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":2236,
+        "longitude":144.9394444609,
+        "latitude":-37.8121507498
+    },
+    {
+        "block_id":6,
+        "property_id":578328,
+        "base_property_id":573333,
+        "building_address":"Carpark Federation Square 2 Swanston Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":450,
+        "longitude":144.9699416428,
+        "latitude":-37.8177778261
+    },
+    {
+        "block_id":12,
+        "property_id":103997,
+        "base_property_id":103997,
+        "building_address":"472-482 Flinders Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":330,
+        "longitude":144.9582711327,
+        "latitude":-37.8197275902
+    },
+    {
+        "block_id":14,
+        "property_id":101099,
+        "base_property_id":101099,
+        "building_address":"16-26 Bond Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":461,
+        "longitude":144.9630578698,
+        "latitude":-37.8181458581
+    },
+    {
+        "block_id":23,
+        "property_id":606103,
+        "base_property_id":606103,
+        "building_address":"388-394 Flinders Lane MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":38,
+        "longitude":144.9610581886,
+        "latitude":-37.8179906363
+    },
+    {
+        "block_id":34,
+        "property_id":102135,
+        "base_property_id":102135,
+        "building_address":"344-350 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":65,
+        "longitude":144.9626887762,
+        "latitude":-37.8160164821
+    },
+    {
+        "block_id":36,
+        "property_id":108534,
+        "base_property_id":108534,
+        "building_address":"150-154 Collins Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":61,
+        "longitude":144.9681766079,
+        "latitude":-37.8141855869
+    },
+    {
+        "block_id":58,
+        "property_id":103621,
+        "base_property_id":103621,
+        "building_address":"174-192 Exhibition Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":150,
+        "longitude":144.9705978881,
+        "latitude":-37.8112189809
+    },
+    {
+        "block_id":62,
+        "property_id":105861,
+        "base_property_id":105861,
+        "building_address":"548-558 Little Bourke Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":335,
+        "longitude":144.95594151,
+        "latitude":-37.8149212405
+    },
+    {
+        "block_id":85,
+        "property_id":105745,
+        "base_property_id":103309,
+        "building_address":"322 Lonsdale Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":312,
+        "longitude":144.9626034264,
+        "latitude":-37.8115766472
+    },
+    {
+        "block_id":97,
+        "property_id":103615,
+        "base_property_id":103615,
+        "building_address":"333-351 Exhibition Street MELBOURNE VIC 3000",
+        "postcode":"3000",
+        "parking_spaces":742,
+        "longitude":144.9680599522,
+        "latitude":-37.8078008918
+    },
+    {
+        "block_id":131,
+        "property_id":103978,
+        "base_property_id":103978,
+        "building_address":"18-38 Siddeley Street DOCKLANDS VIC 3008",
+        "postcode":"3008",
+        "parking_spaces":290,
+        "longitude":144.9538159202,
+        "latitude":-37.8227465515
+    }
+]
