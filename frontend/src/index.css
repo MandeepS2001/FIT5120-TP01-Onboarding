@@ -5,9 +5,56 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Global overflow handling */
+#root {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Ensure containers don't cause horizontal overflow */
+.MuiContainer-root {
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* Prevent floating elements from causing overflow */
+.MuiBox-root {
+  box-sizing: border-box;
+}
+
+/* Ensure text doesn't get cut off */
+.MuiTypography-root {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+/* Additional padding for text containers */
+.MuiContainer-root .MuiTypography-root {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+/* Fixed header positioning */
+.MuiAppBar-root {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 9999 !important;
+}
+
+/* Ensure body doesn't interfere with fixed positioning */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }

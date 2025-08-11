@@ -7,10 +7,16 @@ import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 
+// Import routes
+import dataInsightsRoutes from './routes/dataInsights';
+import parkingRoutes from './routes/parking';
+import analyticsRoutes from './routes/analytics';
+import dataDiscoveryRoutes from './routes/dataDiscovery';
+
 // Load environment variables
 dotenv.config();
 
-const app = express();
+const app: express.Application = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
 
@@ -63,15 +69,43 @@ app.get('/health/db', async (req, res) => {
 });
 
 // API routes
-app.use('/api/v1', (req, res) => {
+app.use('/api/v1/data-insights', dataInsightsRoutes);
+app.use('/api/v1/parking', parkingRoutes);
+app.use('/api/v1/analytics', analyticsRoutes);
+app.use('/api/v1/data-discovery', dataDiscoveryRoutes);
+
+// API info endpoint
+app.get('/api/v1', (req, res) => {
   res.json({
     message: 'Melbourne Parking Accessibility API',
     version: '1.0.0',
     endpoints: {
       health: '/health',
-      parking: '/api/v1/parking',
-      users: '/api/v1/users',
-      predictions: '/api/v1/predictions'
+      'data-insights': {
+        'vehicle-ownership': '/api/v1/data-insights/vehicle-ownership',
+        'population-growth': '/api/v1/data-insights/population-growth',
+        'parking-sensors': '/api/v1/data-insights/parking-sensors',
+        'parking-availability': '/api/v1/data-insights/parking-availability',
+        'parking-trends': '/api/v1/data-insights/parking-trends'
+      },
+      parking: {
+        'locations': '/api/v1/parking/locations',
+        'availability': '/api/v1/parking/availability',
+        'history': '/api/v1/parking/history',
+        'predictions': '/api/v1/parking/predictions'
+      },
+      analytics: {
+        'dashboard': '/api/v1/analytics/dashboard',
+        'parking': '/api/v1/analytics/parking',
+        'vehicles': '/api/v1/analytics/vehicles',
+        'sensors': '/api/v1/analytics/sensors',
+        'recommendations': '/api/v1/analytics/recommendations'
+      },
+      'data-discovery': {
+        'overview': '/api/v1/data-discovery/overview',
+        'file-info': '/api/v1/data-discovery/file/:filePath',
+        'statistics': '/api/v1/data-discovery/statistics'
+      }
     }
   });
 });
@@ -98,6 +132,10 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+  console.log(`📊 Data Insights: http://localhost:${PORT}/api/v1/data-insights`);
+  console.log(`🚗 Parking Data: http://localhost:${PORT}/api/v1/parking`);
+  console.log(`📈 Analytics: http://localhost:${PORT}/api/v1/analytics`);
+  console.log(`🔍 Data Discovery: http://localhost:${PORT}/api/v1/data-discovery`);
 });
 
 export default app;
