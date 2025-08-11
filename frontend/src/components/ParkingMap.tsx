@@ -512,10 +512,21 @@ const ParkingMap: React.FC<Props> = ({
     // Always add a simple test marker to verify marker creation works
     console.log('Adding simple test marker');
     try {
+      const testMarkerIcon = {
+        path: g.maps.SymbolPath.CIRCLE,
+        fillColor: '#2196F3',
+        fillOpacity: 0.9,
+        strokeColor: '#FFFFFF',
+        strokeWeight: 3,
+        scale: 4.5, // 45px equivalent
+      };
+      
       const simpleTestMarker = new g.maps.Marker({
         map: mapRef.current,
         position: { lat: -37.8136, lng: 144.9631 }, // Melbourne CBD
         title: 'Simple Test Marker',
+        icon: testMarkerIcon,
+        animation: g.maps.Animation.DROP,
       });
       console.log('Simple test marker created successfully:', simpleTestMarker);
       markersRef.current.push(simpleTestMarker);
@@ -532,26 +543,26 @@ const ParkingMap: React.FC<Props> = ({
       
       // Determine marker color and size based on availability
       let markerColor = '#FF4444'; // Red for no availability
-      let markerSize = 20;
+      let markerSize = 35;
       
       if (availabilityRate > 50) {
         markerColor = '#4CAF50'; // Green for good availability
-        markerSize = 28;
+        markerSize = 45;
       } else if (availabilityRate > 20) {
         markerColor = '#FF9800'; // Orange for moderate availability
-        markerSize = 24;
+        markerSize = 40;
       } else if (availabilityRate > 0) {
         markerColor = '#FF5722'; // Red-orange for low availability
-        markerSize = 22;
+        markerSize = 38;
       }
 
       // Create custom marker icon
       const markerIcon = {
         path: g.maps.SymbolPath.CIRCLE,
         fillColor: markerColor,
-        fillOpacity: 0.8,
+        fillOpacity: 0.9,
         strokeColor: '#FFFFFF',
-        strokeWeight: 2,
+        strokeWeight: 3,
         scale: markerSize / 10,
       };
 
