@@ -42,8 +42,7 @@ import {
   // Security as SecurityIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import { useTheme as useAppTheme } from '../contexts/ThemeContext';
-import ThemeToggle from './ThemeToggle';
+import { colors } from '../theme';
 
 // Enhanced keyframe animations
 const float = keyframes`
@@ -76,7 +75,6 @@ const glow = keyframes`
 
 const AppHeader: React.FC = () => {
   const theme = useTheme();
-  const { currentColors } = useAppTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -466,9 +464,6 @@ const AppHeader: React.FC = () => {
 
                 {/* Enhanced Right Section */}
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 3 }}>
-                  {/* Theme Toggle */}
-                  <ThemeToggle />
-                  
                   {/* Notifications */}
                   <Tooltip title="Notifications" arrow>
                     <IconButton

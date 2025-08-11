@@ -365,12 +365,12 @@ const LearnMorePage: React.FC = () => {
           </Typography>
           <Typography variant="body1" sx={{ mb: 3, fontSize: '1.1rem' }}>
             Start exploring Melbourne's parking options with real-time data and smart recommendations.
-          </Typography>
+        </Typography>
           <Typography variant="body2" sx={{ opacity: 0.9 }}>
             Navigate to the Parking Map to begin your journey, or explore Data Insights 
             to understand parking patterns across the city.
-          </Typography>
-        </Paper>
+        </Typography>
+      </Paper>
 
       </Container>
     </Box>

@@ -37,7 +37,7 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import { fetchParkingLocations } from '../services/api';
 import { ParkingLocation } from '../types/parking';
-import { useTheme } from '../contexts/ThemeContext';
+import { colors } from '../theme';
 import { calculateParkingMetrics, ParkingMetrics } from '../services/parkingDataService';
 
 // Custom keyframe animations
@@ -63,15 +63,14 @@ const fadeInUp = keyframes`
 `;
 
 const glow = keyframes`
-  0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.6); }
+  0%, 100% { box-shadow: 0 0 20px rgba(33, 150, 243, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(33, 150, 243, 0.6); }
 `;
 
 const HomePage: React.FC = () => {
   const [locations, setLocations] = useState<ParkingLocation[]>([]);
   const [parkingMetrics, setParkingMetrics] = useState<ParkingMetrics | null>(null);
   const [isLoadingMetrics, setIsLoadingMetrics] = useState(true);
-  const { isDarkMode, currentColors } = useTheme();
 
   useEffect(() => {
     fetchParkingLocations().then(setLocations).catch(() => setLocations([]));
@@ -98,34 +97,32 @@ const HomePage: React.FC = () => {
       value: isLoadingMetrics ? '...' : `${parkingMetrics?.totalSensors.toLocaleString()}+`, 
       label: 'Live Sensors', 
       icon: <CarIcon />, 
-      color: isDarkMode ? '#00D4FF' : currentColors.primary[500]
+      color: colors.primary[500]
     },
     { 
       value: isLoadingMetrics ? '...' : `${parkingMetrics?.availabilityRate}%`, 
       label: 'Availability Rate', 
       icon: <TrendingIcon />, 
-      color: isDarkMode ? '#00FF88' : currentColors.secondary[500]
+      color: colors.secondary[500]
     },
     { 
       value: isLoadingMetrics ? '...' : '24/7', 
       label: 'Real-time Updates', 
       icon: <TimeIcon />, 
-      color: isDarkMode ? '#FF6B35' : currentColors.accent[500]
+      color: colors.accent[500]
     },
     { 
       value: isLoadingMetrics ? '...' : `${parkingMetrics?.accessibleSpots.toLocaleString()}+`, 
       label: 'Accessible', 
       icon: <AccessibilityIcon />, 
-      color: isDarkMode ? '#FFD700' : currentColors.success
+      color: colors.success
     },
   ];
 
   return (
     <Box sx={{ 
       minHeight: '100vh', 
-      background: isDarkMode 
-        ? 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)'
-        : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)',
+      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)',
       position: 'relative',
       overflow: 'hidden',
       '&::before': {
@@ -135,9 +132,7 @@ const HomePage: React.FC = () => {
         left: 0,
         right: 0,
         bottom: 0,
-        background: isDarkMode
-          ? `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300D4FF' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-          : `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231976D2' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231976D2' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         opacity: 0.5,
       },
     }}>
@@ -150,9 +145,7 @@ const HomePage: React.FC = () => {
           width: 300,
           height: 300,
           borderRadius: '50%',
-          background: isDarkMode
-            ? 'radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(33, 150, 243, 0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(33, 150, 243, 0.1) 0%, transparent 70%)',
           animation: `${float} 8s ease-in-out infinite`,
           zIndex: 0,
         }}
@@ -165,15 +158,13 @@ const HomePage: React.FC = () => {
           width: 200,
           height: 200,
           borderRadius: '50%',
-          background: isDarkMode
-            ? 'radial-gradient(circle, rgba(0, 255, 136, 0.08) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(156, 39, 176, 0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(156, 39, 176, 0.08) 0%, transparent 70%)',
           animation: `${float} 10s ease-in-out infinite reverse`,
           zIndex: 0,
         }}
       />
 
-      {/* Hero Section */}
+      {/* Hero Section - ABBASS Style */}
       <Box
         sx={{
           pt: { xs: 8, md: 12 },
@@ -195,18 +186,13 @@ const HomePage: React.FC = () => {
                       fontWeight: 600, 
                       fontSize: '0.9rem',
                       animation: isLoadingMetrics ? 'none' : `${pulse} 2s ease-in-out infinite`,
-                      background: isDarkMode
-                        ? 'linear-gradient(45deg, #00FF88 30%, #00D4FF 90%)'
-                        : 'linear-gradient(45deg, #4CAF50 30%, #2196F3 90%)',
-                      color: isDarkMode ? '#000' : '#fff',
-                      boxShadow: `0 4px 15px ${alpha(isDarkMode ? '#00FF88' : '#4CAF50', 0.4)}`,
+                      background: 'linear-gradient(45deg, #4CAF50 30%, #2196F3 90%)',
+                      color: '#fff',
+                      boxShadow: `0 4px 15px ${alpha('#4CAF50', 0.4)}`,
                     }}
                   />
                   {parkingMetrics && (
-                    <Typography variant="body2" sx={{ 
-                      mb: 2, 
-                      color: isDarkMode ? 'rgba(255,255,255,0.7)' : 'text.secondary'
-                    }}>
+                    <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
                       Last updated: {parkingMetrics.lastUpdated}
                     </Typography>
                   )}
@@ -218,11 +204,9 @@ const HomePage: React.FC = () => {
                       fontWeight: 800,
                       lineHeight: 1.1,
                       mb: 3,
-                      color: isDarkMode ? '#FFFFFF' : 'text.primary',
+                      color: 'text.primary',
                       fontSize: { xs: '2.5rem', md: '3.5rem', lg: '4rem' },
-                      textShadow: isDarkMode 
-                        ? '0 4px 20px rgba(0, 212, 255, 0.3)'
-                        : '0 4px 20px rgba(33, 150, 243, 0.1)',
+                      textShadow: '0 4px 20px rgba(33, 150, 243, 0.1)',
                     }}
                   >
                     Smart Parking is Our Business
@@ -234,7 +218,7 @@ const HomePage: React.FC = () => {
                       mb: 4, 
                       fontWeight: 400, 
                       lineHeight: 1.6,
-                      color: isDarkMode ? 'rgba(255,255,255,0.8)' : 'text.secondary',
+                      color: 'text.secondary',
                       fontSize: { xs: '1.1rem', md: '1.3rem' },
                     }}
                   >
@@ -255,19 +239,15 @@ const HomePage: React.FC = () => {
                         fontSize: '1.1rem',
                         fontWeight: 600,
                         borderRadius: 3,
-                        background: isDarkMode
-                          ? 'linear-gradient(135deg, #00D4FF 0%, #0099CC 100%)'
-                          : 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)',
-                        color: isDarkMode ? '#000' : '#fff',
-                        boxShadow: `0 8px 25px ${alpha(isDarkMode ? '#00D4FF' : '#2196F3', 0.4)}`,
+                        background: 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)',
+                        color: '#fff',
+                        boxShadow: `0 8px 25px ${alpha('#2196F3', 0.4)}`,
                         transition: 'all 0.3s ease-in-out',
-                        animation: isDarkMode ? `${glow} 3s ease-in-out infinite` : 'none',
+                        animation: `${glow} 3s ease-in-out infinite`,
                         '&:hover': {
                           transform: 'translateY(-3px) scale(1.02)',
-                          boxShadow: `0 12px 35px ${alpha(isDarkMode ? '#00D4FF' : '#2196F3', 0.6)}`,
-                          background: isDarkMode
-                            ? 'linear-gradient(135deg, #00E6FF 0%, #00B3E6 100%)'
-                            : 'linear-gradient(135deg, #1976D2 0%, #1565C0 100%)',
+                          boxShadow: `0 12px 35px ${alpha('#2196F3', 0.6)}`,
+                          background: 'linear-gradient(135deg, #1976D2 0%, #1565C0 100%)',
                         },
                         '&:active': {
                           transform: 'translateY(-1px) scale(0.98)',
@@ -289,16 +269,14 @@ const HomePage: React.FC = () => {
                         fontWeight: 600,
                         borderWidth: 2,
                         borderRadius: 3,
-                        borderColor: isDarkMode ? '#00D4FF' : currentColors.primary[500],
-                        color: isDarkMode ? '#00D4FF' : currentColors.primary[600],
+                        borderColor: colors.primary[500],
+                        color: colors.primary[600],
                         transition: 'all 0.3s ease-in-out',
                         '&:hover': {
                           borderWidth: 3,
-                          background: isDarkMode 
-                            ? 'rgba(0, 212, 255, 0.1)'
-                            : alpha(currentColors.primary[500], 0.04),
+                          background: alpha(colors.primary[500], 0.04),
                           transform: 'translateY(-2px)',
-                          boxShadow: `0 8px 25px ${alpha(isDarkMode ? '#00D4FF' : currentColors.primary[500], 0.3)}`,
+                          boxShadow: `0 8px 25px ${alpha(colors.primary[500], 0.3)}`,
                         },
                       }}
                     >
@@ -318,13 +296,9 @@ const HomePage: React.FC = () => {
                     elevation={0}
                     sx={{
                       p: 4,
-                      background: isDarkMode 
-                        ? 'rgba(255, 255, 255, 0.05)'
-                        : 'rgba(255, 255, 255, 0.8)',
+                      background: 'rgba(255, 255, 255, 0.8)',
                       backdropFilter: 'blur(20px)',
-                      border: isDarkMode 
-                        ? '1px solid rgba(255, 255, 255, 0.1)'
-                        : '1px solid rgba(0, 0, 0, 0.1)',
+                      border: '1px solid rgba(0, 0, 0, 0.1)',
                       borderRadius: 4,
                       position: 'relative',
                       overflow: 'hidden',
@@ -335,9 +309,7 @@ const HomePage: React.FC = () => {
                         left: 0,
                         right: 0,
                         height: 2,
-                        background: isDarkMode
-                          ? 'linear-gradient(90deg, #00D4FF, #00FF88, #FF6B35)'
-                          : 'linear-gradient(90deg, #2196F3, #9C27B0, #FF9800)',
+                        background: 'linear-gradient(90deg, #2196F3, #9C27B0, #FF9800)',
                         backgroundSize: '200% 100%',
                         animation: `${shimmer} 3s ease-in-out infinite`,
                       },
@@ -346,7 +318,7 @@ const HomePage: React.FC = () => {
                     <Typography
                       variant="h4"
                       sx={{
-                        color: isDarkMode ? '#FFFFFF' : 'text.primary',
+                        color: 'text.primary',
                         fontWeight: 700,
                         mb: 3,
                         textAlign: 'center',
@@ -364,16 +336,12 @@ const HomePage: React.FC = () => {
                               textAlign: 'center',
                               p: 2,
                               borderRadius: 2,
-                              background: isDarkMode 
-                                ? 'rgba(255, 255, 255, 0.05)'
-                                : 'rgba(255, 255, 255, 0.5)',
+                              background: 'rgba(255, 255, 255, 0.5)',
                               border: `1px solid ${alpha(stat.color, 0.2)}`,
                               transition: 'all 0.3s ease-in-out',
                               '&:hover': {
                                 transform: 'translateY(-5px)',
-                                background: isDarkMode 
-                                  ? 'rgba(255, 255, 255, 0.08)'
-                                  : 'rgba(255, 255, 255, 0.8)',
+                                background: 'rgba(255, 255, 255, 0.8)',
                                 border: `1px solid ${alpha(stat.color, 0.4)}`,
                               },
                             }}
@@ -412,10 +380,7 @@ const HomePage: React.FC = () => {
                             >
                               {stat.value}
                             </Typography>
-                            <Typography variant="body2" sx={{ 
-                              color: isDarkMode ? 'rgba(255,255,255,0.7)' : 'text.secondary', 
-                              fontWeight: 500 
-                            }}>
+                            <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
                               {stat.label}
                             </Typography>
                           </Box>
@@ -429,30 +394,30 @@ const HomePage: React.FC = () => {
                         label="3,309+ Sensors"
                         size="small"
                         sx={{
-                          bgcolor: alpha(isDarkMode ? '#00FF88' : currentColors.success, 0.2),
-                          color: isDarkMode ? '#00FF88' : currentColors.success,
+                          bgcolor: alpha(colors.success, 0.2),
+                          color: colors.success,
                           fontWeight: 600,
-                          border: `1px solid ${alpha(isDarkMode ? '#00FF88' : currentColors.success, 0.3)}`,
+                          border: `1px solid ${alpha(colors.success, 0.3)}`,
                         }}
                       />
                       <Chip
                         label="Live Data"
                         size="small"
                         sx={{
-                          bgcolor: alpha(isDarkMode ? '#00D4FF' : currentColors.primary[500], 0.2),
-                          color: isDarkMode ? '#00D4FF' : currentColors.primary[500],
+                          bgcolor: alpha(colors.primary[500], 0.2),
+                          color: colors.primary[500],
                           fontWeight: 600,
-                          border: `1px solid ${alpha(isDarkMode ? '#00D4FF' : currentColors.primary[500], 0.3)}`,
+                          border: `1px solid ${alpha(colors.primary[500], 0.3)}`,
                         }}
                       />
                       <Chip
                         label="Family-Friendly"
                         size="small"
                         sx={{
-                          bgcolor: alpha(isDarkMode ? '#FFD700' : currentColors.accent[500], 0.2),
-                          color: isDarkMode ? '#FFD700' : currentColors.accent[500],
+                          bgcolor: alpha(colors.accent[500], 0.2),
+                          color: colors.accent[500],
                           fontWeight: 600,
-                          border: `1px solid ${alpha(isDarkMode ? '#FFD700' : currentColors.accent[500], 0.3)}`,
+                          border: `1px solid ${alpha(colors.accent[500], 0.3)}`,
                         }}
                       />
                     </Box>
@@ -474,22 +439,16 @@ const HomePage: React.FC = () => {
               fontWeight="bold"
               gutterBottom
               sx={{
-                color: isDarkMode ? '#FFFFFF' : 'text.primary',
+                color: 'text.primary',
                 fontSize: { xs: '2rem', md: '3rem' },
-                textShadow: isDarkMode 
-                  ? '0 4px 20px rgba(0, 212, 255, 0.3)'
-                  : '0 4px 20px rgba(33, 150, 243, 0.1)',
+                textShadow: '0 4px 20px rgba(33, 150, 243, 0.1)',
               }}
             >
               Why Choose Park Pal?
             </Typography>
           </Fade>
           <Fade in timeout={1000}>
-            <Typography variant="h6" sx={{ 
-              maxWidth: 600, 
-              mx: 'auto', 
-              color: isDarkMode ? 'rgba(255,255,255,0.8)' : 'text.secondary'
-            }}>
+            <Typography variant="h6" sx={{ maxWidth: 600, mx: 'auto', color: 'text.secondary' }}>
               Cutting-edge technology meets family-friendly design for the ultimate parking experience
             </Typography>
           </Fade>
@@ -498,22 +457,22 @@ const HomePage: React.FC = () => {
         <Grid container spacing={4}>
           {[
             {
-              icon: <SpeedIcon sx={{ fontSize: 40, color: isDarkMode ? '#00D4FF' : currentColors.primary[500] }} />,
+              icon: <SpeedIcon sx={{ fontSize: 40, color: colors.primary[500] }} />,
               title: 'Real-time Availability',
               description: 'Live updates from 3,309+ CBD parking sensors and car parks across Melbourne.',
-              color: isDarkMode ? '#00D4FF' : currentColors.primary[500],
+              color: colors.primary[500],
             },
             {
-              icon: <TrendingIcon sx={{ fontSize: 40, color: isDarkMode ? '#00FF88' : currentColors.secondary[500] }} />,
+              icon: <TrendingIcon sx={{ fontSize: 40, color: colors.secondary[500] }} />,
               title: 'AI Predictions',
               description: 'Smart forecasts for peak hours, events, and optimal parking times.',
-              color: isDarkMode ? '#00FF88' : currentColors.secondary[500],
+              color: colors.secondary[500],
             },
             {
-              icon: <FamilyIcon sx={{ fontSize: 40, color: isDarkMode ? '#FFD700' : currentColors.accent[500] }} />,
+              icon: <FamilyIcon sx={{ fontSize: 40, color: colors.accent[500] }} />,
               title: 'Family-Focused',
               description: 'Highlighted childcare-friendly zones and accessible parking bays.',
-              color: isDarkMode ? '#FFD700' : currentColors.accent[500],
+              color: colors.accent[500],
             },
           ].map((feature, index) => (
             <Grid xs={12} md={4} key={index}>
@@ -523,9 +482,7 @@ const HomePage: React.FC = () => {
                   sx={{
                     height: '100%',
                     p: 4,
-                    background: isDarkMode 
-                      ? 'rgba(255, 255, 255, 0.05)'
-                      : 'rgba(255, 255, 255, 0.8)',
+                    background: 'rgba(255, 255, 255, 0.8)',
                     backdropFilter: 'blur(20px)',
                     border: `1px solid ${alpha(feature.color, 0.2)}`,
                     borderRadius: 4,
@@ -547,9 +504,7 @@ const HomePage: React.FC = () => {
                     '&:hover': {
                       transform: 'translateY(-8px) scale(1.02)',
                       boxShadow: `0 16px 48px ${alpha(feature.color, 0.2)}`,
-                      background: isDarkMode 
-                        ? 'rgba(255, 255, 255, 0.08)'
-                        : 'rgba(255, 255, 255, 0.9)',
+                      background: 'rgba(255, 255, 255, 0.9)',
                       '& .feature-icon': {
                         transform: 'scale(1.1) rotate(5deg)',
                       },
@@ -568,15 +523,10 @@ const HomePage: React.FC = () => {
                   >
                     {feature.icon}
                   </Box>
-                  <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom sx={{ 
-                    color: isDarkMode ? '#FFFFFF' : 'text.primary'
-                  }}>
+                  <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom sx={{ color: 'text.primary' }}>
                     {feature.title}
                   </Typography>
-                  <Typography variant="body1" sx={{ 
-                    lineHeight: 1.6, 
-                    color: isDarkMode ? 'rgba(255,255,255,0.8)' : 'text.secondary'
-                  }}>
+                  <Typography variant="body1" sx={{ lineHeight: 1.6, color: 'text.secondary' }}>
                     {feature.description}
                   </Typography>
                 </Card>
@@ -589,9 +539,7 @@ const HomePage: React.FC = () => {
       {/* CTA Section */}
       <Box
         sx={{
-          background: isDarkMode
-            ? 'linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 255, 136, 0.1) 100%)'
-            : 'linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(156, 39, 176, 0.1) 100%)',
+          background: 'linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(156, 39, 176, 0.1) 100%)',
           py: { xs: 8, md: 12 },
           mt: { xs: 6, md: 8 },
           position: 'relative',
@@ -603,28 +551,20 @@ const HomePage: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            background: isDarkMode
-              ? `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300D4FF' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-              : `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231976D2' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231976D2' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             opacity: 0.3,
           },
         }}
       >
         <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 5 } }}>
-          <Box sx={{ textAlign: 'center', color: isDarkMode ? 'white' : 'text.primary', position: 'relative', zIndex: 1 }}>
+          <Box sx={{ textAlign: 'center', color: 'text.primary', position: 'relative', zIndex: 1 }}>
             <Fade in timeout={800}>
               <Typography variant="h3" component="h2" fontWeight="bold" gutterBottom>
                 Ready to Transform Your Parking Experience?
               </Typography>
             </Fade>
             <Fade in timeout={1000}>
-              <Typography variant="h6" sx={{ 
-                mb: 4, 
-                opacity: 0.9, 
-                maxWidth: 600, 
-                mx: 'auto',
-                color: isDarkMode ? 'rgba(255,255,255,0.9)' : 'text.secondary'
-              }}>
+              <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, maxWidth: 600, mx: 'auto', color: 'text.secondary' }}>
                 Join thousands of Melbourne families who've already discovered the convenience of smart parking
               </Typography>
             </Fade>
@@ -638,19 +578,19 @@ const HomePage: React.FC = () => {
                   startIcon={<LocationIcon />}
                   endIcon={<ArrowIcon />}
                   sx={{
-                    bgcolor: isDarkMode ? '#00D4FF' : currentColors.primary[500],
-                    color: isDarkMode ? '#000' : '#fff',
+                    bgcolor: colors.primary[500],
+                    color: '#fff',
                     px: 4,
                     py: 1.5,
                     fontSize: '1.1rem',
                     fontWeight: 600,
                     borderRadius: 3,
                     transition: 'all 0.3s ease-in-out',
-                    animation: isDarkMode ? `${glow} 3s ease-in-out infinite` : 'none',
+                    animation: `${glow} 3s ease-in-out infinite`,
                     '&:hover': {
-                      bgcolor: isDarkMode ? '#00E6FF' : currentColors.primary[600],
+                      bgcolor: colors.primary[600],
                       transform: 'translateY(-3px) scale(1.02)',
-                      boxShadow: `0 12px 35px ${alpha(isDarkMode ? '#00D4FF' : currentColors.primary[500], 0.4)}`,
+                      boxShadow: `0 12px 35px ${alpha(colors.primary[500], 0.4)}`,
                     },
                     '&:active': {
                       transform: 'translateY(-1px) scale(0.98)',
@@ -666,8 +606,8 @@ const HomePage: React.FC = () => {
                   to="/data-insights"
                   startIcon={<AnalyticsIcon />}
                   sx={{
-                    borderColor: isDarkMode ? '#00D4FF' : currentColors.primary[500],
-                    color: isDarkMode ? '#00D4FF' : currentColors.primary[600],
+                    borderColor: colors.primary[500],
+                    color: colors.primary[600],
                     px: 4,
                     py: 1.5,
                     fontSize: '1.1rem',
@@ -676,12 +616,10 @@ const HomePage: React.FC = () => {
                     borderRadius: 3,
                     transition: 'all 0.3s ease-in-out',
                     '&:hover': {
-                      bgcolor: isDarkMode 
-                        ? 'rgba(0, 212, 255, 0.1)'
-                        : alpha(currentColors.primary[500], 0.04),
-                      borderColor: isDarkMode ? '#00D4FF' : currentColors.primary[500],
+                      bgcolor: alpha(colors.primary[500], 0.04),
+                      borderColor: colors.primary[500],
                       transform: 'translateY(-2px)',
-                      boxShadow: `0 8px 25px ${alpha(isDarkMode ? '#00D4FF' : currentColors.primary[500], 0.3)}`,
+                      boxShadow: `0 8px 25px ${alpha(colors.primary[500], 0.3)}`,
                     },
                   }}
                 >
