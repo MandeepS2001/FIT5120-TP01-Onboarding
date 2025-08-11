@@ -25,7 +25,7 @@ const ParkingMap: React.FC<Props> = ({
 }) => {
   const center = useMemo(() => ({ lat: initialCenter[0], lng: initialCenter[1] }), [initialCenter]);
 
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '',
   });
@@ -785,7 +785,61 @@ const ParkingMap: React.FC<Props> = ({
         </Box>
       </Paper>
 
-      {isLoaded && (
+      {!isLoaded && !loadError && (
+        <Box
+          sx={{
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            bgcolor: 'background.paper',
+          }}
+        >
+          <Typography variant="h6" color="text.secondary">
+            Loading Google Maps...
+          </Typography>
+        </Box>
+      )}
+
+      {loadError && (
+        <Box
+          sx={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            bgcolor: 'background.paper',
+            p: 3,
+            textAlign: 'center',
+          }}
+        >
+          <Typography variant="h5" color="error" gutterBottom>
+            Google Maps Error
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+            {loadError.message === 'ApiProjectMapError' 
+              ? 'Google Maps API key is missing or invalid. Please set REACT_APP_GOOGLE_MAPS_API_KEY in your environment variables.'
+              : loadError.message}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            To fix this, you need to:
+          </Typography>
+          <Box component="ul" sx={{ textAlign: 'left', mt: 1 }}>
+            <Typography component="li" variant="body2" color="text.secondary">
+              1. Get a Google Maps API key from the Google Cloud Console
+            </Typography>
+            <Typography component="li" variant="body2" color="text.secondary">
+              2. Set REACT_APP_GOOGLE_MAPS_API_KEY in your .env.local file
+            </Typography>
+            <Typography component="li" variant="body2" color="text.secondary">
+              3. For production, add it to Vercel environment variables
+            </Typography>
+          </Box>
+        </Box>
+      )}
+
+      {isLoaded && !loadError && (
         <GoogleMap
           mapContainerStyle={{ height: '100%', width: '100%' }}
           center={center}
