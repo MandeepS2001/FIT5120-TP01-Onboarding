@@ -30,16 +30,10 @@ import {
 } from '@mui/icons-material';
 import { colors } from '../theme';
 import VehicleOwnershipChart from '../components/VehicleOwnershipChart';
-import ZoneAnalyticsChart from '../components/ZoneAnalyticsChart';
-import HistoricalTrendsChart from '../components/HistoricalTrendsChart';
 import DetailedInsightsPanel from '../components/DetailedInsightsPanel';
 import { 
   calculateParkingMetrics, 
   ParkingMetrics, 
-  getZoneAnalytics, 
-  ZoneAnalytics,
-  getHistoricalTrends,
-  HistoricalTrend,
   getDetailedInsights,
   DetailedInsights
 } from '../services/parkingDataService';
@@ -68,12 +62,8 @@ const rotate = keyframes`
 
 const DataInsightsPage: React.FC = () => {
   const [parkingMetrics, setParkingMetrics] = React.useState<ParkingMetrics | null>(null);
-  const [zoneAnalytics, setZoneAnalytics] = React.useState<ZoneAnalytics[]>([]);
-  const [historicalTrends, setHistoricalTrends] = React.useState<HistoricalTrend[]>([]);
   const [detailedInsights, setDetailedInsights] = React.useState<DetailedInsights | null>(null);
   const [isLoadingMetrics, setIsLoadingMetrics] = React.useState(true);
-  const [isLoadingZoneAnalytics, setIsLoadingZoneAnalytics] = React.useState(true);
-  const [isLoadingHistoricalTrends, setIsLoadingHistoricalTrends] = React.useState(true);
   const [isLoadingDetailedInsights, setIsLoadingDetailedInsights] = React.useState(true);
 
   // Load all data with real-time refresh
@@ -81,30 +71,22 @@ const DataInsightsPage: React.FC = () => {
     try {
       console.log('Starting to load all data...');
       // Load all data in parallel
-      const [metrics, zones, trends, insights] = await Promise.all([
+      const [metrics, insights] = await Promise.all([
         calculateParkingMetrics(),
-        getZoneAnalytics(),
-        getHistoricalTrends(),
         getDetailedInsights()
       ]);
 
       console.log('Data loaded successfully:', { 
         metrics: !!metrics, 
-        zonesLength: zones.length, 
-        trendsLength: trends.length, 
         insights: !!insights 
       });
 
       setParkingMetrics(metrics);
-      setZoneAnalytics(zones);
-      setHistoricalTrends(trends);
       setDetailedInsights(insights);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
       setIsLoadingMetrics(false);
-      setIsLoadingZoneAnalytics(false);
-      setIsLoadingHistoricalTrends(false);
       setIsLoadingDetailedInsights(false);
     }
   }, []);
@@ -320,151 +302,355 @@ const DataInsightsPage: React.FC = () => {
           {/* Key Metrics Overview */}
           <Grid container spacing={3} sx={{ mb: 4 }}>
             <Grid item xs={12} md={3}>
-              <Card sx={{ 
-                background: `linear-gradient(135deg, ${colors.primary[500]}, ${colors.primary[700]})`,
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-                  opacity: 0.3,
-                }
-              }}>
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Box>
-                      <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        {isLoadingMetrics ? '...' : `${parkingMetrics?.totalSensors.toLocaleString()}+`}
-                      </Typography>
-                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                        Live Parking Sensors
-                      </Typography>
+              <Box
+                sx={{
+                  perspective: '1000px',
+                  height: 200,
+                }}
+              >
+                <Card
+                  sx={{
+                    background: `linear-gradient(135deg, ${colors.primary[500]}, ${colors.primary[700]})`,
+                    color: 'white',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    height: '100%',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.6s ease-in-out',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'rotateY(180deg)',
+                    },
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                      opacity: 0.3,
+                    }
+                  }}
+                >
+                  {/* Front Side */}
+                  <CardContent sx={{ 
+                    backfaceVisibility: 'hidden',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Box>
+                        <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+                          {isLoadingMetrics ? '...' : `${parkingMetrics?.totalSensors.toLocaleString()}+`}
+                        </Typography>
+                        <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                          Live Parking Sensors
+                        </Typography>
+                      </Box>
+                      <DirectionsCar sx={{ fontSize: 48, opacity: 0.8 }} />
                     </Box>
-                    <DirectionsCar sx={{ fontSize: 48, opacity: 0.8 }} />
+                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                      <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
+                      <Typography variant="body2">Real-time data</Typography>
+                    </Box>
+                  </CardContent>
+
+                  {/* Back Side */}
+                  <Box sx={{ 
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg)',
+                    background: `linear-gradient(135deg, ${colors.primary[600]}, ${colors.primary[800]})`,
+                    borderRadius: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    p: 3,
+                    color: 'white'
+                  }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: 'white' }}>
+                      What This Means
+                    </Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6, color: 'white' }}>
+                      Smart sensors installed across Melbourne CBD that detect parking space availability in real-time. 
+                      These sensors provide instant updates to help you find available parking spots quickly.
+                    </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                    <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
-                    <Typography variant="body2">Real-time data</Typography>
-                  </Box>
-                </CardContent>
-              </Card>
+                </Card>
+              </Box>
             </Grid>
 
             <Grid item xs={12} md={3}>
-              <Card sx={{ 
-                background: `linear-gradient(135deg, ${colors.secondary[500]}, ${colors.secondary[700]})`,
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-                  opacity: 0.3,
-                }
-              }}>
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Box>
-                      <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        {isLoadingMetrics ? '...' : `${parkingMetrics?.availableSpots.toLocaleString()}`}
-                      </Typography>
-                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                        Available Spots Now
-                      </Typography>
+              <Box
+                sx={{
+                  perspective: '1000px',
+                  height: 200,
+                }}
+              >
+                <Card
+                  sx={{
+                    background: `linear-gradient(135deg, ${colors.secondary[500]}, ${colors.secondary[700]})`,
+                    color: 'white',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    height: '100%',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.6s ease-in-out',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'rotateY(180deg)',
+                    },
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                      opacity: 0.3,
+                    }
+                  }}
+                >
+                  {/* Front Side */}
+                  <CardContent sx={{ 
+                    backfaceVisibility: 'hidden',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Box>
+                        <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+                          {isLoadingMetrics ? '...' : `${parkingMetrics?.availableSpots.toLocaleString()}`}
+                        </Typography>
+                        <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                          Available Spots Now
+                        </Typography>
+                      </Box>
+                      <LocalParking sx={{ fontSize: 48, opacity: 0.8 }} />
                     </Box>
-                    <DirectionsCar sx={{ fontSize: 48, opacity: 0.8 }} />
+                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                      <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
+                      <Typography variant="body2">Live updates</Typography>
+                    </Box>
+                  </CardContent>
+
+                  {/* Back Side */}
+                  <Box sx={{ 
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg)',
+                    background: `linear-gradient(135deg, ${colors.secondary[600]}, ${colors.secondary[800]})`,
+                    borderRadius: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    p: 3,
+                    color: 'white'
+                  }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: 'white' }}>
+                      What This Means
+                    </Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6, color: 'white' }}>
+                      The current number of parking spaces that are free and ready for use right now. 
+                      This number updates every few minutes to give you the most accurate information.
+                    </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                    <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
-                    <Typography variant="body2">Live updates</Typography>
-                  </Box>
-                </CardContent>
-              </Card>
+                </Card>
+              </Box>
             </Grid>
 
             <Grid item xs={12} md={3}>
-              <Card sx={{ 
-                background: `linear-gradient(135deg, ${colors.success}, ${colors.accent[600]})`,
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-                  opacity: 0.3,
-                }
-              }}>
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Box>
-                      <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        {isLoadingMetrics ? '...' : `${parkingMetrics?.availabilityRate}%`}
-                      </Typography>
-                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                        Availability Rate
-                      </Typography>
+              <Box
+                sx={{
+                  perspective: '1000px',
+                  height: 200,
+                }}
+              >
+                <Card
+                  sx={{
+                    background: `linear-gradient(135deg, ${colors.success}, ${colors.accent[600]})`,
+                    color: 'white',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    height: '100%',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.6s ease-in-out',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'rotateY(180deg)',
+                    },
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                      opacity: 0.3,
+                    }
+                  }}
+                >
+                  {/* Front Side */}
+                  <CardContent sx={{ 
+                    backfaceVisibility: 'hidden',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Box>
+                        <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+                          {isLoadingMetrics ? '...' : `${parkingMetrics?.availabilityRate}%`}
+                        </Typography>
+                        <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                          Availability Rate
+                        </Typography>
+                      </Box>
+                      <LocalParking sx={{ fontSize: 48, opacity: 0.8 }} />
                     </Box>
-                    <LocalParking sx={{ fontSize: 48, opacity: 0.8 }} />
+                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                      <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
+                      <Typography variant="body2">Melbourne CBD</Typography>
+                    </Box>
+                  </CardContent>
+
+                  {/* Back Side */}
+                  <Box sx={{ 
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg)',
+                    background: `linear-gradient(135deg, ${colors.success}, ${colors.accent[700]})`,
+                    borderRadius: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    p: 3,
+                    color: 'white'
+                  }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: 'white' }}>
+                      What This Means
+                    </Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6, color: 'white' }}>
+                      The percentage of total parking spaces that are currently available. 
+                      Higher percentages mean more parking options and easier to find a spot.
+                    </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                    <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
-                    <Typography variant="body2">Melbourne CBD</Typography>
-                  </Box>
-                </CardContent>
-              </Card>
+                </Card>
+              </Box>
             </Grid>
 
             <Grid item xs={12} md={3}>
-              <Card sx={{ 
-                background: `linear-gradient(135deg, ${colors.warning}, ${colors.secondary[600]})`,
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-                  opacity: 0.3,
-                }
-              }}>
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Box>
-                      <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        {isLoadingMetrics ? '...' : `${parkingMetrics?.accessibleSpots.toLocaleString()}+`}
-                      </Typography>
-                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                        Accessible Spots
-                      </Typography>
+              <Box
+                sx={{
+                  perspective: '1000px',
+                  height: 200,
+                }}
+              >
+                <Card
+                  sx={{
+                    background: `linear-gradient(135deg, ${colors.warning}, ${colors.secondary[600]})`,
+                    color: 'white',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    height: '100%',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.6s ease-in-out',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'rotateY(180deg)',
+                    },
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                      opacity: 0.3,
+                    }
+                  }}
+                >
+                  {/* Front Side */}
+                  <CardContent sx={{ 
+                    backfaceVisibility: 'hidden',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Box>
+                        <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+                          {isLoadingMetrics ? '...' : `${parkingMetrics?.accessibleSpots.toLocaleString()}+`}
+                        </Typography>
+                        <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                          Accessible Spots
+                        </Typography>
+                      </Box>
+                      <Accessibility sx={{ fontSize: 48, opacity: 0.8 }} />
                     </Box>
-                    <Accessibility sx={{ fontSize: 48, opacity: 0.8 }} />
+                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                      <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
+                      <Typography variant="body2">ADA compliant</Typography>
+                    </Box>
+                  </CardContent>
+
+                  {/* Back Side */}
+                  <Box sx={{ 
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg)',
+                    background: `linear-gradient(135deg, ${colors.warning}, ${colors.secondary[700]})`,
+                    borderRadius: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    p: 3,
+                    color: 'white'
+                  }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: 'white' }}>
+                      What This Means
+                    </Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6, color: 'white' }}>
+                      Specially designed parking spaces for people with disabilities. 
+                      These spots are wider, closer to entrances, and meet accessibility standards.
+                    </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                    <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
-                    <Typography variant="body2">ADA compliant</Typography>
-                  </Box>
-                </CardContent>
-              </Card>
+                </Card>
+              </Box>
             </Grid>
           </Grid>
 
@@ -651,182 +837,7 @@ const DataInsightsPage: React.FC = () => {
         </Grid>
       </Container>
 
-              {/* Trends Analysis Section */}
-        <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, px: { xs: 3, sm: 4, md: 5 } }}>
-        <Box sx={{ textAlign: 'center', mb: 6 }}>
-          <Fade in timeout={800}>
-            <Typography
-              variant="h2"
-              component="h2"
-              fontWeight="bold"
-              gutterBottom
-              sx={{
-                background: `linear-gradient(135deg, ${colors.secondary[600]} 0%, ${colors.accent[600]} 100%)`,
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              Real-Time Trends Analysis
-            </Typography>
-          </Fade>
-          <Fade in timeout={1000}>
-            <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
-              Live monitoring of parking patterns and occupancy trends across Melbourne CBD
-            </Typography>
-          </Fade>
-        </Box>
 
-        <Grid container spacing={4}>
-          <Grid xs={12} lg={7}>
-            <Slide direction="up" in timeout={1200}>
-              <Card
-                elevation={0}
-                sx={{
-                  p: 4,
-                  background: `linear-gradient(135deg, ${colors.neutral[50]} 0%, ${colors.neutral[100]} 100%)`,
-                  border: `1px solid ${alpha(colors.neutral[200], 0.5)}`,
-                  borderRadius: 4,
-                  position: 'relative',
-                  overflow: 'hidden',
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 4,
-                    background: `linear-gradient(90deg, ${colors.primary[500]}, ${colors.secondary[500]}, ${colors.accent[500]})`,
-                    backgroundSize: '200% 100%',
-                    animation: `${shimmer} 4s ease-in-out infinite`,
-                  },
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: colors.primary[500],
-                      width: 48,
-                      height: 48,
-                      animation: `${pulse} 2s ease-in-out infinite`,
-                    }}
-                  >
-                    <Analytics />
-                  </Avatar>
-                  <Box>
-                    <Typography variant="h5" component="h3" fontWeight="bold" color="text.primary">
-                      Live Occupancy Trends
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Real-time monitoring of parking availability across all CBD zones
-                    </Typography>
-                  </Box>
-                </Box>
-                
-                {/* Real Zone Analytics and Historical Trends */}
-                <Box sx={{ mt: 3 }}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
-                      <ZoneAnalyticsChart 
-                        zoneAnalytics={zoneAnalytics} 
-                        isLoading={isLoadingZoneAnalytics} 
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <HistoricalTrendsChart 
-                        historicalTrends={historicalTrends} 
-                        isLoading={isLoadingHistoricalTrends} 
-                      />
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Card>
-            </Slide>
-          </Grid>
-
-          <Grid xs={12} lg={5}>
-            <Slide direction="left" in timeout={1400}>
-              <Card
-                elevation={0}
-                sx={{
-                  height: '100%',
-                  p: 4,
-                  background: `linear-gradient(135deg, ${colors.neutral[50]} 0%, ${colors.neutral[100]} 100%)`,
-                  border: `1px solid ${alpha(colors.neutral[200], 0.5)}`,
-                  borderRadius: 4,
-                  position: 'relative',
-                  overflow: 'hidden',
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 4,
-                    background: `linear-gradient(90deg, ${colors.accent[500]}, ${colors.primary[500]}, ${colors.secondary[500]})`,
-                    backgroundSize: '200% 100%',
-                    animation: `${shimmer} 5s ease-in-out infinite`,
-                  },
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: colors.accent[500],
-                      width: 48,
-                      height: 48,
-                      animation: `${pulse} 2s ease-in-out infinite`,
-                    }}
-                  >
-                    <Insights />
-                  </Avatar>
-                  <Box>
-                    <Typography variant="h5" component="h3" fontWeight="bold" color="text.primary">
-                      Peak Time Analysis
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      When to expect congestion and plan accordingly
-                    </Typography>
-                  </Box>
-                </Box>
-                
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  {trends.map((trend, index) => (
-                    <Grow in timeout={1600 + index * 200} key={index}>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          p: 3,
-                          borderRadius: 3,
-                          bgcolor: alpha(trend.color, 0.08),
-                          border: `2px solid ${alpha(trend.color, 0.15)}`,
-                          transition: 'all 0.3s ease-in-out',
-                          cursor: 'pointer',
-                          minHeight: 60,
-                          '&:hover': {
-                            transform: 'translateX(8px)',
-                            bgcolor: alpha(trend.color, 0.12),
-                            boxShadow: `0 4px 12px ${alpha(trend.color, 0.2)}`,
-                          },
-                        }}
-                      >
-                        <Typography variant="body1" fontWeight="600" color="text.primary">
-                          {trend.label}
-                        </Typography>
-                        <Typography variant="h5" fontWeight="bold" sx={{ color: trend.color }}>
-                          {trend.value}
-                        </Typography>
-                      </Box>
-                    </Grow>
-                  ))}
-                </Box>
-              </Card>
-            </Slide>
-          </Grid>
-        </Grid>
-      </Container>
 
       {/* Enhanced CTA Section */}
       <Box

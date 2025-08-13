@@ -13,7 +13,6 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Chip,
   Avatar,
   Container,
   alpha,
@@ -21,25 +20,17 @@ import {
   Fade,
   Grow,
   Slide,
-  Badge,
   Tooltip,
-  Divider,
   Paper,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
   Home as HomeIcon,
   Map as MapIcon,
-  Info as InfoIcon,
   Analytics as AnalyticsIcon,
-  // DirectionsCar as CarIcon,
   Close as CloseIcon,
-  FlashOn as FlashIcon,
-  Notifications as NotificationsIcon,
-  // AccountCircle as AccountIcon,
   LocationOn as LocationIcon,
   TrendingUp as TrendingIcon,
-  // Security as SecurityIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { colors } from '../theme';
@@ -95,7 +86,6 @@ const AppHeader: React.FC = () => {
     { path: '/', label: 'Home', icon: <HomeIcon />, description: 'Dashboard & Overview' },
     { path: '/map', label: 'Parking Map', icon: <MapIcon />, description: 'Find Parking Spots' },
     { path: '/data-insights', label: 'Data Insights', icon: <AnalyticsIcon />, description: 'Analytics & Trends' },
-    { path: '/learn-more', label: 'Learn More', icon: <InfoIcon />, description: 'About the Project' },
   ];
 
   const handleDrawerToggle = () => {
@@ -232,41 +222,7 @@ const AppHeader: React.FC = () => {
         ))}
       </List>
 
-      <Divider sx={{ my: 2, mx: 3 }} />
 
-      {/* Live Data Status */}
-      <Box sx={{ px: 3, mb: 3 }}>
-        <Chip
-          icon={<FlashIcon />}
-          label="Live Data"
-          color="success"
-          variant="filled"
-          component={RouterLink}
-          to="/data-insights"
-          clickable
-          onClick={handleDrawerToggle}
-          sx={{
-            fontWeight: 600,
-            background: `linear-gradient(45deg, ${colors.success} 30%, ${colors.accent[500]} 90%)`,
-            color: 'white',
-            boxShadow: `0 4px 15px ${alpha(colors.success, 0.4)}`,
-            animation: `${glow} 3s ease-in-out infinite`,
-            cursor: 'pointer',
-            textDecoration: 'none',
-            width: '100%',
-            justifyContent: 'center',
-            '&:hover': {
-              transform: 'scale(1.02)',
-              boxShadow: `0 6px 20px ${alpha(colors.success, 0.6)}`,
-              animation: `${pulse} 1s ease-in-out infinite`,
-              textDecoration: 'none',
-            },
-            '& .MuiChip-icon': {
-              color: 'inherit',
-            },
-          }}
-        />
-      </Box>
 
       {/* Quick Actions */}
       <Box sx={{ px: 3 }}>
@@ -315,48 +271,43 @@ const AppHeader: React.FC = () => {
     <>
       <AppBar 
         position="fixed" 
-        elevation={0}
+        elevation={scrolled ? 2 : 0}
         sx={{
-          background: scrolled 
-            ? 'rgba(255, 255, 255, 0.9)' 
-            : 'rgba(255, 255, 255, 0.7)',
-          backdropFilter: 'blur(25px)',
-          borderBottom: `1px solid ${alpha(colors.neutral[200], 0.4)}`,
-          boxShadow: scrolled 
-            ? '0 8px 30px rgba(0, 0, 0, 0.15)' 
-            : '0 4px 20px rgba(0, 0, 0, 0.08)',
+          backgroundColor: scrolled ? 'rgba(28, 36, 52, 0.95)' : 'transparent',
+          backgroundImage: scrolled 
+            ? 'none'
+            : 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 100%)',
+          backdropFilter: scrolled ? 'blur(10px)' : 'none',
           transition: 'all 0.3s ease-in-out',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 9999,
-          '&:hover': {
-            background: 'rgba(255, 255, 255, 0.95)',
-            boxShadow: '0 10px 35px rgba(0, 0, 0, 0.12)',
-          },
+          borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
         }}
       >
         <Container maxWidth="xl" sx={{ px: { xs: 3, sm: 4, md: 5 } }}>
-          <Toolbar sx={{ px: { xs: 0 }, minHeight: { xs: 64, md: 72 } }}>
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between', 
+            height: scrolled ? '80px' : '100px',
+            transition: 'height 0.3s ease-in-out'
+          }}>
             {/* Enhanced Logo and Brand */}
             <Fade in timeout={800}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Avatar
                   sx={{
                     background: `linear-gradient(135deg, ${colors.primary[500]} 0%, ${colors.primary[600]} 100%)`,
-                    width: { xs: 44, md: 52 },
-                    height: { xs: 44, md: 52 },
-                    fontSize: { xs: '1.3rem', md: '1.6rem' },
+                    width: scrolled ? { xs: 40, md: 48 } : { xs: 44, md: 52 },
+                    height: scrolled ? { xs: 40, md: 48 } : { xs: 44, md: 52 },
+                    fontSize: scrolled ? { xs: '1.2rem', md: '1.5rem' } : { xs: '1.3rem', md: '1.6rem' },
                     fontWeight: 'bold',
                     boxShadow: `0 4px 20px ${alpha(colors.primary[500], 0.3)}`,
                     animation: `${float} 4s ease-in-out infinite`,
                     cursor: 'pointer',
-                    transform: scrolled ? 'scale(0.95)' : 'scale(1)',
                     transition: 'all 0.3s ease-in-out',
                     '&:hover': {
                       animation: `${pulse} 0.6s ease-in-out`,
                       boxShadow: `0 6px 25px ${alpha(colors.primary[500], 0.4)}`,
-                      transform: scrolled ? 'scale(1)' : 'scale(1.05)',
+                      transform: 'scale(1.05)',
                     },
                   }}
                 >
@@ -368,16 +319,15 @@ const AppHeader: React.FC = () => {
                     component="div"
                     fontWeight="bold"
                     sx={{
-                      background: `linear-gradient(135deg, ${colors.primary[600]} 0%, ${colors.primary[700]} 100%)`,
+                      background: `linear-gradient(135deg, #ffffff 0%, ${colors.primary[200]} 100%)`,
                       backgroundClip: 'text',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                       lineHeight: 1.2,
-                      animation: `${shimmer} 4s ease-in-out infinite`,
-                      backgroundSize: '200% 100%',
                       cursor: 'pointer',
+                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
                       '&:hover': {
-                        animation: `${shimmer} 2s ease-in-out infinite`,
+                        color: colors.primary[200],
                       },
                     }}
                   >
@@ -386,10 +336,14 @@ const AppHeader: React.FC = () => {
                   <Typography
                     variant="caption"
                     sx={{ 
-                      fontWeight: 500, 
+                      fontWeight: 600, 
                       letterSpacing: '0.5px',
                       display: { xs: 'none', sm: 'block' },
-                      color: colors.primary[600],
+                      background: `linear-gradient(135deg, ${colors.primary[200]} 0%, ${colors.primary[300]} 100%)`,
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
                     }}
                   >
                     Smart Parking Solutions
@@ -398,149 +352,66 @@ const AppHeader: React.FC = () => {
               </Box>
             </Fade>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Moved to Right */}
             {!isMobile && (
-              <>
-                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 2 }}>
-                  {navItems.map((item, index) => (
-                    <Grow in timeout={800 + index * 100} key={item.path}>
-                      <Tooltip title={item.description} arrow>
-                        <Button
-                          component={RouterLink}
-                          to={item.path}
-                          startIcon={item.icon}
-                          variant={isActiveRoute(item.path) ? 'contained' : 'outlined'}
-                          color={isActiveRoute(item.path) ? 'primary' : 'primary'}
-                          sx={{
-                            px: 3,
-                            py: 1.5,
-                            borderRadius: 3,
-                            fontWeight: 600,
-                            textTransform: 'none',
-                            position: 'relative',
-                            transition: 'all 0.3s ease-in-out',
-                            minWidth: 'auto',
-                            borderWidth: isActiveRoute(item.path) ? 0 : 2,
-                            borderColor: isActiveRoute(item.path) ? 'transparent' : colors.primary[300],
-                            color: isActiveRoute(item.path) ? 'white' : colors.primary[700],
-                            bgcolor: isActiveRoute(item.path) 
-                              ? `linear-gradient(135deg, ${colors.primary[500]} 0%, ${colors.primary[600]} 100%)`
-                              : 'transparent',
-                            '&:hover': {
-                              transform: 'translateY(-2px)',
-                              bgcolor: isActiveRoute(item.path) 
-                                ? `linear-gradient(135deg, ${colors.primary[600]} 0%, ${colors.primary[700]} 100%)`
-                                : alpha(colors.primary[500], 0.1),
-                              borderColor: isActiveRoute(item.path) ? 'transparent' : colors.primary[500],
-                              boxShadow: isActiveRoute(item.path) 
-                                ? `0 8px 25px ${alpha(colors.primary[500], 0.3)}`
-                                : `0 4px 15px ${alpha(colors.primary[400], 0.2)}`,
-                            },
-                            '&::after': isActiveRoute(item.path) ? {
-                              content: '""',
-                              position: 'absolute',
-                              bottom: -8,
-                              left: '50%',
-                              transform: 'translateX(-50%)',
-                              width: 6,
-                              height: 6,
-                              borderRadius: '50%',
-                              bgcolor: colors.secondary[500],
-                              boxShadow: `0 0 20px ${alpha(colors.secondary[500], 0.5)}`,
-                              animation: `${pulse} 2s ease-in-out infinite`,
-                            } : {},
-                            '& .MuiButton-startIcon': {
-                              color: 'inherit',
-                              opacity: 0.9,
-                            },
-                          }}
-                        >
-                          {item.label}
-                        </Button>
-                      </Tooltip>
-                    </Grow>
-                  ))}
-                </Box>
-
-                {/* Enhanced Right Section */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 3 }}>
-                  {/* Notifications */}
-                  <Tooltip title="Notifications" arrow>
-                    <IconButton
-                      sx={{
-                        color: colors.neutral[600],
-                        transition: 'all 0.3s ease-in-out',
-                        '&:hover': {
-                          color: colors.primary[600],
-                          transform: 'scale(1.1)',
-                          bgcolor: alpha(colors.primary[500], 0.1),
-                        },
-                      }}
-                    >
-                      <Badge badgeContent={3} color="error">
-                        <NotificationsIcon />
-                      </Badge>
-                    </IconButton>
-                  </Tooltip>
-
-                  {/* Live Data Chip */}
-                  <Grow in timeout={1200}>
-                    <Chip
-                      icon={<FlashIcon />}
-                      label="Live Data"
-                      color="success"
-                      variant="filled"
-                      component={RouterLink}
-                      to="/data-insights"
-                      clickable
-                      sx={{
-                        fontWeight: 600,
-                        background: `linear-gradient(45deg, ${colors.success} 30%, ${colors.accent[500]} 90%)`,
-                        color: 'white',
-                        boxShadow: `0 4px 15px ${alpha(colors.success, 0.4)}`,
-                        animation: `${glow} 3s ease-in-out infinite`,
-                        cursor: 'pointer',
-                        textDecoration: 'none',
-                        '&:hover': {
-                          transform: 'scale(1.05)',
-                          boxShadow: `0 6px 20px ${alpha(colors.success, 0.6)}`,
-                          animation: `${pulse} 1s ease-in-out infinite`,
-                          textDecoration: 'none',
-                        },
-                        '& .MuiChip-icon': {
-                          color: 'inherit',
-                        },
-                      }}
-                    />
-                  </Grow>
-
-                  {/* User Profile */}
-                  <Tooltip title="User Profile" arrow>
-                    <IconButton
-                      sx={{
-                        color: colors.primary[600],
-                        transition: 'all 0.3s ease-in-out',
-                        '&:hover': {
-                          transform: 'scale(1.1)',
-                          bgcolor: alpha(colors.primary[500], 0.1),
-                        },
-                      }}
-                    >
-                      <Avatar
+              <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                {navItems.map((item, index) => (
+                  <Grow in timeout={800 + index * 100} key={item.path}>
+                    <Tooltip title={item.description} arrow>
+                      <Button
+                        component={RouterLink}
+                        to={item.path}
+                        startIcon={item.icon}
+                        variant={isActiveRoute(item.path) ? 'contained' : 'outlined'}
+                        color={isActiveRoute(item.path) ? 'primary' : 'primary'}
                         sx={{
-                          width: 36,
-                          height: 36,
-                          bgcolor: colors.secondary[500],
-                          fontSize: '1rem',
-                          fontWeight: 'bold',
+                          px: 3,
+                          py: 1.5,
+                          borderRadius: 2,
+                          fontWeight: 600,
+                          textTransform: 'none',
+                          position: 'relative',
+                          transition: 'all 0.3s ease-in-out',
+                          minWidth: 'auto',
+                          color: isActiveRoute(item.path) ? '#ffffff' : '#ffffff',
+                          backgroundColor: isActiveRoute(item.path) 
+                            ? colors.primary[500] 
+                            : 'rgba(255, 255, 255, 0.1)',
+                          border: isActiveRoute(item.path) 
+                            ? 'none' 
+                            : `1px solid ${colors.primary[300]}`,
+                          fontSize: '16px',
+                          backdropFilter: 'blur(10px)',
+                          boxShadow: isActiveRoute(item.path) 
+                            ? `0 4px 15px ${alpha(colors.primary[500], 0.4)}`
+                            : '0 2px 8px rgba(0, 0, 0, 0.1)',
+                          '&:hover': {
+                            backgroundColor: isActiveRoute(item.path) 
+                              ? colors.primary[600]
+                              : 'rgba(255, 255, 255, 0.2)',
+                            color: '#ffffff',
+                            transform: 'translateY(-1px)',
+                            boxShadow: isActiveRoute(item.path) 
+                              ? `0 6px 20px ${alpha(colors.primary[500], 0.5)}`
+                              : '0 4px 12px rgba(0, 0, 0, 0.15)',
+                          },
+                          ...(isActiveRoute(item.path) && {
+                            color: '#ffffff',
+                            fontWeight: 700,
+                            borderBottom: `2.5px solid ${colors.primary[300]}`,
+                          }),
+                          '& .MuiButton-startIcon': {
+                            color: 'inherit',
+                            opacity: 0.9,
+                          },
                         }}
                       >
-                        U
-                      </Avatar>
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </>
+                        {item.label}
+                      </Button>
+                    </Tooltip>
+                  </Grow>
+                ))}
+              </Box>
             )}
 
             {/* Mobile Menu Button */}
@@ -555,10 +426,10 @@ const AppHeader: React.FC = () => {
                   edge="end"
                   onClick={handleDrawerToggle}
                   sx={{
-                    color: colors.primary[700],
+                    color: '#ffffff',
                     transition: 'all 0.3s ease-in-out',
                     '&:hover': {
-                      bgcolor: alpha(colors.primary[500], 0.1),
+                      bgcolor: alpha(colors.primary[500], 0.2),
                       transform: 'rotate(90deg)',
                     },
                   }}
@@ -567,12 +438,11 @@ const AppHeader: React.FC = () => {
                 </IconButton>
               </Grow>
             )}
-          </Toolbar>
+          </Box>
         </Container>
       </AppBar>
 
-      {/* Spacer to prevent content from going behind fixed header */}
-      <Box sx={{ height: { xs: 64, md: 72 } }} />
+
 
       {/* Enhanced Mobile Drawer */}
       <Drawer

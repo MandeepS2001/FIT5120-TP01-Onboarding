@@ -1,12 +1,30 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
+import DirectionsIcon from '@mui/icons-material/Directions';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import { ParkingLocation } from '../types/parking';
 import { GoogleMap, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 
@@ -30,453 +48,374 @@ const ParkingMap: React.FC<Props> = ({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '',
   });
 
-  // Log map configuration for debugging
-  useEffect(() => {
-    if (isLoaded) {
-      console.log('Google Maps loaded successfully');
-    }
-  }, [isLoaded]);
-
+  // Map state
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<ParkingLocation | null>(null);
+  
+  // Search state
   const [searchQuery, setSearchQuery] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchError, setSearchError] = useState<string | null>(null);
+  const [searchSuggestions, setSearchSuggestions] = useState<google.maps.places.AutocompletePrediction[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
-  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
-  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
-  const [isUsingFallbackSuggestions, setIsUsingFallbackSuggestions] = useState(false);
+  
+  // Prediction state
+  const [showPredictionModal, setShowPredictionModal] = useState(false);
+  const [predictionDateTime, setPredictionDateTime] = useState<Date | null>(new Date());
+  const [predictionDuration, setPredictionDuration] = useState<number>(2);
+  const [predictionResults, setPredictionResults] = useState<{
+    good: number;
+    moderate: number;
+    low: number;
+    none: number;
+    total: number;
+    bestSpots: ParkingLocation[];
+  } | null>(null);
+
   const mapRef = useRef<google.maps.Map | null>(null);
   const markersRef = useRef<any[]>([]);
   const searchBoxRef = useRef<HTMLInputElement>(null);
-  const autocompleteServiceRef = useRef<google.maps.places.AutocompleteService | null>(null);
-  const placesServiceRef = useRef<google.maps.places.PlacesService | null>(null);
-
-  // Common Melbourne locations for quick search
-  const quickLocations = [
-    'Melbourne CBD',
-    'Federation Square',
-    'Flinders Street Station',
-    'Bourke Street Mall',
-    'Queen Victoria Market',
-    'Southbank',
-    'Docklands',
-    'Carlton',
-    'North Melbourne',
-    'East Melbourne',
-    'West Melbourne',
-    'South Melbourne',
-    'Port Melbourne',
-    'St Kilda',
-    'Richmond',
-    'Collingwood',
-    'Fitzroy',
-    'Brunswick',
-    'Northcote',
-    'Thornbury',
-    'Preston',
-    'Coburg',
-    'Essendon',
-    'Moonee Ponds',
-    'Footscray',
-    'Yarraville',
-    'Williamstown',
-    'Altona',
-    'Point Cook',
-    'Werribee',
-    'Sunshine',
-    'St Albans',
-    'Keilor',
-    'Airport West',
-    'Tullamarine',
-    'Broadmeadows',
-    'Craigieburn',
-    'Mickleham',
-    'Roxburgh Park',
-    'Greenvale',
-    'Epping',
-    'Thomastown',
-    'Lalor',
-    'Mill Park',
-    'Bundoora',
-    'Reservoir',
-    'Preston',
-    'Northcote',
-    'Thornbury',
-    'Fairfield',
-    'Alphington',
-    'Ivanhoe',
-    'Heidelberg',
-    'Rosanna',
-    'Macleod',
-    'Watsonia',
-    'Greensborough',
-    'Diamond Creek',
-    'Eltham',
-    'Research',
-    'Warrandyte',
-    'Doncaster',
-    'Templestowe',
-    'Bulleen',
-    'Balwyn',
-    'Kew',
-    'Hawthorn',
-    'Camberwell',
-    'Glen Iris',
-    'Malvern',
-    'Toorak',
-    'South Yarra',
-    'Prahran',
-    'Windsor',
-    'St Kilda East',
-    'Balaclava',
-    'Elwood',
-    'Brighton',
-    'Sandringham',
-    'Beaumaris',
-    'Mentone',
-    'Cheltenham',
-    'Moorabbin',
-    'Oakleigh',
-    'Clayton',
-    'Springvale',
-    'Noble Park',
-    'Dandenong',
-    'Keysborough',
-    'Chelsea',
-    'Bonbeach',
-    'Carrum',
-    'Seaford',
-    'Frankston',
-    'Mount Eliza',
-    'Mornington',
-    'Mount Martha',
-    'Dromana',
-    'Rosebud',
-    'Rye',
-    'Sorrento',
-    'Portsea'
-  ];
-
-  // Handle search input changes
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    setSearchError(null);
-    setSelectedSuggestionIndex(-1);
-    
-    // Clear suggestions if query is too short
-    if (value.length < 2) {
-      setSearchSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-    
-    // Get suggestions immediately as user types
-    getSearchSuggestions(value);
-  };
-
-  // Handle suggestion selection
-  const handleSuggestionSelect = (suggestion: string) => {
-    setSearchQuery(suggestion);
-    setShowSuggestions(false);
-    setSearchSuggestions([]);
-    setSelectedSuggestionIndex(-1);
-    
-    // Auto-search the selected suggestion
-    setTimeout(() => {
-      handleSearchSubmit(suggestion);
-    }, 100);
-  };
-
-  // Handle form submission
-  const handleSearchSubmit = async (queryToSearch?: string) => {
-    const searchTerm = queryToSearch || searchQuery;
-    if (!searchTerm.trim() || !mapRef.current) return;
-
-    setIsSearching(true);
-    setSearchError(null);
-    setShowSuggestions(false);
-    setSearchSuggestions([]);
-    setSelectedSuggestionIndex(-1);
-
-    try {
-      const geocoder = new (window as any).google.maps.Geocoder();
-      
-      // Try multiple search strategies
-      const searchStrategies = [
-        // Strategy 1: Direct geocoding
-        () => geocoder.geocode({ address: searchTerm }),
-        // Strategy 2: Add "Melbourne, VIC" to make it more specific
-        () => geocoder.geocode({ address: `${searchTerm}, Melbourne, VIC, Australia` }),
-        // Strategy 3: Try with just "Melbourne" suffix
-        () => geocoder.geocode({ address: `${searchTerm}, Melbourne` }),
-        // Strategy 4: Try with just "VIC" suffix
-        () => geocoder.geocode({ address: `${searchTerm}, VIC, Australia` })
-      ];
-
-      let results = null;
-      let strategyUsed = '';
-
-      for (let i = 0; i < searchStrategies.length; i++) {
-        try {
-          const response = await searchStrategies[i]();
-          if (response.results && response.results.length > 0) {
-            results = response.results;
-            strategyUsed = i === 0 ? 'direct' : i === 1 ? 'with full address' : i === 2 ? 'with Melbourne' : 'with VIC';
-            break;
-          }
-        } catch (error) {
-          console.log(`Strategy ${i + 1} failed:`, error);
-          continue;
-        }
-      }
-
-      if (!results || results.length === 0) {
-        // Try to find a close match from quick locations
-        const closeMatch = quickLocations.find(location => 
-          location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          searchTerm.toLowerCase().includes(location.toLowerCase())
-        );
-
-        if (closeMatch) {
-          setSearchError(`Location not found. Did you mean "${closeMatch}"? Try searching for that instead.`);
-        } else {
-          setSearchError(`Location "${searchTerm}" not found. Try a more specific address or use one of the quick locations below.`);
-        }
-        return;
-      }
-
-      const location = results[0].geometry.location;
-      const newCenter = {
-        lat: location.lat(),
-        lng: location.lng(),
-      };
-
-      // Pan and zoom to the found location
-      mapRef.current.panTo(newCenter);
-      mapRef.current.setZoom(16);
-
-      // Add a temporary marker at the searched location
-      const tempMarker = new (window as any).google.maps.Marker({
-        position: newCenter,
-        map: mapRef.current,
-        title: `Searched: ${searchTerm}`,
-        icon: {
-          url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" fill="#FF6B6B" stroke="#FFF" stroke-width="2"/>
-              <circle cx="12" cy="12" r="4" fill="#FFF"/>
-            </svg>
-          `),
-          scaledSize: new (window as any).google.maps.Size(24, 24),
-        },
-        zIndex: 1000,
-      });
-
-      // Remove the temporary marker after 5 seconds
-      setTimeout(() => {
-        tempMarker.setMap(null);
-      }, 5000);
-
-      console.log(`Search successful using ${strategyUsed} strategy for: ${searchTerm}`);
-
-    } catch (error) {
-      console.error('Geocoding error:', error);
-      
-      // Provide more helpful error messages
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      
-      if (errorMessage.includes('ZERO_RESULTS')) {
-        setSearchError(`No results found for "${searchTerm}". Try a more specific address or use one of the quick locations below.`);
-      } else if (errorMessage.includes('OVER_QUERY_LIMIT')) {
-        setSearchError('Search limit reached. Please try again in a moment.');
-      } else if (errorMessage.includes('REQUEST_DENIED')) {
-        setSearchError('Search service temporarily unavailable. Please try again later.');
-      } else {
-        setSearchError(`Search failed: ${errorMessage}. Please try a different search term.`);
-      }
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
-  // Search for a location (form submission handler)
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    handleSearchSubmit();
-  };
-
-  // Get current location
-  const handleGetCurrentLocation = () => {
-    if (!mapRef.current) return;
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const newCenter = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          mapRef.current!.panTo(newCenter);
-          mapRef.current!.setZoom(16);
-        },
-        (error) => {
-          console.error('Geolocation error:', error);
-          setSearchError('Unable to get your current location.');
-        }
-      );
-    } else {
-      setSearchError('Geolocation is not supported by this browser.');
-    }
-  };
-
-  // Initialize Google Places services when map loads
-  useEffect(() => {
-    if (isLoaded && mapRef.current) {
-      autocompleteServiceRef.current = new (window as any).google.maps.places.AutocompleteService();
-      placesServiceRef.current = new (window as any).google.maps.places.PlacesService(mapRef.current);
-    }
-  }, [isLoaded]);
-
-  // Get search suggestions as user types
-  const getSearchSuggestions = async (query: string) => {
-    if (!query.trim() || query.length < 2) {
-      setSearchSuggestions([]);
-      setShowSuggestions(false);
-      setIsUsingFallbackSuggestions(false);
-      return;
-    }
-
-    if (!autocompleteServiceRef.current) return;
-
-    setIsLoadingSuggestions(true);
-    setShowSuggestions(true);
-    setIsUsingFallbackSuggestions(false);
-
-    try {
-      const request = {
-        input: query,
-        componentRestrictions: { country: 'au' }, // Restrict to Australia
-        types: ['establishment', 'geocode', 'locality', 'sublocality'], // Include more location types
-      };
-
-      autocompleteServiceRef.current.getPlacePredictions(request, (predictions, status) => {
-        setIsLoadingSuggestions(false);
-        
-        if (status === (window as any).google.maps.places.PlacesServiceStatus.OK && predictions) {
-          // Get more diverse suggestions including suburbs, landmarks, and addresses
-          const allSuggestions = predictions
-            .filter(pred => 
-              pred.description.toLowerCase().includes('melbourne') ||
-              pred.description.toLowerCase().includes('vic') ||
-              pred.description.toLowerCase().includes('victoria') ||
-              pred.description.toLowerCase().includes('australia')
-            )
-            .slice(0, 10)
-            .map(pred => pred.description);
-          
-          setSearchSuggestions(allSuggestions);
-          setIsUsingFallbackSuggestions(false);
-        } else {
-          // Fallback to quick locations if Places API fails
-          const fallbackSuggestions = quickLocations
-            .filter(location => 
-              location.toLowerCase().includes(query.toLowerCase())
-            )
-            .slice(0, 6);
-          
-          if (fallbackSuggestions.length > 0) {
-            setSearchSuggestions(fallbackSuggestions);
-            setIsUsingFallbackSuggestions(true);
-          } else {
-            setSearchSuggestions([]);
-            setIsUsingFallbackSuggestions(false);
-          }
-        }
-      });
-    } catch (error) {
-      console.error('Autocomplete error:', error);
-      setIsLoadingSuggestions(false);
-      
-      // Fallback to quick locations on error
-      const fallbackSuggestions = quickLocations
-        .filter(location => 
-          location.toLowerCase().includes(query.toLowerCase())
-        )
-        .slice(0, 6);
-      
-      setSearchSuggestions(fallbackSuggestions);
-      setIsUsingFallbackSuggestions(true);
-    }
-  };
-
-  // Handle keyboard navigation
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!showSuggestions || searchSuggestions.length === 0) return;
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setSelectedSuggestionIndex(prev => 
-          prev < searchSuggestions.length - 1 ? prev + 1 : prev
-        );
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setSelectedSuggestionIndex(prev => prev > 0 ? prev - 1 : -1);
-        break;
-      case 'Enter':
-        e.preventDefault();
-        if (selectedSuggestionIndex >= 0) {
-          handleSuggestionSelect(searchSuggestions[selectedSuggestionIndex]);
-        } else {
-          // Submit the form if no suggestion is selected
-          const form = searchBoxRef.current?.closest('form');
-          if (form) form.requestSubmit();
-        }
-        break;
-      case 'Escape':
-        setShowSuggestions(false);
-        setSearchSuggestions([]);
-        setSelectedSuggestionIndex(-1);
-        break;
-    }
-  };
 
   // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchBoxRef.current && !searchBoxRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
-        setSearchSuggestions([]);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
-    // Create Enhanced Markers when map or locations change
-  useEffect(() => {
-    console.log('Marker useEffect triggered:', { 
-      isLoaded, 
-      hasMapRef: !!mapRef.current, 
-      hasGoogle: !!(window as any).google,
-      locationsLength: locations.length 
-    });
+  // Get user's current location
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const newLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setUserLocation(newLocation);
+          if (mapRef.current) {
+            mapRef.current.panTo(newLocation);
+            mapRef.current.setZoom(16);
+          }
+
+        },
+        (error) => {
+          console.error('Geolocation error:', error);
+        }
+      );
+    }
+  };
+
+  
+
+  // Calculate distance between two points
+  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+    const R = 6371; // Earth's radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  };
+
+
+
+  // Handle search input changes for autocomplete
+  const handleSearchInputChange = async (value: string) => {
+    setSearchQuery(value);
     
-    // Wait for all dependencies to be ready
-    if (!isLoaded || !mapRef.current || !(window as any).google) {
-      console.log('Marker creation blocked - waiting for dependencies:', { 
-        isLoaded, 
-        hasMapRef: !!mapRef.current, 
-        hasGoogle: !!(window as any).google 
-      });
+    if (!value.trim() || !(window as any).google) {
+      setSearchSuggestions([]);
+      setShowSuggestions(false);
       return;
     }
 
-    console.log('Creating markers for', locations.length, 'locations');
+    try {
+      const autocompleteService = new (window as any).google.maps.places.AutocompleteService();
+      const response = await autocompleteService.getPlacePredictions({
+        input: `${value}, Melbourne, VIC, Australia`,
+        types: ['geocode'],
+        componentRestrictions: { country: 'au' }
+      });
+      
+      setSearchSuggestions(response.predictions || []);
+      setShowSuggestions(true);
+    } catch (error) {
+      console.error('Autocomplete error:', error);
+      setSearchSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  // Handle search selection
+  const handleSearchSelection = async (prediction: google.maps.places.AutocompletePrediction) => {
+    setSearchQuery(prediction.description);
+    setShowSuggestions(false);
+    
+    if (!mapRef.current) return;
+
+    try {
+      const geocoder = new (window as any).google.maps.Geocoder();
+      const response = await geocoder.geocode({ 
+        placeId: prediction.place_id 
+      });
+      
+      if (response.results && response.results.length > 0) {
+        const location = response.results[0].geometry.location;
+        const newCenter = {
+          lat: location.lat(),
+          lng: location.lng(),
+        };
+        
+        mapRef.current.panTo(newCenter);
+        mapRef.current.setZoom(16);
+      }
+    } catch (error) {
+      console.error('Geocoding error:', error);
+    }
+  };
+
+  // Handle search form submission
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim() || !mapRef.current) return;
+
+    try {
+      const geocoder = new (window as any).google.maps.Geocoder();
+      const response = await geocoder.geocode({ 
+        address: `${searchQuery}, Melbourne, VIC, Australia` 
+      });
+      
+      if (response.results && response.results.length > 0) {
+        const location = response.results[0].geometry.location;
+        const newCenter = {
+          lat: location.lat(),
+          lng: location.lng(),
+        };
+        
+        mapRef.current.panTo(newCenter);
+        mapRef.current.setZoom(16);
+        
+      } else {
+        alert('Location not found. Please try a different search term.');
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      alert('Search failed. Please try again.');
+    }
+  };
+
+  // Find the best parking spot nearby
+  const findBestParkingNearby = () => {
+    if (!userLocation) {
+      // If no user location, get it first
+      alert('Getting your location first, then finding the best parking...');
+      getCurrentLocation();
+      // Try to find parking after a delay
+      setTimeout(() => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const currentLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              };
+              findBestParkingForLocation(currentLocation);
+            },
+            () => {
+              alert('Could not get your location. Please allow location access and try again.');
+            }
+          );
+        }
+      }, 1000);
+      return;
+    }
+
+    findBestParkingForLocation(userLocation);
+  };
+
+  // Find best parking for a specific location
+  const findBestParkingForLocation = (location: { lat: number; lng: number }) => {
+    // Filter available parking spots
+    const availableSpots = locations.filter((l) => {
+      const availabilityRate = l.available / (l.capacity || 1) * 100;
+      return availabilityRate > 0;
+    });
+
+    if (availableSpots.length === 0) {
+      alert('No parking spots available nearby.');
+      return;
+    }
+
+    // Calculate distance and score for each location
+    const scoredLocations = availableSpots.map((spot) => {
+      const distance = calculateDistance(
+        location.lat,
+        location.lng,
+        spot.latitude,
+        spot.longitude
+      );
+      
+      const availabilityRate = spot.available / (spot.capacity || 1) * 100;
+      const priceScore = spot.pricePerHour ? Math.max(0, 30 - spot.pricePerHour) / 30 : 10; // Lower price = higher score
+      const availabilityScore = availabilityRate / 100;
+      const distanceScore = Math.max(0, 1 - distance / 5); // Closer = higher score
+      
+      // Weight factors: distance (40%), price (35%), availability (25%)
+      const totalScore = (distanceScore * 0.4) + (priceScore * 0.35) + (availabilityScore * 0.25);
+      
+      return {
+        ...spot,
+        distance,
+        score: totalScore,
+        availabilityRate
+      };
+    });
+
+    // Sort by score and get the best option
+    const bestParking = scoredLocations.sort((a, b) => b.score - a.score)[0];
+
+    // Select and highlight the best parking spot
+    setSelectedLocation(bestParking);
+    setActiveId(bestParking.id);
+
+    // Pan map to the best parking spot
+    if (mapRef.current) {
+      mapRef.current.panTo({ lat: bestParking.latitude, lng: bestParking.longitude });
+      mapRef.current.setZoom(17);
+    }
+
+    // Show success message with details
+    const distanceText = bestParking.distance < 1 ? 
+      `${Math.round(bestParking.distance * 1000)}m away` : 
+      `${bestParking.distance.toFixed(1)}km away`;
+    
+    alert(`Found the best parking spot!\n\n${bestParking.name}\n${distanceText}\n${bestParking.available} spots available\n$${bestParking.pricePerHour || 0}/hr\n\nClick "Get Directions" to navigate there.`);
+  };
+
+  // Predict parking availability based on time patterns
+  const predictParkingAvailability = (dateTime: Date, duration: number) => {
+    const hour = dateTime.getHours();
+    const dayOfWeek = dateTime.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const isPeakHour = (hour >= 8 && hour <= 10) || (hour >= 17 && hour <= 19);
+    const isLateNight = hour >= 22 || hour <= 6;
+    
+    let good = 0, moderate = 0, low = 0, none = 0;
+    const bestSpots: ParkingLocation[] = [];
+    
+    // Use filtered locations (only available spots)
+    filteredLocations.forEach((location) => {
+      let availabilityRate = location.available / (location.capacity || 1) * 100;
+      
+      // Apply time-based adjustments
+      if (isWeekend) {
+        // Weekends: generally more available
+        availabilityRate *= 1.2;
+      } else if (isPeakHour) {
+        // Peak hours: much less available
+        availabilityRate *= 0.4;
+      } else if (isLateNight) {
+        // Late night: more available
+        availabilityRate *= 1.5;
+      } else {
+        // Regular hours: slight reduction
+        availabilityRate *= 0.8;
+      }
+      
+      // Apply duration-based adjustments
+      if (duration > 4) {
+        // Longer stays: less availability
+        availabilityRate *= 0.7;
+      } else if (duration <= 1) {
+        // Short stays: more availability
+        availabilityRate *= 1.1;
+      }
+      
+      // Ensure availability is within bounds
+      availabilityRate = Math.max(0, Math.min(100, availabilityRate));
+      
+      // Categorize availability
+      if (availabilityRate > 50) {
+        good++;
+        if (bestSpots.length < 3) {
+          bestSpots.push({ ...location, available: Math.round(availabilityRate / 100 * (location.capacity || 1)) });
+        }
+      } else if (availabilityRate > 20) {
+        moderate++;
+      } else if (availabilityRate > 0) {
+        low++;
+      } else {
+        none++;
+      }
+    });
+    
+    return { good, moderate, low, none, total: filteredLocations.length, bestSpots };
+  };
+
+  // Handle prediction form submission
+  const handlePredictionSubmit = () => {
+    if (!predictionDateTime) return;
+    
+    const results = predictParkingAvailability(predictionDateTime, predictionDuration);
+    setPredictionResults(results);
+  };
+
+  // Handle get directions to parking spot
+  const handleGetDirections = (destination: ParkingLocation) => {
+    if (!userLocation) {
+      // If no user location, get it first and show a message
+      alert('Getting your location first, then opening directions...');
+      getCurrentLocation();
+      // Try to open directions after a delay
+      setTimeout(() => {
+        // Use a simpler approach - just try to open directions with current location
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const origin = `${position.coords.latitude},${position.coords.longitude}`;
+              const destinationCoords = `${destination.latitude},${destination.longitude}`;
+              const directionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destinationCoords}&travelmode=driving`;
+              window.open(directionsUrl, '_blank');
+            },
+            () => {
+              alert('Could not get your location. Please allow location access and try again.');
+            }
+          );
+        }
+      }, 1000);
+      return;
+    }
+
+    const origin = `${userLocation.lat},${userLocation.lng}`;
+    const destinationCoords = `${destination.latitude},${destination.longitude}`;
+    
+    // Open Google Maps directions in a new tab
+    const directionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destinationCoords}&travelmode=driving`;
+    window.open(directionsUrl, '_blank');
+  };
+
+  // Filter locations to show only available spots
+  const filteredLocations = useMemo(() => {
+    return locations.filter((l) => {
+      // Filter out locations with no availability (red markers)
+      const availabilityRate = l.available / (l.capacity || 1) * 100;
+      return availabilityRate > 0;
+    });
+  }, [locations]);
+
+  // Create markers when map or locations change
+  useEffect(() => {
+    if (!isLoaded || !mapRef.current || !(window as any).google) return;
 
     // Clear existing markers
     markersRef.current.forEach((m) => {
@@ -486,504 +425,350 @@ const ParkingMap: React.FC<Props> = ({
 
     const g = (window as any).google as typeof google;
     
-    // Force use of regular markers for better compatibility
-    console.log('Using regular markers for better visibility');
-    console.log('Locations to create markers for:', locations);
-    
-    // Add a test marker if no locations are provided
-    if (locations.length === 0) {
-      console.log('No locations provided, adding test marker');
-      const testMarker = new g.maps.Marker({
-        map: mapRef.current,
-        position: { lat: -37.8136, lng: 144.9631 }, // Melbourne CBD
-        title: 'Test Marker - Melbourne CBD',
-        icon: {
-          path: g.maps.SymbolPath.CIRCLE,
-          fillColor: '#4CAF50',
-          fillOpacity: 0.8,
-          strokeColor: '#FFFFFF',
-          strokeWeight: 2,
-          scale: 3,
-        },
-      });
-      markersRef.current.push(testMarker);
-    }
-    
-    // Always add a simple test marker to verify marker creation works
-    console.log('Adding simple test marker');
-    try {
-      const testMarkerIcon = {
-        path: g.maps.SymbolPath.CIRCLE,
-        fillColor: '#2196F3',
-        fillOpacity: 0.95,
-        strokeColor: '#FFFFFF',
-        strokeWeight: 4,
-        scale: 8, // 80px equivalent
-      };
-      
-      const simpleTestMarker = new g.maps.Marker({
-        map: mapRef.current,
-        position: { lat: -37.8136, lng: 144.9631 }, // Melbourne CBD
-        title: 'Simple Test Marker',
-        icon: testMarkerIcon,
-        animation: g.maps.Animation.DROP,
-      });
-      console.log('Simple test marker created successfully:', simpleTestMarker);
-      markersRef.current.push(simpleTestMarker);
-    } catch (error) {
-      console.error('Error creating simple test marker:', error);
-    }
-    
-    console.log('Creating parking location markers for', locations.length, 'locations');
-    locations.forEach((loc, index) => {
-      console.log(`Creating marker ${index + 1}/${locations.length}:`, loc.name, 'at', loc.latitude, loc.longitude);
-      
-      // Create enhanced marker with availability status
-      const availabilityRate = loc.capacity && loc.capacity > 0 ? (loc.available / loc.capacity) * 100 : 0;
-      
-      // Determine marker color and size based on availability
-      let markerColor = '#FF4444'; // Red for no availability
-      let markerSize = 60;
-      
-      if (availabilityRate > 50) {
-        markerColor = '#4CAF50'; // Green for good availability
-        markerSize = 80;
-      } else if (availabilityRate > 20) {
-        markerColor = '#FF9800'; // Orange for moderate availability
-        markerSize = 70;
-      } else if (availabilityRate > 0) {
-        markerColor = '#FF5722'; // Red-orange for low availability
-        markerSize = 65;
+         filteredLocations.forEach((location, index) => {
+       try {
+         const availabilityRate = location.available / (location.capacity || 1) * 100;
+         
+         // Determine marker color based on availability (no red markers since we filtered them out)
+         let fillColor = '#FF5722'; // Low availability (default)
+         if (availabilityRate > 50) fillColor = '#4CAF50'; // Good
+         else if (availabilityRate > 20) fillColor = '#FF9800'; // Moderate
+
+         const marker = new g.maps.Marker({
+           map: mapRef.current,
+           position: { lat: location.latitude, lng: location.longitude },
+           title: `${location.name} - ${location.available}/${location.capacity} spots available`,
+           icon: {
+             path: g.maps.SymbolPath.CIRCLE,
+             fillColor,
+             fillOpacity: 0.8,
+             strokeColor: '#FFFFFF',
+             strokeWeight: 2,
+             scale: 6,
+           },
+           clickable: true,
+         });
+
+        // Add click listener
+        marker.addListener('click', () => {
+          setSelectedLocation(location);
+          setActiveId(location.id);
+        });
+
+        markersRef.current.push(marker);
+      } catch (error) {
+        console.error(`Error creating marker for ${location.name}:`, error);
       }
-
-      // Create custom marker icon
-      const markerIcon = {
-        path: g.maps.SymbolPath.CIRCLE,
-        fillColor: markerColor,
-        fillOpacity: 0.95,
-        strokeColor: '#FFFFFF',
-        strokeWeight: 4,
-        scale: markerSize / 10,
-      };
-
-              try {
-          const marker = new g.maps.Marker({
-            map: mapRef.current,
-            position: { lat: loc.latitude, lng: loc.longitude },
-            title: `${loc.name} - ${loc.available} available`,
-            icon: markerIcon,
-            animation: g.maps.Animation.DROP,
-          });
-
-          // Add click listener
-          marker.addListener('click', () => setActiveId(loc.id));
-          
-          // Add hover effects
-          marker.addListener('mouseover', () => {
-            marker.setAnimation(g.maps.Animation.BOUNCE);
-          });
-          
-          marker.addListener('mouseout', () => {
-            marker.setAnimation(null);
-          });
-
-      markersRef.current.push(marker);
-          console.log(`Marker ${index + 1} created successfully for ${loc.name}`);
-        } catch (error) {
-          console.error(`Error creating marker for ${loc.name}:`, error);
-        }
     });
-  }, [isLoaded, locations]);
+  }, [isLoaded, filteredLocations]);
+
+  if (loadError) {
+    return (
+      <Box sx={{ height, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Typography color="error">Error loading map</Typography>
+      </Box>
+    );
+  }
+
+  if (!isLoaded) {
+    return (
+      <Box sx={{ height, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Typography>Loading map...</Typography>
+      </Box>
+    );
+  }
 
   return (
-    <Box sx={{ height, borderRadius: 2, overflow: 'hidden', boxShadow: 2 }}>
-      {/* Search Bar */}
-      <Paper
-        component="form"
-        onSubmit={handleSearch}
-        sx={{
-          p: 2,
-          mb: 2,
-          position: 'relative',
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(0, 0, 0, 0.1)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-          <TextField
-            ref={searchBoxRef}
-            fullWidth
-            placeholder="Search for a location, address, or landmark..."
-            value={searchQuery}
-            onChange={handleSearchInputChange}
-            onKeyDown={handleKeyDown}
-            disabled={isSearching}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon color="action" />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    type="submit"
-                    disabled={!searchQuery.trim() || isSearching}
-                    sx={{ color: 'primary.main' }}
-                  >
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-              },
-            }}
-          />
-          <IconButton
-            onClick={handleGetCurrentLocation}
-            disabled={isSearching}
-            sx={{
-              bgcolor: 'primary.main',
-              color: 'white',
-              '&:hover': {
-                bgcolor: 'primary.dark',
-              },
-              '&:disabled': {
-                bgcolor: 'action.disabledBackground',
-                color: 'action.disabled',
-              },
-            }}
-          >
-            <MyLocationIcon />
-          </IconButton>
-        </Box>
-        
-        {/* Search Suggestions Dropdown */}
-        {showSuggestions && (searchSuggestions.length > 0 || isLoadingSuggestions) && (
-          <Paper
-            sx={{
-              position: 'absolute',
-              top: '100%',
-              left: 0,
-              right: 0,
-              zIndex: 1000,
-              mt: 1,
-              maxHeight: 500,
-              overflow: 'auto',
-              boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
-              border: '1px solid',
-              borderColor: 'divider',
-            }}
-          >
-            {isLoadingSuggestions ? (
-              <Box sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Loading suggestions...
-                </Typography>
-              </Box>
-            ) : (
-              <>
-                <Box sx={{ p: 1.5, bgcolor: 'info.50', borderBottom: '1px solid', borderColor: 'divider' }}>
-                  <Typography variant="caption" color="info.700" sx={{ fontSize: '0.75rem' }}>
-                    {isUsingFallbackSuggestions 
-                      ? '🔍 Showing quick location suggestions (Google Places API unavailable)'
-                      : '🔍 Showing Melbourne area suggestions'
-                    }
-                  </Typography>
-                </Box>
-                {searchSuggestions.map((suggestion, index) => (
-                  <Box
-                    key={index}
-                    onClick={() => handleSuggestionSelect(suggestion)}
-                    sx={{
-                      p: 2,
-                      cursor: 'pointer',
-                      borderBottom: '1px solid',
-                      borderColor: 'divider',
-                      transition: 'all 0.2s ease-in-out',
-                      bgcolor: selectedSuggestionIndex === index ? 'action.hover' : 'transparent',
-                      '&:hover': {
-                        bgcolor: 'action.hover',
-                      },
-                      '&:last-child': {
-                        borderBottom: 'none',
-                      },
-                    }}
-                  >
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        fontWeight: selectedSuggestionIndex === index ? 600 : 500,
-                        color: selectedSuggestionIndex === index ? 'primary.main' : 'inherit',
-                      }}
-                    >
-                      {suggestion}
-                    </Typography>
-                  </Box>
-                ))}
-              </>
-            )}
-          </Paper>
-        )}
-        
-        {/* Error Message */}
-        {searchError && (
-          <Typography
-            variant="body2"
-            color="error"
-            sx={{ mt: 1, fontSize: '0.875rem' }}
-          >
-            {searchError}
-          </Typography>
-        )}
-        
-        {/* Search Status */}
-        {isSearching && (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ mt: 1, fontSize: '0.875rem' }}
-          >
-            Searching...
-          </Typography>
-        )}
-
-        {/* Quick Location Suggestions */}
-        <Box sx={{ mt: 2 }}>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontWeight: 500 }}>
-            Quick locations:
-          </Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-            {quickLocations.slice(0, 8).map((location) => (
-              <Box
-                key={location}
-                onClick={() => {
-                  setSearchQuery(location);
-                  setShowSuggestions(false);
-                  // Auto-search after a short delay
-                  setTimeout(() => {
-                    const form = searchBoxRef.current?.closest('form');
-                    if (form) form.requestSubmit();
-                  }, 100);
+    <Box sx={{ height, position: 'relative', borderRadius: 2, overflow: 'hidden' }}>
+             {/* Search and Filter Panel */}
+       <Paper
+         sx={{
+           position: 'absolute',
+           top: 16,
+           left: 16,
+           right: 16,
+           zIndex: 1000,
+           p: 2,
+           background: 'rgba(255, 255, 255, 0.95)',
+           backdropFilter: 'blur(10px)',
+           border: '1px solid rgba(0, 0, 0, 0.1)',
+           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+         }}
+       >
+         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                       {/* Search Bar */}
+            <Box component="form" onSubmit={handleSearch} sx={{ flex: 1, position: 'relative' }}>
+              <TextField
+                ref={searchBoxRef}
+                fullWidth
+                placeholder="Search for a location in Melbourne..."
+                value={searchQuery}
+                onChange={(e) => handleSearchInputChange(e.target.value)}
+                onFocus={() => {
+                  if (searchSuggestions.length > 0) {
+                    setShowSuggestions(true);
+                  }
                 }}
-                sx={{
-                  px: 1.5,
-                  py: 0.5,
-                  bgcolor: 'primary.50',
-                  color: 'primary.700',
-                  borderRadius: 1,
-                  fontSize: '0.75rem',
-                  cursor: 'pointer',
-                  border: '1px solid',
-                  borderColor: 'primary.200',
-                  transition: 'all 0.2s ease-in-out',
-                  '&:hover': {
-                    bgcolor: 'primary.100',
-                    borderColor: 'primary.300',
-                    transform: 'translateY(-1px)',
-                  },
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color="action" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton type="submit" disabled={!searchQuery.trim()}>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
-              >
-                {location}
-              </Box>
-            ))}
-          </Box>
-        </Box>
-      </Paper>
-
-      {!isLoaded && !loadError && (
-        <Box
-          sx={{
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bgcolor: 'background.paper',
-          }}
-        >
-          <Typography variant="h6" color="text.secondary">
-            Loading Google Maps...
-          </Typography>
-        </Box>
-      )}
-
-      {loadError && (
-        <Box
-          sx={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bgcolor: 'background.paper',
-            p: 3,
-            textAlign: 'center',
-          }}
-        >
-          <Typography variant="h5" color="error" gutterBottom>
-            Google Maps Error
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-            {loadError.message === 'ApiProjectMapError' 
-              ? 'Google Maps API key is missing or invalid. Please set REACT_APP_GOOGLE_MAPS_API_KEY in your environment variables.'
-              : loadError.message}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            To fix this, you need to:
-          </Typography>
-          <Box component="ul" sx={{ textAlign: 'left', mt: 1 }}>
-            <Typography component="li" variant="body2" color="text.secondary">
-              1. Get a Google Maps API key from the Google Cloud Console
-            </Typography>
-            <Typography component="li" variant="body2" color="text.secondary">
-              2. Set REACT_APP_GOOGLE_MAPS_API_KEY in your .env.local file
-            </Typography>
-            <Typography component="li" variant="body2" color="text.secondary">
-              3. For production, add it to Vercel environment variables
-            </Typography>
-          </Box>
-        </Box>
-      )}
-
-      {isLoaded && !loadError && (
-        <GoogleMap
-          mapContainerStyle={{ height: '100%', width: '100%' }}
-          center={center}
-          zoom={initialZoom}
-          options={{
-            mapTypeControl: true,
-            streetViewControl: false,
-            fullscreenControl: true,
-            clickableIcons: true,
-            zoomControl: true,
-            mapId: process.env.REACT_APP_GOOGLE_MAPS_MAP_ID,
-          }}
-          onLoad={(map) => {
-            console.log('Map loaded successfully');
-            mapRef.current = map;
-            console.log('Map center:', map.getCenter());
-            console.log('Map zoom:', map.getZoom());
-            
-            if (locations.length && (window as any).google) {
-              console.log('Fitting bounds for', locations.length, 'locations');
-              const g = (window as any).google as typeof google;
-              const b = new g.maps.LatLngBounds();
-              locations.forEach((l) => {
-                console.log('Adding location to bounds:', l.name, l.latitude, l.longitude);
-                b.extend({ lat: l.latitude, lng: l.longitude });
-              });
-              map.fitBounds(b, { top: 40, bottom: 40, left: 40, right: 40 } as any);
-              console.log('Bounds fitted, new center:', map.getCenter(), 'new zoom:', map.getZoom());
-            }
-          }}
-        >
-          {/* Advanced markers created imperatively below */}
-          {locations.map(
-            (loc) =>
-              activeId === loc.id && (
-                <InfoWindow
-                  key={`iw-${loc.id}`}
-                  position={{ lat: loc.latitude, lng: loc.longitude }}
-                  onCloseClick={() => setActiveId(null)}
+                size="small"
+              />
+              
+              {/* Search Suggestions Dropdown */}
+              {showSuggestions && searchSuggestions.length > 0 && (
+                <Paper
+                  sx={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    zIndex: 1001,
+                    mt: 0.5,
+                    maxHeight: 300,
+                    overflow: 'auto',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+                  }}
                 >
-                  <Box sx={{ p: 1, minWidth: 200 }}>
-                    <Typography variant="h6" fontWeight="bold" gutterBottom>
-                      {loc.name}
-                    </Typography>
-                    
-                    {/* Availability Status */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <Box
-                        sx={{
-                          width: 12,
-                          height: 12,
-                          borderRadius: '50%',
-                          bgcolor: loc.available > 0 ? '#4CAF50' : '#FF4444',
-                        }}
-                      />
-                      <Typography variant="body2" fontWeight="600">
-                        {loc.available} spots available
-                        {loc.capacity ? ` of ${loc.capacity}` : ''}
+                  {searchSuggestions.map((prediction, index) => (
+                    <Box
+                      key={prediction.place_id}
+                      sx={{
+                        p: 1.5,
+                        cursor: 'pointer',
+                        borderBottom: index < searchSuggestions.length - 1 ? '1px solid #f0f0f0' : 'none',
+                        '&:hover': {
+                          backgroundColor: '#f5f5f5',
+                        },
+                      }}
+                      onClick={() => handleSearchSelection(prediction)}
+                    >
+                      <Typography variant="body2" noWrap>
+                        {prediction.description}
                       </Typography>
                     </Box>
-                    
-                    {/* Type and Price */}
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                      {loc.type === 'on_street' ? '🚗 On-street' : '🏢 Off-street'} parking
-                      {loc.pricePerHour ? ` · $${loc.pricePerHour.toFixed(2)}/hour` : ' · Free'}
+                  ))}
+                </Paper>
+              )}
+            </Box>
+
+                       <Button
+              variant="contained"
+              onClick={getCurrentLocation}
+              startIcon={<MyLocationIcon />}
+              size="small"
+              sx={{ minWidth: 'auto', px: 2 }}
+            >
+              My Location
+            </Button>
+            
+            <Button
+              variant="outlined"
+              onClick={findBestParkingNearby}
+              startIcon={<DirectionsIcon />}
+              size="small"
+              sx={{ minWidth: 'auto', px: 2 }}
+            >
+              Park Nearby
+            </Button>
+            
+            <Button
+              variant="outlined"
+              onClick={() => setShowPredictionModal(true)}
+              startIcon={<TrendingUpIcon />}
+              size="small"
+              sx={{ minWidth: 'auto', px: 2 }}
+            >
+              Predict
+            </Button>
+         </Box>
+       </Paper>
+
+      
+
+      
+
+      {/* Map Component */}
+      <GoogleMap
+        mapContainerStyle={{ width: '100%', height: '100%' }}
+        center={center}
+        zoom={initialZoom}
+        onLoad={(map) => {
+          mapRef.current = map;
+          // Get user location on map load
+          getCurrentLocation();
+        }}
+        options={{
+          zoomControl: true,
+          streetViewControl: false,
+          mapTypeControl: true,
+          fullscreenControl: true,
+        }}
+      >
+                {/* Info Window for selected location */}
+        {selectedLocation && activeId && (
+          <InfoWindow
+            position={{ lat: selectedLocation.latitude, lng: selectedLocation.longitude }}
+            onCloseClick={() => {
+              setSelectedLocation(null);
+              setActiveId(null);
+            }}
+          >
+            <Box sx={{ p: 1, maxWidth: 200 }}>
+              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                {selectedLocation.name}
+              </Typography>
+              
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                <Typography variant="body2">
+                  {selectedLocation.available} spots
+                </Typography>
+                <Typography variant="body2" fontWeight="bold" color="primary">
+                  ${selectedLocation.pricePerHour || 0}/hr
+                </Typography>
+              </Box>
+              
+              <Button
+                variant="contained"
+                fullWidth
+                startIcon={<DirectionsIcon />}
+                size="small"
+                onClick={() => handleGetDirections(selectedLocation)}
+              >
+                Get Directions
+              </Button>
+            </Box>
+          </InfoWindow>
+        )}
+      </GoogleMap>
+
+      {/* Prediction Modal */}
+      <Dialog 
+        open={showPredictionModal} 
+        onClose={() => setShowPredictionModal(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <TrendingUpIcon color="primary" />
+            Parking Availability Prediction
+          </Box>
+        </DialogTitle>
+        
+        <DialogContent>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                When will you arrive?
+              </Typography>
+              <DateTimePicker
+                value={predictionDateTime}
+                onChange={setPredictionDateTime}
+                disablePast
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    size: "small"
+                  }
+                }}
+              />
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                How long will you stay?
+              </Typography>
+              <FormControl fullWidth size="small">
+                <Select
+                  value={predictionDuration}
+                  onChange={(e) => setPredictionDuration(e.target.value as number)}
+                >
+                  <MenuItem value={1}>1 hour</MenuItem>
+                  <MenuItem value={2}>2 hours</MenuItem>
+                  <MenuItem value={3}>3 hours</MenuItem>
+                  <MenuItem value={4}>4 hours</MenuItem>
+                  <MenuItem value={6}>6 hours</MenuItem>
+                  <MenuItem value={8}>8 hours</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+
+            {predictionResults && (
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                  Predicted Availability
+                </Typography>
+                
+                <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                  <Chip 
+                    label={`${predictionResults.good} Good`} 
+                    color="success" 
+                    variant="outlined"
+                  />
+                  <Chip 
+                    label={`${predictionResults.moderate} Moderate`} 
+                    color="warning" 
+                    variant="outlined"
+                  />
+                  <Chip 
+                    label={`${predictionResults.low} Low`} 
+                    color="error" 
+                    variant="outlined"
+                  />
+                  <Chip 
+                    label={`${predictionResults.none} None`} 
+                    color="default" 
+                    variant="outlined"
+                  />
+                </Box>
+
+                {predictionResults.bestSpots.length > 0 && (
+                  <Box>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Best Spots to Try:
                     </Typography>
-                    
-                    {/* Features */}
-                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                      {loc.accessible && (
-                        <Box
-                          sx={{
-                            px: 1,
-                            py: 0.5,
-                            bgcolor: '#E3F2FD',
-                            color: '#1976D2',
-                            borderRadius: 1,
-                            fontSize: '0.75rem',
-                            fontWeight: 600,
-                          }}
-                        >
-                          ♿ Accessible
-                        </Box>
-                      )}
-                      {loc.familyFriendly && (
-                        <Box
-                          sx={{
-                            px: 1,
-                            py: 0.5,
-                            bgcolor: '#E8F5E8',
-                            color: '#2E7D32',
-                            borderRadius: 1,
-                            fontSize: '0.75rem',
-                            fontWeight: 600,
-                          }}
-                        >
-                          👨‍👩‍👧‍👦 Family-friendly
-                        </Box>
-                      )}
-                    </Box>
-                    
-                    {/* Availability Rate */}
-                    {loc.capacity && loc.capacity > 0 && (
-                      <Box sx={{ mt: 1 }}>
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                          Availability: {Math.round((loc.available / loc.capacity) * 100)}%
+                    {predictionResults.bestSpots.map((spot, index) => (
+                      <Box key={spot.id} sx={{ p: 1, bgcolor: 'grey.50', borderRadius: 1, mb: 1 }}>
+                        <Typography variant="body2" fontWeight="bold">
+                          {spot.name}
                         </Typography>
-                        <Box
-                          sx={{
-                            width: '100%',
-                            height: 6,
-                            bgcolor: '#E0E0E0',
-                            borderRadius: 3,
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              width: `${(loc.available / loc.capacity) * 100}%`,
-                              height: '100%',
-                              bgcolor: loc.available > 0 ? '#4CAF50' : '#FF4444',
-                              transition: 'width 0.3s ease',
-                            }}
-                          />
-                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Predicted: {spot.available} spots • ${spot.pricePerHour || 0}/hr
+                        </Typography>
                       </Box>
-                    )}
+                    ))}
                   </Box>
-                </InfoWindow>
-              )
-          )}
-        </GoogleMap>
-      )}
+                )}
+              </Box>
+            )}
+          </LocalizationProvider>
+        </DialogContent>
+        
+        <DialogActions>
+          <Button onClick={() => setShowPredictionModal(false)}>
+            Close
+          </Button>
+          <Button 
+            variant="contained" 
+            onClick={handlePredictionSubmit}
+            startIcon={<TrendingUpIcon />}
+          >
+            Predict Availability
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

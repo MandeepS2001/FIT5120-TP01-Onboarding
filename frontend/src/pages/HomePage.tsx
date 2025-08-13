@@ -17,14 +17,11 @@ import {
   Paper,
 } from '@mui/material';
 import {
-  DirectionsCar as CarIcon,
-  AccessTime as TimeIcon,
   LocationOn as LocationIcon,
   TrendingUp as TrendingIcon,
   FamilyRestroom as FamilyIcon,
-  Accessibility as AccessibilityIcon,
   Speed as SpeedIcon,
-  Info as InfoIcon,
+
   ArrowForward as ArrowIcon,
   Star as StarIcon,
   FlashOn as FlashIcon,
@@ -67,7 +64,7 @@ const glow = keyframes`
   50% { box-shadow: 0 0 40px rgba(33, 150, 243, 0.6); }
 `;
 
-// Light theme HomePage with ABBASS-inspired glassmorphism effects
+// Light theme HomePage with inspired glassmorphism effects
 const HomePage: React.FC = () => {
   const [locations, setLocations] = useState<ParkingLocation[]>([]);
   const [parkingMetrics, setParkingMetrics] = useState<ParkingMetrics | null>(null);
@@ -93,32 +90,7 @@ const HomePage: React.FC = () => {
     loadMetrics();
   }, []);
 
-  const stats = [
-    { 
-      value: isLoadingMetrics ? '...' : `${parkingMetrics?.totalSensors.toLocaleString()}+`, 
-      label: 'Live Sensors', 
-      icon: <CarIcon />, 
-      color: colors.primary[500]
-    },
-    { 
-      value: isLoadingMetrics ? '...' : `${parkingMetrics?.availabilityRate}%`, 
-      label: 'Availability Rate', 
-      icon: <TrendingIcon />, 
-      color: colors.secondary[500]
-    },
-    { 
-      value: isLoadingMetrics ? '...' : '24/7', 
-      label: 'Real-time Updates', 
-      icon: <TimeIcon />, 
-      color: colors.accent[500]
-    },
-    { 
-      value: isLoadingMetrics ? '...' : `${parkingMetrics?.accessibleSpots.toLocaleString()}+`, 
-      label: 'Accessible', 
-      icon: <AccessibilityIcon />, 
-      color: colors.success
-    },
-  ];
+
 
   return (
     <Box sx={{ 
@@ -126,110 +98,124 @@ const HomePage: React.FC = () => {
       background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%)',
       position: 'relative',
       overflow: 'hidden',
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231976D2' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        opacity: 0.5,
-      },
     }}>
-      {/* Floating Background Elements */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '10%',
-          right: '5%',
-          width: 300,
-          height: 300,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(33, 150, 243, 0.1) 0%, transparent 70%)',
-          animation: `${float} 8s ease-in-out infinite`,
-          zIndex: 0,
-        }}
-      />
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: '20%',
-          left: '5%',
-          width: 200,
-          height: 200,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(156, 39, 176, 0.08) 0%, transparent 70%)',
-          animation: `${float} 10s ease-in-out infinite reverse`,
-          zIndex: 0,
-        }}
-      />
 
       {/* Hero Section - ABBASS Style */}
       <Box
         sx={{
-          pt: { xs: 8, md: 12 },
+          pt: { xs: 12, md: 16 },
           pb: { xs: 8, md: 16 },
           position: 'relative',
-          zIndex: 1,
+          zIndex: 3,
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
-        <Container maxWidth="xl" sx={{ px: { xs: 3, sm: 4, md: 5 } }}>
-          <Grid container spacing={6} alignItems="center">
-            {/* Left Content - Hero Text */}
-            <Grid xs={12} md={6}>
+        {/* Video Background for Hero Section Only */}
+        <Box
+          component="video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          sx={{
+            position: 'absolute',
+            top: '-80px', // Extend above the header
+            left: 0,
+            width: '100%',
+            height: 'calc(100% + 80px)', // Make taller to account for header
+            objectFit: 'cover',
+            zIndex: 0,
+          }}
+        >
+          <source src="/melb.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </Box>
+
+        {/* Overlay for better text readability */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '-80px', // Match video position
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: 'calc(100% + 80px)', // Match video height
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.2) 100%)',
+            zIndex: 1,
+          }}
+        />
+
+        {/* Floating Background Elements */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 'calc(10% - 80px)', // Adjust for extended video
+            right: '5%',
+            width: 300,
+            height: 300,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(33, 150, 243, 0.1) 0%, transparent 70%)',
+            animation: `${float} 8s ease-in-out infinite`,
+            zIndex: 2,
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: '20%',
+            left: '5%',
+            width: 200,
+            height: 200,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(156, 39, 176, 0.08) 0%, transparent 70%)',
+            animation: `${float} 10s ease-in-out infinite reverse`,
+            zIndex: 2,
+          }}
+        />
+        <Container maxWidth="xl" sx={{ px: { xs: 3, sm: 4, md: 5 }, position: 'relative', zIndex: 3 }}>
+          <Grid container justifyContent="center">
+            {/* Centered Content - Hero Text */}
+            <Grid xs={12} md={8} lg={6}>
               <Fade in timeout={1000}>
-                <Box sx={{ pl: { xs: 2, md: 4, lg: 6 } }}>
-                  <Chip
-                    label={isLoadingMetrics ? "🔄 Loading Real Data..." : "🚀 Live Data Connected"}
-                    sx={{ 
-                      mb: 3, 
-                      fontWeight: 600, 
-                      fontSize: '0.9rem',
-                      animation: isLoadingMetrics ? 'none' : `${pulse} 2s ease-in-out infinite`,
-                      background: 'linear-gradient(45deg, #4CAF50 30%, #2196F3 90%)',
-                      color: '#fff',
-                      boxShadow: `0 4px 15px ${alpha('#4CAF50', 0.4)}`,
-                    }}
-                  />
-                  {parkingMetrics && (
-                    <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
-                      Last updated: {parkingMetrics.lastUpdated}
-                    </Typography>
-                  )}
+                <Box sx={{ textAlign: 'center' }}>
+
                   <Typography
                     variant="h1"
                     component="h1"
                     gutterBottom
                     sx={{
-                      fontWeight: 800,
+                      fontWeight: 900,
                       lineHeight: 1.1,
                       mb: 3,
-                      background: `linear-gradient(135deg, ${colors.primary[600]} 0%, ${colors.primary[800]} 100%)`,
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
+                      color: '#ffffff',
                       fontSize: { xs: '2.5rem', md: '3.5rem', lg: '4rem' },
-                      textShadow: '0 4px 20px rgba(33, 150, 243, 0.1)',
+                      textShadow: '0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.6)',
+                      filter: 'drop-shadow(0 3px 6px rgba(0, 0, 0, 0.7))',
                     }}
                   >
-                    Smart Parking is Our Business
+                    Find Your Perfect Parking Spot
                   </Typography>
                   <Typography
                     variant="h5"
                     paragraph
                     sx={{ 
                       mb: 4, 
-                      fontWeight: 400, 
+                      fontWeight: 600, 
                       lineHeight: 1.6,
-                      color: 'text.secondary',
+                      color: '#ffffff',
                       fontSize: { xs: '1.1rem', md: '1.3rem' },
+                      maxWidth: 600,
+                      mx: 'auto',
+                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6)',
+                      filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5))',
                     }}
                   >
-                    Real-time availability, AI-powered predictions, and accessible options across Melbourne CBD— 
-                    helping busy families save time and reduce stress with intelligent parking solutions.
+                    Discover real-time parking availability across Melbourne CBD with AI-powered predictions. 
+                    Save time, reduce stress, and find the perfect spot for your family with our intelligent parking solution.
                   </Typography>
-                  <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
                       variant="contained"
                       size="large"
@@ -238,204 +224,114 @@ const HomePage: React.FC = () => {
                       startIcon={<LocationIcon />}
                       endIcon={<ArrowIcon />}
                       sx={{
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1.1rem',
-                        fontWeight: 600,
+                        px: 8,
+                        py: 2.5,
+                        fontSize: '1.3rem',
+                        fontWeight: 700,
                         borderRadius: 3,
-                        background: 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)',
+                        background: `linear-gradient(135deg, ${colors.primary[500]} 0%, ${colors.primary[600]} 100%)`,
                         color: '#fff',
-                        boxShadow: `0 8px 25px ${alpha('#2196F3', 0.4)}`,
+                        boxShadow: `0 10px 30px ${alpha(colors.primary[500], 0.5)}`,
                         transition: 'all 0.3s ease-in-out',
-                        animation: `${glow} 3s ease-in-out infinite`,
+                        textTransform: 'none',
                         '&:hover': {
                           transform: 'translateY(-3px) scale(1.02)',
-                          boxShadow: `0 12px 35px ${alpha('#2196F3', 0.6)}`,
-                          background: 'linear-gradient(135deg, #1976D2 0%, #1565C0 100%)',
+                          boxShadow: `0 15px 40px ${alpha(colors.primary[500], 0.7)}`,
+                          background: `linear-gradient(135deg, ${colors.primary[600]} 0%, ${colors.primary[700]} 100%)`,
                         },
                         '&:active': {
                           transform: 'translateY(-1px) scale(0.98)',
                         },
                       }}
                     >
-                      Find Parking Now
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="large"
-                      component={RouterLink}
-                      to="/learn-more"
-                      startIcon={<InfoIcon />}
-                      sx={{
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1.1rem',
-                        fontWeight: 600,
-                        borderWidth: 2,
-                        borderRadius: 3,
-                        borderColor: colors.primary[500],
-                        color: colors.primary[600],
-                        transition: 'all 0.3s ease-in-out',
-                        '&:hover': {
-                          borderWidth: 3,
-                          background: alpha(colors.primary[500], 0.04),
-                          transform: 'translateY(-2px)',
-                          boxShadow: `0 8px 25px ${alpha(colors.primary[500], 0.3)}`,
-                        },
-                      }}
-                    >
-                      Learn More
+                      Start Finding Parking
                     </Button>
                   </Box>
-                </Box>
-              </Fade>
+                                  </Box>
+                </Fade>
+              </Grid>
             </Grid>
+          </Container>
 
-            {/* Right Content - Glassmorphism Form */}
-            <Grid xs={12} md={6}>
-              <Slide direction="left" in timeout={1200}>
-                <Box sx={{ position: 'relative' }}>
-                  {/* Glassmorphism Card */}
-                  <Card
-                    elevation={0}
-                    sx={{
-                      p: 4,
-                      background: 'rgba(255, 255, 255, 0.8)',
-                      backdropFilter: 'blur(20px)',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      borderRadius: 4,
-                      position: 'relative',
-                      overflow: 'hidden',
-                      '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: 2,
-                        background: 'linear-gradient(90deg, #2196F3, #9C27B0, #FF9800)',
-                        backgroundSize: '200% 100%',
-                        animation: `${shimmer} 3s ease-in-out infinite`,
-                      },
-                    }}
-                  >
-                    <Typography
-                      variant="h4"
-                      sx={{
-                        color: 'text.primary',
-                        fontWeight: 700,
-                        mb: 3,
-                        textAlign: 'center',
-                      }}
-                    >
-                      What's my parking availability?
-                    </Typography>
-                    
-                    {/* Stats Grid */}
-                    <Grid container spacing={3} sx={{ mb: 4 }}>
-                      {stats.map((stat, index) => (
-                        <Grid xs={6} key={index}>
-                          <Box
-                            sx={{
-                              textAlign: 'center',
-                              p: 2,
-                              borderRadius: 2,
-                              background: 'rgba(255, 255, 255, 0.5)',
-                              border: `1px solid ${alpha(stat.color, 0.2)}`,
-                              transition: 'all 0.3s ease-in-out',
-                              '&:hover': {
-                                transform: 'translateY(-5px)',
-                                background: 'rgba(255, 255, 255, 0.8)',
-                                border: `1px solid ${alpha(stat.color, 0.4)}`,
-                              },
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                mb: 1,
-                                animation: `${float} 3s ease-in-out infinite`,
-                                animationDelay: `${index * 0.5}s`,
-                              }}
-                            >
-                              <Avatar
-                                sx={{
-                                  bgcolor: alpha(stat.color, 0.2),
-                                  color: stat.color,
-                                  width: 48,
-                                  height: 48,
-                                  fontSize: '1.2rem',
-                                }}
-                              >
-                                {stat.icon}
-                              </Avatar>
-                            </Box>
-                            <Typography
-                              variant="h4"
-                              component="div"
-                              fontWeight="bold"
-                              sx={{
-                                color: stat.color,
-                                mb: 0.5,
-                                animation: `${pulse} 2s ease-in-out infinite`,
-                                animationDelay: `${index * 0.3}s`,
-                              }}
-                            >
-                              {stat.value}
-                            </Typography>
-                            <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                              {stat.label}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                      ))}
-                    </Grid>
-
-                    {/* Quick Actions */}
-                    <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                      <Chip
-                        label="3,309+ Sensors"
-                        size="small"
-                        sx={{
-                          bgcolor: alpha(colors.success, 0.2),
-                          color: colors.success,
-                          fontWeight: 600,
-                          border: `1px solid ${alpha(colors.success, 0.3)}`,
-                        }}
-                      />
-                      <Chip
-                        label="Live Data"
-                        size="small"
-                        sx={{
-                          bgcolor: alpha(colors.primary[500], 0.2),
-                          color: colors.primary[500],
-                          fontWeight: 600,
-                          border: `1px solid ${alpha(colors.primary[500], 0.3)}`,
-                        }}
-                      />
-                      <Chip
-                        label="Family-Friendly"
-                        size="small"
-                        sx={{
-                          bgcolor: alpha(colors.accent[500], 0.2),
-                          color: colors.accent[500],
-                          fontWeight: 600,
-                          border: `1px solid ${alpha(colors.accent[500], 0.3)}`,
-                        }}
-                      />
-                    </Box>
-                  </Card>
-                </Box>
-              </Slide>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+          {/* Scroll Down Indicator */}
+          <Box
+            onClick={() => {
+              window.scrollTo({
+                top: window.innerHeight,
+                behavior: 'smooth'
+              });
+            }}
+            sx={{
+              position: 'absolute',
+              bottom: 40,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+              cursor: 'pointer',
+              padding: 2,
+              borderRadius: 3,
+              transition: 'all 0.3s ease-in-out',
+              '&:hover': {
+                transform: 'translateX(-50%) translateY(-5px)',
+                '& .scroll-text': {
+                  color: colors.primary[200],
+                },
+                '& .scroll-line': {
+                  background: 'linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.4) 100%)',
+                  transform: 'scaleY(1.2)',
+                },
+              },
+            }}
+          >
+            <Typography
+              className="scroll-text"
+              variant="body2"
+              sx={{
+                color: '#ffffff',
+                fontWeight: 600,
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.8)',
+                fontSize: '1rem',
+                letterSpacing: '0.5px',
+                transition: 'color 0.3s ease-in-out',
+              }}
+            >
+              Scroll to explore
+            </Typography>
+            <Box
+              className="scroll-line"
+              sx={{
+                width: 3,
+                height: 40,
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.3) 100%)',
+                borderRadius: 2,
+                animation: `${float} 2s ease-in-out infinite`,
+                position: 'relative',
+                transition: 'all 0.3s ease-in-out',
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  bottom: -10,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: 0,
+                  height: 0,
+                  borderLeft: '5px solid transparent',
+                  borderRight: '5px solid transparent',
+                  borderTop: '8px solid rgba(255, 255, 255, 0.9)',
+                  transition: 'all 0.3s ease-in-out',
+                },
+              }}
+            />
+          </Box>
+        </Box>
 
       {/* Features Section */}
       <Container maxWidth="xl" sx={{ py: { xs: 8, md: 12 }, px: { xs: 3, sm: 4, md: 5 } }}>
-        <Box sx={{ textAlign: 'center', mb: 8 }}>
+        <Box sx={{ textAlign: 'center', mb: 10 }}>
           <Fade in timeout={800}>
             <Typography
               variant="h2"
@@ -447,16 +343,26 @@ const HomePage: React.FC = () => {
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                fontSize: { xs: '2rem', md: '3rem' },
+                fontSize: { xs: '2.5rem', md: '3.5rem' },
                 textShadow: '0 4px 20px rgba(33, 150, 243, 0.1)',
+                mb: 3,
               }}
             >
               Why Choose Park Pal?
             </Typography>
           </Fade>
           <Fade in timeout={1000}>
-            <Typography variant="h6" sx={{ maxWidth: 600, mx: 'auto', color: 'text.secondary' }}>
-              Cutting-edge technology meets family-friendly design for the ultimate parking experience
+            <Typography 
+              variant="h5" 
+              sx={{ 
+                maxWidth: 700, 
+                mx: 'auto', 
+                color: 'text.secondary',
+                fontWeight: 400,
+                lineHeight: 1.6,
+              }}
+            >
+              Smart parking made simple - find the perfect spot for your family with real-time updates
             </Typography>
           </Fade>
         </Box>
@@ -464,25 +370,28 @@ const HomePage: React.FC = () => {
         <Grid container spacing={4}>
           {[
             {
-              icon: <SpeedIcon sx={{ fontSize: 40, color: colors.primary[500] }} />,
-              title: 'Real-time Availability',
-              description: 'Live updates from 3,309+ CBD parking sensors and car parks across Melbourne.',
-              color: colors.primary[500],
-              gradient: `linear-gradient(135deg, ${colors.primary[50]} 0%, ${colors.primary[100]} 100%)`,
+              icon: <SpeedIcon sx={{ fontSize: 50, color: '#ffffff' }} />,
+              title: 'Live Parking Updates',
+              description: 'See which spots are available right now across Melbourne CBD.',
+              color: '#2196F3',
+              gradient: 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)',
+              bgGradient: 'linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(25, 118, 210, 0.1) 100%)',
             },
             {
-              icon: <TrendingIcon sx={{ fontSize: 40, color: colors.secondary[500] }} />,
-              title: 'AI Predictions',
-              description: 'Smart forecasts for peak hours, events, and optimal parking times.',
-              color: colors.secondary[500],
-              gradient: `linear-gradient(135deg, ${colors.secondary[50]} 0%, ${colors.secondary[100]} 100%)`,
+              icon: <TrendingIcon sx={{ fontSize: 50, color: '#ffffff' }} />,
+              title: 'Smart Predictions',
+              description: 'Know the best times to park and avoid busy periods.',
+              color: '#FF9800',
+              gradient: 'linear-gradient(135deg, #FF9800 0%, #F57C00 100%)',
+              bgGradient: 'linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(245, 124, 0, 0.1) 100%)',
             },
             {
-              icon: <FamilyIcon sx={{ fontSize: 40, color: colors.accent[500] }} />,
-              title: 'Family-Focused',
-              description: 'Highlighted childcare-friendly zones and accessible parking bays.',
-              color: colors.accent[500],
-              gradient: `linear-gradient(135deg, ${colors.accent[50]} 0%, ${colors.accent[100]} 100%)`,
+              icon: <FamilyIcon sx={{ fontSize: 50, color: '#ffffff' }} />,
+              title: 'Family-Friendly',
+              description: 'Find spots near childcare and easy-access parking areas.',
+              color: '#4CAF50',
+              gradient: 'linear-gradient(135deg, #4CAF50 0%, #388E3C 100%)',
+              bgGradient: 'linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(56, 142, 60, 0.1) 100%)',
             },
           ].map((feature, index) => (
             <Grid xs={12} md={4} key={index}>
@@ -491,12 +400,12 @@ const HomePage: React.FC = () => {
                   elevation={0}
                   sx={{
                     height: '100%',
-                    p: 4,
-                    background: feature.gradient,
+                    p: 5,
+                    background: feature.bgGradient,
                     backdropFilter: 'blur(20px)',
-                    border: `1px solid ${alpha(feature.color, 0.2)}`,
-                    borderRadius: 4,
-                    transition: 'all 0.3s ease-in-out',
+                    border: `2px solid ${alpha(feature.color, 0.2)}`,
+                    borderRadius: 6,
+                    transition: 'all 0.4s ease-in-out',
                     cursor: 'pointer',
                     position: 'relative',
                     overflow: 'hidden',
@@ -506,17 +415,20 @@ const HomePage: React.FC = () => {
                       top: 0,
                       left: 0,
                       right: 0,
-                      height: 3,
-                      background: `linear-gradient(90deg, ${feature.color}, ${alpha(feature.color, 0.7)})`,
+                      height: 4,
+                      background: feature.gradient,
                       backgroundSize: '200% 100%',
                       animation: `${shimmer} 3s ease-in-out infinite`,
                     },
                     '&:hover': {
-                      transform: 'translateY(-8px) scale(1.02)',
-                      boxShadow: `0 16px 48px ${alpha(feature.color, 0.2)}`,
-                      background: feature.gradient,
+                      transform: 'translateY(-12px) scale(1.03)',
+                      boxShadow: `0 20px 60px ${alpha(feature.color, 0.3)}`,
+                      border: `2px solid ${alpha(feature.color, 0.4)}`,
                       '& .feature-icon': {
-                        transform: 'scale(1.1) rotate(5deg)',
+                        transform: 'scale(1.15) rotate(5deg)',
+                      },
+                      '& .feature-title': {
+                        color: feature.color,
                       },
                     },
                   }}
@@ -525,18 +437,52 @@ const HomePage: React.FC = () => {
                     className="feature-icon"
                     sx={{ 
                       textAlign: 'center', 
-                      mb: 3,
-                      transition: 'all 0.3s ease-in-out',
+                      mb: 4,
+                      transition: 'all 0.4s ease-in-out',
                       animation: `${float} 4s ease-in-out infinite`,
                       animationDelay: `${index * 0.5}s`,
+                      position: 'relative',
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 80,
+                        height: 80,
+                        borderRadius: '50%',
+                        background: feature.gradient,
+                        opacity: 0.1,
+                        zIndex: -1,
+                      },
                     }}
                   >
                     {feature.icon}
                   </Box>
-                  <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom sx={{ color: 'text.primary' }}>
+                  <Typography 
+                    className="feature-title"
+                    variant="h5" 
+                    component="h3" 
+                    fontWeight="bold" 
+                    gutterBottom 
+                    sx={{ 
+                      color: 'text.primary',
+                      transition: 'color 0.4s ease-in-out',
+                      textAlign: 'center',
+                      mb: 2,
+                    }}
+                  >
                     {feature.title}
                   </Typography>
-                  <Typography variant="body1" sx={{ lineHeight: 1.6, color: 'text.secondary' }}>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      lineHeight: 1.7, 
+                      color: 'text.secondary',
+                      textAlign: 'center',
+                      fontSize: '1.1rem',
+                    }}
+                  >
                     {feature.description}
                   </Typography>
                 </Card>
