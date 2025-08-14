@@ -1,100 +1,54 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { Box, Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 
 interface VehicleData {
   year: number;
-  vehicle_type: string;
-  value: number;
-  vehicle_group: string;
+  car_ownership: number;
+  growth: number;
 }
 
-interface ChartData {
-  year: number;
-  value: number;
-  growth?: number | null;
-}
-
-const MARGIN = { top: 48, right: 24, bottom: 64, left: 90 };
+const MARGIN = { top: 80, right: 70, bottom: 50, left: 100 };
 
 const VehicleOwnershipChart: React.FC = () => {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const [vizType, setVizType] = useState<'bar' | 'line'>('bar');
-  const [vehicleGroup, setVehicleGroup] = useState<string>('All types');
   const [data, setData] = useState<VehicleData[]>([]);
-  const [groups, setGroups] = useState<string[]>([]);
 
   // Load data
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await fetch('/vehicle_ownership.csv');
+        // Use the new CSV file path
+        const response = await fetch('/car_ownership_cleaned.csv');
         const csvText = await response.text();
-        const rawData = d3.csvParse(csvText, d3.autoType) as VehicleData[];
+        
+        // Parse CSV with semicolon delimiter
+        const rawData = d3.csvParse(csvText, (d: any) => ({
+          year: +d.year,
+          car_ownership: +d.car_ownership,
+          growth: parseFloat(d.growth.replace('%', ''))
+        })) as VehicleData[];
         
         console.log('Raw CSV data:', rawData);
-        
-        // Convert year and value to numbers
-        const processedData = rawData.map(d => ({
-          ...d,
-          year: +d.year,
-          value: +d.value
-        }));
-        
-        console.log('Processed data:', processedData);
-        setData(processedData);
-        
-        // Extract unique vehicle groups
-        const uniqueGroups = Array.from(new Set(processedData.map(d => d.vehicle_group))).sort();
-        console.log('Vehicle groups:', uniqueGroups);
-        setGroups(uniqueGroups);
-        
-        // Set default vehicle group
-        if (uniqueGroups.includes('All types')) {
-          setVehicleGroup('All types');
-        } else if (uniqueGroups.length > 0) {
-          setVehicleGroup(uniqueGroups[0]);
-        }
+        setData(rawData);
       } catch (error) {
         console.error('Error loading vehicle ownership data:', error);
+        // Fallback data if CSV loading fails
+        const fallbackData: VehicleData[] = [
+          { year: 2020, car_ownership: 5121323, growth: 1.80 },
+          { year: 2021, car_ownership: 5157172, growth: 0.70 },
+          { year: 2022, car_ownership: 5268134, growth: 2.15 },
+          { year: 2023, car_ownership: 5384177, growth: 2.20 },
+          { year: 2024, car_ownership: 5514720, growth: 2.42 }
+        ];
+        setData(fallbackData);
       }
     };
 
     loadData();
   }, []);
-
-  // Compute growth percentage
-  const computeGrowth = (rows: ChartData[]): ChartData[] => {
-    const sorted = [...rows].sort((a, b) => a.year - b.year);
-    for (let i = 0; i < sorted.length; i++) {
-      const prev = sorted[i - 1];
-      const curr = sorted[i];
-      if (!prev) { 
-        curr.growth = null; 
-        continue; 
-      }
-      curr.growth = prev.value === 0 ? null : ((curr.value - prev.value) / prev.value) * 100;
-    }
-    return sorted;
-  };
-
-  // Filter data by vehicle group
-  const filterData = (raw: VehicleData[], group: string): ChartData[] => {
-    const rows = group === "All types"
-      ? raw.filter(d => d.vehicle_group === "All types")
-      : raw.filter(d => d.vehicle_group === group);
-
-    const byYear = d3.rollups(
-      rows,
-      v => d3.sum(v, d => d.value),
-      d => d.year
-    ).map(([year, value]) => ({ year, value }));
-
-    byYear.sort((a, b) => a.year - b.year);
-    return computeGrowth(byYear);
-  };
 
   // Render chart
   useEffect(() => {
@@ -107,235 +61,135 @@ const VehicleOwnershipChart: React.FC = () => {
     const svg = d3.select(svgRef.current);
     const tooltip = d3.select(tooltipRef.current);
 
-    // Setup chart elements
-    const g = svg.append("g");
-    const gx = g.append("g").attr("class", "x-axis");
-    const gy = g.append("g").attr("class", "y-axis");
-    const gContent = g.append("g").attr("class", "content");
-    const gTitle = g.append("text").attr("class", "title").attr("x", 0).attr("y", -14);
-    const xLabel = g.append("text").attr("class", "axis-label");
-    const yLabel = g.append("text").attr("class", "axis-label");
+    const fmtComma = d3.format(",");
+    const fmtPct = d3.format(".2f");
 
-    const fmt = d3.format(",");
-    const fmtPct = d3.format(".1f");
+    // Dimensions
+    const outerW = container.node()?.clientWidth || 900;
+    const outerH = 520;
+    const width = outerW - MARGIN.left - MARGIN.right;
+    const height = outerH - MARGIN.top - MARGIN.bottom;
 
-    // Size function
-    const size = () => {
-      const width = container.node()?.clientWidth || 800;
-      const height = 460;
-      svg.attr("width", width).attr("height", height);
-      const innerW = width - MARGIN.left - MARGIN.right;
-      const innerH = height - MARGIN.top - MARGIN.bottom;
-      g.attr("transform", `translate(${MARGIN.left},${MARGIN.top})`);
-      return { innerW, innerH, width, height };
-    };
+    svg.attr("width", outerW).attr("height", outerH);
+    const g = svg.append("g").attr("transform", `translate(${MARGIN.left},${MARGIN.top})`);
 
-    // Get scales
-    const getScales = (data: ChartData[], innerW: number, innerH: number, kind: string) => {
-      const years = Array.from(new Set(data.map(d => d.year))).sort((a, b) => a - b).map(String);
+    // Scales
+    const x = d3.scaleBand().domain(data.map(d => String(d.year))).range([0, width]).padding(0.2);
+    const yLeft = d3.scaleLinear().domain([0, d3.max(data, d => d.car_ownership) || 0]).nice().range([height, 0]);
+    const yRight = d3.scaleLinear().domain([0, d3.max(data, d => d.growth) || 0]).nice().range([height, 0]);
 
-      const xBand = d3.scaleBand().domain(years).range([0, innerW]).padding(0.2);
-      const xPoint = d3.scalePoint().domain(years).range([0, innerW]).padding(0.5);
+    // Axes
+    g.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
 
-      const maxY = d3.max(data, d => d.value) || 0;
-      const y = d3.scaleLinear()
-        .domain([0, maxY]).nice()
-        .range([innerH, 0]);
-
-      const yGrowth = d3.scaleLinear()
-        .domain([d3.min(data, d => d.growth ?? 0) ?? 0, d3.max(data, d => d.growth ?? 0) ?? 0]).nice()
-        .range([innerH, 0]);
-
-      return { xBand, xPoint, y, yGrowth };
-    };
-
-    // Title text
-    const titleText = (group: string, viz: string) => {
-      const vizName = viz === "bar" ? "Number car ownerships" : "Vehicle growth trend (% change vs prev year)";
-      return `Victoria — ${vizName} — ${group}`;
-    };
-
-    // Render axes
-    const renderAxes = (scales: any, innerH: number, viz: string) => {
-      // Add grid lines
-      const gridLines = gContent.selectAll("line.grid").data(viz === "bar" ? scales.y.ticks(6) : scales.yGrowth.ticks(6));
-      gridLines.exit().remove();
-      gridLines.enter().append("line")
-        .attr("class", "grid")
-        .merge(gridLines as any)
-        .attr("x1", 0)
-        .attr("x2", scales.xBand ? scales.xBand.range()[1] : scales.xPoint.range()[1])
-        .attr("y1", (d: any) => viz === "bar" ? scales.y(d) : scales.yGrowth(d))
-        .attr("y2", (d: any) => viz === "bar" ? scales.y(d) : scales.yGrowth(d));
-
-      // Render axes with enhanced styling
-      gx.attr("transform", `translate(0,${innerH})`)
-        .call(d3.axisBottom(scales.xBand).tickFormat((d: any) => d3.format("d")(d)));
-
-      if (viz === "bar") {
-        gy.call(d3.axisLeft(scales.y).ticks(6).tickFormat((d: any) => fmt(d)));
-      } else {
-        gy.call(d3.axisLeft(scales.yGrowth).ticks(6).tickFormat((d: any) => `${fmtPct(d)}%`));
-      }
-    };
-
-    // Render bars
-    const renderBars = (data: ChartData[], scales: any, innerH: number) => {
-      console.log('Rendering bars with data:', data);
-      console.log('Scales:', scales);
-      console.log('Inner height:', innerH);
-      
-      const bars = gContent.selectAll("rect.bar").data(data, (d: any) => String(d.year));
-
-      bars.exit()
-        .transition().duration(200)
-        .attr("y", innerH)
-        .attr("height", 0)
-        .remove();
-
-      bars.transition().duration(400)
-        .attr("x", (d: ChartData) => scales.xBand(String(d.year)))
-        .attr("width", scales.xBand.bandwidth())
-        .attr("y", (d: ChartData) => scales.y(d.value))
-        .attr("height", (d: ChartData) => innerH - scales.y(d.value))
-        .attr("fill", "#3b82f6")
-        .attr("stroke", "#1e40af");
-
-      const enter = bars.enter().append("rect")
-        .attr("class", "bar")
-        .attr("fill", "#3b82f6")
-        .attr("stroke", "#1e40af")
-        .attr("stroke-width", 1)
-        .attr("rx", 4)
-        .attr("ry", 4)
-        .attr("x", (d: ChartData) => scales.xBand(String(d.year)))
-        .attr("width", scales.xBand.bandwidth())
-        .attr("y", innerH)
-        .attr("height", 0)
-        .on("mousemove", (event: any, d: ChartData) => {
-          const [mx, my] = d3.pointer(event, container.node());
-          tooltip
-            .style("left", `${mx}px`)
-            .style("top", `${my - 10}px`)
-            .style("opacity", 1)
-            .html(`
-              <div style="font-weight: 600; margin-bottom: 4px;">${d.year}</div>
-              <div style="font-size: 16px; font-weight: 700; color: #3b82f6;">${fmt(d.value)}</div>
-              <div style="font-size: 11px; opacity: 0.8;">vehicles registered</div>
-            `);
-        })
-        .on("mouseleave", () => tooltip.style("opacity", 0));
-
-      enter.transition().duration(800)
-        .delay((d: ChartData, i: number) => i * 100)
-        .ease(d3.easeBounceOut)
-        .attr("y", (d: ChartData) => scales.y(d.value))
-        .attr("height", (d: ChartData) => innerH - scales.y(d.value));
-    };
-
-    // Render line
-    const renderLine = (data: ChartData[], scales: any) => {
-      const line = d3.line<ChartData>()
-        .x(d => scales.xPoint(String(d.year)))
-        .y(d => scales.yGrowth(d.growth || 0));
-
-      const path = gContent.selectAll("path.line").data([data]);
-      path.enter().append("path")
-        .attr("class", "line")
-        .attr("stroke", "url(#lineGradient)")
-        .attr("stroke-width", 3)
-        .attr("stroke-linecap", "round")
-        .attr("stroke-linejoin", "round")
-        .merge(path as any)
-        .attr("d", line);
-      path.exit().remove();
-
-      const pts = gContent.selectAll("circle.pt").data(data, (d: any) => String(d.year));
-      pts.exit().remove();
-
-      pts.enter().append("circle")
-        .attr("class", "pt")
-        .attr("fill", "#3b82f6")
-        .attr("stroke", "#1e40af")
-        .attr("stroke-width", 2)
-        .attr("r", 6)
-        .on("mousemove", (event: any, d: ChartData) => {
-          const [mx, my] = d3.pointer(event, container.node());
-          tooltip
-            .style("left", `${mx}px`)
-            .style("top", `${my - 10}px`)
-            .style("opacity", 1)
-            .html(`
-              <div style="font-weight: 600; margin-bottom: 4px;">${d.year}</div>
-              <div style="font-size: 16px; font-weight: 700; color: #8b5cf6;">${fmtPct(d.growth || 0)}%</div>
-              <div style="font-size: 11px; opacity: 0.8;">growth rate</div>
-            `);
-        })
-        .on("mouseleave", () => tooltip.style("opacity", 0))
-        .merge(pts as any)
-        .attr("cx", (d: ChartData) => scales.xPoint(String(d.year)))
-        .attr("cy", (d: ChartData) => scales.yGrowth(d.growth || 0))
-        .attr("fill", "#3b82f6")
-        .attr("stroke", "#1e40af")
-        .attr("stroke-width", 2)
-        .attr("r", 6);
-    };
-
-    // Main render function
-    const renderChart = () => {
-      const { innerW, innerH } = size();
-      gContent.selectAll("*").remove();
-
-      const chartData = filterData(data, vehicleGroup);
-      console.log('Chart data for rendering:', chartData);
-      console.log('Vehicle group:', vehicleGroup);
-      console.log('Visualization type:', vizType);
-      
-      const baseScales = getScales(chartData, innerW, innerH, vizType);
-
-      // Axes + labels titles
-      gTitle.text(titleText(vehicleGroup, vizType));
-      xLabel
-        .attr("x", innerW / 2)
-        .attr("y", innerH + 44)
+    g.append("g").call(d3.axisLeft(yLeft).tickFormat(d3.format(",")))
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height/2)
+        .attr("y", -75)
+        .attr("dy", "0.71em")
+        .attr("fill", "#111")
         .attr("text-anchor", "middle")
-        .text("Year");
-      yLabel
-        .attr("transform", `rotate(-90)`)
-        .attr("x", -innerH / 2)
-        .attr("y", -MARGIN.left + 16)
+        .text("Number of Cars");
+
+    g.append("g").attr("transform", `translate(${width},0)`)
+      .call(d3.axisRight(yRight).ticks(5).tickFormat(d => fmtPct(d) + "%"))
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height/2)
+        .attr("y", 65)
+        .attr("dy", "0.71em")
+        .attr("fill", "#111")
         .attr("text-anchor", "middle")
-        .text(vizType === "bar" ? "Number of Vehicles" : "% Growth");
+        .text("Increase Rate (%)");
 
-      if (vizType === "bar") {
-        renderAxes(baseScales, innerH, "bar");
-        renderBars(chartData, baseScales, innerH);
-      } else {
-        // Filter out 2021 and null growth BEFORE building the scales
-        const growthData = chartData.filter(d => d.growth != null && d.year >= 2022);
+    // Bars
+    g.selectAll(".bar").data(data).enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", d => x(String(d.year)) || 0)
+      .attr("y", d => yLeft(d.car_ownership))
+      .attr("width", x.bandwidth())
+      .attr("height", d => height - yLeft(d.car_ownership))
+      .attr("fill", "#87CEFA")
+      .on("mousemove", (event: any, d: VehicleData) => {
+        const [mx, my] = d3.pointer(event, container.node());
+        tooltip
+          .style("left", `${mx}px`)
+          .style("top", `${my - 10}px`)
+          .style("opacity", 1)
+          .html(`
+            <div style="font-weight: 600; margin-bottom: 4px;">${d.year}</div>
+            <div style="font-size: 16px; font-weight: 700; color: #3b82f6;">${fmtComma(d.car_ownership)}</div>
+            <div style="font-size: 11px; opacity: 0.8;">cars registered</div>
+            <div style="font-size: 12px; color: #ef4444; margin-top: 4px;">Growth: ${fmtPct(d.growth)}%</div>
+          `);
+      })
+      .on("mouseleave", () => tooltip.style("opacity", 0));
 
-        // Build scales from the filtered domain so the x‑axis only has 2022–2024
-        const growthScales = getScales(growthData, innerW, innerH, "line");
+    // Line + dots
+    const line = d3.line<VehicleData>().x(d => (x(String(d.year)) || 0) + x.bandwidth()/2).y(d => yRight(d.growth));
+    g.append("path").datum(data).attr("fill", "none").attr("stroke", "red").attr("stroke-width", 2).attr("d", line);
+    
+    g.selectAll(".dot").data(data).enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 4)
+      .attr("fill", "red")
+      .attr("cx", d => (x(String(d.year)) || 0) + x.bandwidth()/2)
+      .attr("cy", d => yRight(d.growth))
+      .on("mousemove", (event: any, d: VehicleData) => {
+        const [mx, my] = d3.pointer(event, container.node());
+        tooltip
+          .style("left", `${mx}px`)
+          .style("top", `${my - 10}px`)
+          .style("opacity", 1)
+          .html(`
+            <div style="font-weight: 600; margin-bottom: 4px;">${d.year}</div>
+            <div style="font-size: 16px; font-weight: 700; color: #ef4444;">${fmtPct(d.growth)}%</div>
+            <div style="font-size: 11px; opacity: 0.8;">growth rate</div>
+            <div style="font-size: 12px; color: #3b82f6; margin-top: 4px;">Cars: ${fmtComma(d.car_ownership)}</div>
+          `);
+      })
+      .on("mouseleave", () => tooltip.style("opacity", 0));
 
-        // Axes: x uses point scale for line; y uses growth scale
-        gx.attr("transform", `translate(0,${innerH})`)
-          .call(d3.axisBottom(growthScales.xPoint).tickFormat((d: any) => d3.format("d")(d)));
-        gy.call(d3.axisLeft(growthScales.yGrowth).ticks(6).tickFormat((d: any) => `${fmtPct(d)}%`));
+    // Legend
+    const legend = svg.append("g").attr("transform", `translate(${outerW/2}, 30)`);
 
-        renderLine(growthData, growthScales);
-      }
-    };
+    // item 1: bars
+    const lg1 = legend.append("g");
+    lg1.append("rect").attr("width", 14).attr("height", 14).attr("fill", "#87CEFA").attr("y", -10);
+    lg1.append("text").attr("x", 20).attr("y", 2).text("Number of Cars");
 
-    renderChart();
+    // measure and place item 2 after item 1 width + gap
+    const gap = 28;
+    const lg1Width = lg1.node()?.getBBox().width || 0;
+    const lg2 = legend.append("g").attr("transform", `translate(${lg1Width + gap},0)`);
+    lg2.append("line").attr("x1", 0).attr("x2", 20).attr("y1", -3).attr("y2", -3).attr("stroke", "red").attr("stroke-width", 2);
+    lg2.append("circle").attr("cx", 10).attr("cy", -3).attr("r", 4).attr("fill", "red");
+    lg2.append("text").attr("x", 28).attr("y", 2).text("Increase Rate (%)");
+
+    // center the whole legend group by shifting half of its width
+    const legendWidth = legend.node()?.getBBox().width || 0;
+    legend.attr("transform", `translate(${outerW/2 - legendWidth/2}, 30)`);
 
     // Handle resize
-    const handleResize = () => renderChart();
+    const handleResize = () => {
+      // Re-render chart on resize
+      if (svgRef.current && containerRef.current) {
+        d3.select(svgRef.current).selectAll("*").remove();
+        // Re-trigger the effect
+        setTimeout(() => {
+          if (data.length > 0) {
+            // Force re-render
+            setData([...data]);
+          }
+        }, 100);
+      }
+    };
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [data, vizType, vehicleGroup, filterData]);
+  }, [data]);
 
   return (
     <Paper 
@@ -386,54 +240,12 @@ const VehicleOwnershipChart: React.FC = () => {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}>
-            Vehicle Ownership in Victoria (2021–2024)
+            Vehicle Ownership in Victoria (2020–2024)
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Interactive data visualization with real-time insights
           </Typography>
         </Box>
-      </Box>
-      
-      <Box sx={{ display: 'flex', gap: 3, mb: 4, flexWrap: 'wrap' }}>
-        <FormControl sx={{ minWidth: 220 }}>
-          <InputLabel sx={{ fontWeight: 500 }}>Visualization Type</InputLabel>
-          <Select
-            value={vizType}
-            label="Visualization Type"
-            onChange={(e) => setVizType(e.target.value as 'bar' | 'line')}
-            sx={{
-              '& .MuiSelect-select': {
-                fontWeight: 500,
-              },
-            }}
-          >
-            <MenuItem value="bar">📊 Bar Chart - Vehicle Counts</MenuItem>
-            <MenuItem value="line">📈 Line Chart - Growth Trends</MenuItem>
-          </Select>
-        </FormControl>
-        
-        <FormControl sx={{ minWidth: 220 }}>
-          <InputLabel sx={{ fontWeight: 500 }}>Vehicle Category</InputLabel>
-          <Select
-            value={vehicleGroup}
-            label="Vehicle Category"
-            onChange={(e) => setVehicleGroup(e.target.value)}
-            sx={{
-              '& .MuiSelect-select': {
-                fontWeight: 500,
-              },
-            }}
-          >
-            {groups.map((group) => (
-              <MenuItem key={group} value={group}>
-                {group === 'All types' ? '🚗 All Vehicle Types' : 
-                 group === 'Passenger vehicles' ? '🚙 Passenger Vehicles' :
-                 group === 'Commercial vehicles' ? '🚛 Commercial Vehicles' :
-                 group === 'Motorcycles' ? '🏍️ Motorcycles' : group}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
       </Box>
 
       <Box 
