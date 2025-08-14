@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<body style="font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;">
+<div id="chart"></div>
+
+<style>
+  .tooltip {
+    position: absolute; pointer-events: none;
+    background: white; border: 1px solid #ddd; border-radius: 8px;
+    padding: 8px 10px; font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,.08);
+    opacity: 0; transition: opacity .15s ease; line-height: 1.35;
+  }
+  .bar:hover { opacity: .85; }
+</style>
+
+<script>
+// Data
+const data = [
+  {year: 2020, car_ownership: 5121323, growth: 1.80},
+  {year: 2021, car_ownership: 5157172, growth: 0.70},
+  {year: 2022, car_ownership: 5268134, growth: 2.15},
+  {year: 2023, car_ownership: 5384177, growth: 2.20},
+  {year: 2024, car_ownership: 5514720, growth: 2.42}
+];
+
+const fmtComma = d3.format(","), fmtPct = d3.format(".2f");
+
+// Dimensions
+const margin = {top: 80, right: 70, bottom: 50, left: 100};
+const outerW = 900, outerH = 520;
+const width  = outerW - margin.left - margin.right;
+const height = outerH - margin.top - margin.bottom;
+
+const svg = d3.select("#chart").append("svg")
+  .attr("width", outerW).attr("height", outerH);
+
+const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+// Scales
+const x = d3.scaleBand().domain(data.map(d => d.year)).range([0, width]).padding(0.2);
+const yLeft  = d3.scaleLinear().domain([0, d3.max(data, d => d.car_ownership)]).nice().range([height, 0]);
+const yRight = d3.scaleLinear().domain([0, d3.max(data, d => d.growth)]).nice().range([height, 0]);
+
+// Axes
+g.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
+
+g.append("g").call(d3.axisLeft(yLeft).tickFormat(d3.format(",")))
+  .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -height/2)
+    .attr("y", -75)            // moved farther left from ticks
+    .attr("dy", "0.71em")
+    .attr("fill", "#111")
+    .attr("text-anchor", "middle")
+    .text("Number of Cars");
+
+g.append("g").attr("transform", `translate(${width},0)`)
+  .call(d3.axisRight(yRight).ticks(5).tickFormat(d => fmtPct(d) + "%"))
+  .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -height/2)
+    .attr("y", 65)             // moved farther right from ticks
+    .attr("dy", "0.71em")
+    .attr("fill", "#111")
+    .attr("text-anchor", "middle")
+    .text("Increase Rate (%)");
+
+// Bars
+g.selectAll(".bar").data(data).enter().append("rect")
+  .attr("class", "bar")
+  .attr("x", d => x(d.year))
+  .attr("y", d => yLeft(d.car_ownership))
+  .attr("width", x.bandwidth())
+  .attr("height", d => height - yLeft(d.car_ownership))
+  .attr("fill", "#87CEFA");
+
+// Line + dots
+const line = d3.line().x(d => x(d.year) + x.bandwidth()/2).y(d => yRight(d.growth));
+g.append("path").datum(data).attr("fill", "none").attr("stroke", "red").attr("stroke-width", 2).attr("d", line);
+g.selectAll(".dot").data(data).enter().append("circle")
+  .attr("class", "dot").attr("r", 4).attr("fill", "red")
+  .attr("cx", d => x(d.year) + x.bandwidth()/2).attr("cy", d => yRight(d.growth));
+
+// Centered legend with dynamic spacing (prevents overlap)
+const legend = svg.append("g").attr("transform", `translate(${outerW/2}, 30)`);
+
+// item 1: bars
+const lg1 = legend.append("g");
+lg1.append("rect").attr("width", 14).attr("height", 14).attr("fill", "#87CEFA").attr("y", -10);
+lg1.append("text").attr("x", 20).attr("y", 2).text("Number of Cars");
+
+// measure and place item 2 after item 1 width + gap
+const gap = 28;
+const lg1Width = lg1.node().getBBox().width;
+const lg2 = legend.append("g").attr("transform", `translate(${lg1Width + gap},0)`);
+lg2.append("line").attr("x1", 0).attr("x2", 20).attr("y1", -3).attr("y2", -3).attr("stroke", "red").attr("stroke-width", 2);
+lg2.append("circle").attr("cx", 10).attr("cy", -3).attr("r", 4).attr("fill", "red");
+lg2.append("text").attr("x", 28).attr("y", 2).text("Increase Rate (%)");
+
+// center the whole legend group by shifting half of its width
+const legendWidth = legend.node().getBBox().width;
+legend.attr("transform", `translate(${outerW/2 - legendWidth/2}, 30)`);
+
+// Tooltip
+const tip = d3.select("body").append("div").attr("class", "tooltip");
+function showTip(event, d){
+  tip.style("opacity", 1).html(
+    `<strong>${d.year}</strong><br/>
+     Car ownership: ${fmtComma(d.car_ownership)} cars<br/>
+     Increase rate: ${fmtPct(d.growth)}%`
+  ).style("left", (event.pageX + 14) + "px").style("top", (event.pageY - 28) + "px");
+}
+function moveTip(event){ tip.style("left", (event.pageX + 14) + "px").style("top", (event.pageY - 28) + "px"); }
+function hideTip(){ tip.style("opacity", 0); }
+
+g.selectAll(".bar, .dot").on("mouseover", showTip).on("mousemove", moveTip).on("mouseout", hideTip);
+</script>
+</body>
