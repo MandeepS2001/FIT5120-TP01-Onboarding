@@ -41,11 +41,12 @@ const ParkingMap: React.FC<Props> = ({
   initialCenter = [-37.8136, 144.9631], // Melbourne CBD
   initialZoom = 14,
 }) => {
-  const center = useMemo(() => ({ lat: initialCenter[0], lng: initialCenter[1] }), [initialCenter]);
+  const [center, setCenter] = useState({ lat: initialCenter[0], lng: initialCenter[1] });
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '',
+    libraries: ['places'], // Add places library for autocomplete
   });
 
   // Map state
@@ -91,25 +92,56 @@ const ParkingMap: React.FC<Props> = ({
 
   // Get user's current location
   const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const newLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setUserLocation(newLocation);
-          if (mapRef.current) {
-            mapRef.current.panTo(newLocation);
-            mapRef.current.setZoom(16);
-          }
-
-        },
-        (error) => {
-          console.error('Geolocation error:', error);
-        }
-      );
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by this browser. Please enable location services or use a different browser.');
+      return;
     }
+
+    // Show loading state
+    console.log('Getting current location...');
+    
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const newLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        console.log('Location obtained successfully:', newLocation);
+        setUserLocation(newLocation);
+        setCenter(newLocation);
+        if (mapRef.current) {
+          mapRef.current.panTo(newLocation);
+          mapRef.current.setZoom(16);
+        }
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+        
+        // Provide specific error messages based on error code
+        let errorMessage = 'Unable to get your location. ';
+        
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage += 'Please allow location access in your browser settings and try again.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage += 'Location information is unavailable. Please check your internet connection and try again.';
+            break;
+          case error.TIMEOUT:
+            errorMessage += 'Location request timed out. Please try again.';
+            break;
+          default:
+            errorMessage += 'An unknown error occurred. Please try again.';
+        }
+        
+        alert(errorMessage);
+      },
+      {
+        enableHighAccuracy: true,  // Try to get the most accurate location
+        timeout: 10000,           // Wait up to 10 seconds
+        maximumAge: 60000         // Accept cached location up to 1 minute old
+      }
+    );
   };
 
   
@@ -133,7 +165,15 @@ const ParkingMap: React.FC<Props> = ({
   const handleSearchInputChange = async (value: string) => {
     setSearchQuery(value);
     
-    if (!value.trim() || !(window as any).google) {
+    if (!value.trim()) {
+      setSearchSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    // Check if Google Maps API is fully loaded
+    if (!(window as any).google || !(window as any).google.maps || !(window as any).google.maps.places) {
+      console.log('Google Maps API not fully loaded yet');
       setSearchSuggestions([]);
       setShowSuggestions(false);
       return;
@@ -158,10 +198,15 @@ const ParkingMap: React.FC<Props> = ({
 
   // Handle search selection
   const handleSearchSelection = async (prediction: google.maps.places.AutocompletePrediction) => {
+    console.log('Search selection:', prediction.description);
     setSearchQuery(prediction.description);
     setShowSuggestions(false);
+    setSearchSuggestions([]);
     
-    if (!mapRef.current) return;
+    if (!mapRef.current) {
+      console.error('Map reference not available');
+      return;
+    }
 
     try {
       const geocoder = new (window as any).google.maps.Geocoder();
@@ -176,11 +221,27 @@ const ParkingMap: React.FC<Props> = ({
           lng: location.lng(),
         };
         
+        console.log('Moving map to:', newCenter);
+        
+        // Update the center state to trigger re-render
+        setCenter(newCenter);
+        
+        // Pan the map to the new location
         mapRef.current.panTo(newCenter);
         mapRef.current.setZoom(16);
+        
+        // Clear any selected location
+        setSelectedLocation(null);
+        setActiveId(null);
+        
+        console.log('Map moved successfully');
+      } else {
+        console.error('No geocoding results found');
+        alert('Location not found. Please try a different search term.');
       }
     } catch (error) {
       console.error('Geocoding error:', error);
+      alert('Failed to find location. Please try again.');
     }
   };
 
@@ -202,8 +263,13 @@ const ParkingMap: React.FC<Props> = ({
           lng: location.lng(),
         };
         
+        setCenter(newCenter);
         mapRef.current.panTo(newCenter);
         mapRef.current.setZoom(16);
+        
+        // Clear any selected location
+        setSelectedLocation(null);
+        setActiveId(null);
         
       } else {
         alert('Location not found. Please try a different search term.');
@@ -231,8 +297,30 @@ const ParkingMap: React.FC<Props> = ({
               };
               findBestParkingForLocation(currentLocation);
             },
-            () => {
-              alert('Could not get your location. Please allow location access and try again.');
+            (error) => {
+              console.error('Geolocation error in Park Nearby:', error);
+              let errorMessage = 'Could not get your location for parking suggestions. ';
+              
+              switch (error.code) {
+                case error.PERMISSION_DENIED:
+                  errorMessage += 'Please allow location access in your browser settings.';
+                  break;
+                case error.POSITION_UNAVAILABLE:
+                  errorMessage += 'Location unavailable. Please check your internet connection.';
+                  break;
+                case error.TIMEOUT:
+                  errorMessage += 'Location request timed out. Please try again.';
+                  break;
+                default:
+                  errorMessage += 'Please try again.';
+              }
+              
+              alert(errorMessage);
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 60000
             }
           );
         }
@@ -387,8 +475,30 @@ const ParkingMap: React.FC<Props> = ({
               const directionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destinationCoords}&travelmode=driving`;
               window.open(directionsUrl, '_blank');
             },
-            () => {
-              alert('Could not get your location. Please allow location access and try again.');
+            (error) => {
+              console.error('Geolocation error in Get Directions:', error);
+              let errorMessage = 'Could not get your location for directions. ';
+              
+              switch (error.code) {
+                case error.PERMISSION_DENIED:
+                  errorMessage += 'Please allow location access in your browser settings.';
+                  break;
+                case error.POSITION_UNAVAILABLE:
+                  errorMessage += 'Location unavailable. Please check your internet connection.';
+                  break;
+                case error.TIMEOUT:
+                  errorMessage += 'Location request timed out. Please try again.';
+                  break;
+                default:
+                  errorMessage += 'Please try again.';
+              }
+              
+              alert(errorMessage);
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 60000
             }
           );
         }
@@ -498,33 +608,34 @@ const ParkingMap: React.FC<Props> = ({
          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                        {/* Search Bar */}
             <Box component="form" onSubmit={handleSearch} sx={{ flex: 1, position: 'relative' }}>
-              <TextField
-                ref={searchBoxRef}
-                fullWidth
-                placeholder="Search for a location in Melbourne..."
-                value={searchQuery}
-                onChange={(e) => handleSearchInputChange(e.target.value)}
-                onFocus={() => {
-                  if (searchSuggestions.length > 0) {
-                    setShowSuggestions(true);
-                  }
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon color="action" />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton type="submit" disabled={!searchQuery.trim()}>
-                        <SearchIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                size="small"
-              />
+                             <TextField
+                 ref={searchBoxRef}
+                 fullWidth
+                 placeholder={isLoaded ? "Search for a location in Melbourne..." : "Loading search..."}
+                 value={searchQuery}
+                 onChange={(e) => handleSearchInputChange(e.target.value)}
+                 onFocus={() => {
+                   if (searchSuggestions.length > 0) {
+                     setShowSuggestions(true);
+                   }
+                 }}
+                 disabled={!isLoaded}
+                 InputProps={{
+                   startAdornment: (
+                     <InputAdornment position="start">
+                       <SearchIcon color={isLoaded ? "action" : "disabled"} />
+                     </InputAdornment>
+                   ),
+                   endAdornment: (
+                     <InputAdornment position="end">
+                       <IconButton type="submit" disabled={!searchQuery.trim() || !isLoaded}>
+                         <SearchIcon />
+                       </IconButton>
+                     </InputAdornment>
+                   ),
+                 }}
+                 size="small"
+               />
               
               {/* Search Suggestions Dropdown */}
               {showSuggestions && searchSuggestions.length > 0 && (

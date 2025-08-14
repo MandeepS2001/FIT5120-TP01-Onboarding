@@ -53,68 +53,82 @@ const MapPage: React.FC = () => {
 
 
 
-        <ParkingMap locations={filtered} height={560} />
-        
-        {/* Parking Legend */}
-        <Paper sx={{ p: 2, mt: 2, bgcolor: 'background.paper' }}>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
-            Parking Availability Legend
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box
-                sx={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: '50%',
-                  bgcolor: '#4CAF50',
-                  border: '2px solid white',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                }}
-              />
-              <Typography variant="body2">Good availability (&gt;50%)</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box
-                sx={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: '50%',
-                  bgcolor: '#FF9800',
-                  border: '2px solid white',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                }}
-              />
-              <Typography variant="body2">Moderate availability (20-50%)</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box
-                sx={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: '50%',
-                  bgcolor: '#FF5722',
-                  border: '2px solid white',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                }}
-              />
-              <Typography variant="body2">Low availability (1-20%)</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box
-                sx={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: '50%',
-                  bgcolor: '#FF4444',
-                  border: '2px solid white',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                }}
-              />
-              <Typography variant="body2">No availability (0%)</Typography>
-            </Box>
+        {/* Map and Legend Container */}
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+          {/* Map */}
+          <Box sx={{ flex: 1 }}>
+            <ParkingMap locations={filtered} height={560} />
           </Box>
-        </Paper>
+          
+          {/* Parking Legend */}
+          <Paper sx={{ 
+            p: 2, 
+            bgcolor: 'background.paper',
+            minWidth: 280,
+            maxWidth: 320,
+            position: 'sticky',
+            top: 100,
+            height: 'fit-content'
+          }}>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Parking Availability Legend
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    bgcolor: '#4CAF50',
+                    border: '2px solid white',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                  }}
+                />
+                <Typography variant="body2">Good availability (&gt;50%)</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    bgcolor: '#FF9800',
+                    border: '2px solid white',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                  }}
+                />
+                <Typography variant="body2">Moderate availability (20-50%)</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    bgcolor: '#FF5722',
+                    border: '2px solid white',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                  }}
+                />
+                <Typography variant="body2">Low availability (1-20%)</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    bgcolor: '#FF4444',
+                    border: '2px solid white',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                  }}
+                />
+                <Typography variant="body2">No availability (0%)</Typography>
+              </Box>
+            </Box>
+          </Paper>
+        </Box>
       </Container>
     </Box>
   );
