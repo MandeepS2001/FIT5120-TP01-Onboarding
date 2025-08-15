@@ -289,43 +289,81 @@ const HomePage: React.FC = () => {
           >
             <Typography
               className="scroll-text"
-              variant="body2"
+              variant="h6"
               sx={{
                 color: '#ffffff',
-                fontWeight: 600,
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.8)',
-                fontSize: '1rem',
-                letterSpacing: '0.5px',
-                transition: 'color 0.3s ease-in-out',
+                fontWeight: 700,
+                textShadow: '0 4px 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.3)',
+                fontSize: '1.25rem',
+                letterSpacing: '1px',
+                transition: 'all 0.3s ease-in-out',
+                mb: 2,
+                textTransform: 'uppercase',
+                animation: `${pulse} 2s ease-in-out infinite`,
+                '&:hover': {
+                  color: '#87CEEB',
+                  textShadow: '0 4px 8px rgba(0, 0, 0, 0.9), 0 0 30px rgba(135, 206, 235, 0.6)',
+                  transform: 'scale(1.05)',
+                },
               }}
             >
               Scroll to explore
             </Typography>
             <Box
-              className="scroll-line"
               sx={{
-                width: 3,
-                height: 40,
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.3) 100%)',
-                borderRadius: 2,
-                animation: `${float} 2s ease-in-out infinite`,
-                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 1,
+                p: 2,
+                borderRadius: '50px',
+                background: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(10px)',
+                border: '2px solid rgba(255, 255, 255, 0.3)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.2)',
                 transition: 'all 0.3s ease-in-out',
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: -10,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: 0,
-                  height: 0,
-                  borderLeft: '5px solid transparent',
-                  borderRight: '5px solid transparent',
-                  borderTop: '8px solid rgba(255, 255, 255, 0.9)',
-                  transition: 'all 0.3s ease-in-out',
+                cursor: 'pointer',
+                '&:hover': {
+                  background: 'rgba(255, 255, 255, 0.25)',
+                  border: '2px solid rgba(255, 255, 255, 0.5)',
+                  boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 255, 255, 0.4)',
+                  transform: 'scale(1.05)',
                 },
               }}
-            />
+            >
+              <Box
+                className="scroll-line"
+                sx={{
+                  width: 4,
+                  height: 50,
+                  background: 'linear-gradient(180deg, #00BFFF 0%, #1E90FF 50%, #4169E1 100%)',
+                  borderRadius: 3,
+                  animation: `${float} 2s ease-in-out infinite`,
+                  position: 'relative',
+                  transition: 'all 0.3s ease-in-out',
+                  boxShadow: '0 0 15px rgba(0, 191, 255, 0.6), 0 0 30px rgba(30, 144, 255, 0.4)',
+                  '&:hover': {
+                    background: 'linear-gradient(180deg, #00BFFF 0%, #0066CC 50%, #0000CD 100%)',
+                    boxShadow: '0 0 25px rgba(0, 191, 255, 0.8), 0 0 40px rgba(30, 144, 255, 0.6)',
+                    transform: 'scale(1.1)',
+                  },
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: -12,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 0,
+                    height: 0,
+                    borderLeft: '6px solid transparent',
+                    borderRight: '6px solid transparent',
+                    borderTop: '10px solid #00BFFF',
+                    transition: 'all 0.3s ease-in-out',
+                    filter: 'drop-shadow(0 0 8px rgba(0, 191, 255, 0.8))',
+                  },
+                }}
+              />
+            </Box>
           </Box>
         </Box>
 

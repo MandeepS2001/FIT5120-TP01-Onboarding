@@ -120,8 +120,8 @@ const DataInsightsPage: React.FC = () => {
 
   const insights = [
     {
-      title: 'Peak Congestion Patterns',
-      description: `Morning rush peaks at 8:30 AM with ${parkingData.occupancyRate}% occupancy, while evening peaks at 5:15 PM with 92% occupancy.`,
+      title: 'Busiest Times',
+      description: `Parking is busiest at 8:30 AM and 5:15 PM on weekdays. Try to avoid these times if possible.`,
       icon: <TrendingUp />,
       color: colors.warning,
       metric: `${parkingData.occupancyRate}%`,
@@ -129,8 +129,8 @@ const DataInsightsPage: React.FC = () => {
       delay: 0,
     },
     {
-      title: 'Family-Friendly Zones',
-      description: `${parkingData.familyFriendlyZones} designated areas with stroller access, changing facilities, and extended time limits.`,
+      title: 'Family Parking',
+      description: `${parkingData.familyFriendlyZones} areas with extra space for families, strollers, and longer parking times.`,
       icon: <FamilyRestroom />,
       color: colors.accent[600],
       metric: `${parkingData.familyFriendlyZones}`,
@@ -138,8 +138,8 @@ const DataInsightsPage: React.FC = () => {
       delay: 200,
     },
     {
-      title: 'Accessibility Coverage',
-      description: `${parkingData.accessibilitySpots} accessible parking bays across the CBD, with real-time availability tracking.`,
+      title: 'Easy Access Spots',
+      description: `${parkingData.accessibilitySpots} parking spots that are wider and closer to building entrances.`,
       icon: <Accessibility />,
       color: colors.info,
       metric: `${parkingData.accessibilitySpots}`,
@@ -147,8 +147,8 @@ const DataInsightsPage: React.FC = () => {
       delay: 400,
     },
     {
-      title: 'Smart Predictions',
-      description: `AI-powered forecasting with 94% accuracy for parking availability up to 2 hours ahead.`,
+      title: 'Parking Forecast',
+      description: `We can predict parking availability 2 hours ahead with 94% accuracy to help you plan your trip.`,
       icon: <Speed />,
       color: colors.success,
       metric: '94%',
@@ -250,22 +250,7 @@ const DataInsightsPage: React.FC = () => {
         
         <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, px: { xs: 3, sm: 4, md: 5 } }}>
           <Box sx={{ textAlign: 'center', mb: 8 }}>
-            <Fade in timeout={800}>
-              <Chip
-                label="📊 Live Analytics Dashboard"
-                color="primary"
-                variant="filled"
-                sx={{ 
-                  mb: 3, 
-                  fontWeight: 600,
-                  fontSize: '0.9rem',
-                  animation: `${pulse} 2s ease-in-out infinite`,
-                  background: `linear-gradient(45deg, ${colors.primary[500]} 30%, ${colors.secondary[500]} 90%)`,
-                  color: 'white',
-                  boxShadow: `0 4px 15px ${alpha(colors.primary[500], 0.4)}`,
-                }}
-              />
-            </Fade>
+
             <Fade in timeout={1000}>
               <Typography
                 variant="h1"
@@ -293,8 +278,8 @@ const DataInsightsPage: React.FC = () => {
                 paragraph
                 sx={{ mb: 4, fontWeight: 400, lineHeight: 1.6, maxWidth: 800, mx: 'auto' }}
               >
-                Real-time analytics and intelligent insights from our comprehensive parking infrastructure network. 
-                Discover patterns, optimize your commute, and make informed parking decisions.
+                See what's happening with parking in Melbourne right now. 
+                Find the best times to park and save time on your daily commute.
               </Typography>
             </Fade>
           </Box>
@@ -381,8 +366,8 @@ const DataInsightsPage: React.FC = () => {
                       What This Means
                     </Typography>
                     <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6, color: 'white' }}>
-                      Smart sensors installed across Melbourne CBD that detect parking space availability in real-time. 
-                      These sensors provide instant updates to help you find available parking spots quickly.
+                      Smart devices across Melbourne CBD that tell us when parking spots are free or taken. 
+                      They update every few minutes so you know exactly where to find parking.
                     </Typography>
                   </Box>
                 </Card>
@@ -469,8 +454,8 @@ const DataInsightsPage: React.FC = () => {
                       What This Means
                     </Typography>
                     <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6, color: 'white' }}>
-                      The current number of parking spaces that are free and ready for use right now. 
-                      This number updates every few minutes to give you the most accurate information.
+                      How many parking spots are free right now. 
+                      This number changes every few minutes so you always know what's available.
                     </Typography>
                   </Box>
                 </Card>
@@ -557,8 +542,8 @@ const DataInsightsPage: React.FC = () => {
                       What This Means
                     </Typography>
                     <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6, color: 'white' }}>
-                      The percentage of total parking spaces that are currently available. 
-                      Higher percentages mean more parking options and easier to find a spot.
+                      What percentage of all parking spots are free right now. 
+                      Higher numbers mean it's easier to find parking.
                     </Typography>
                   </Box>
                 </Card>
@@ -645,8 +630,8 @@ const DataInsightsPage: React.FC = () => {
                       What This Means
                     </Typography>
                     <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6, color: 'white' }}>
-                      Specially designed parking spaces for people with disabilities. 
-                      These spots are wider, closer to entrances, and meet accessibility standards.
+                      Special parking spots for people who need extra space or are closer to building entrances. 
+                      These spots are wider and easier to access.
                     </Typography>
                   </Box>
                 </Card>
@@ -675,25 +660,14 @@ const DataInsightsPage: React.FC = () => {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              Advanced Analytics & Insights
+              Parking Patterns & Trends
             </Typography>
           </Fade>
           <Fade in timeout={1000}>
             <Box>
               <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto', mb: 2 }}>
-                Deep dive into Melbourne's parking patterns with real-time zone analytics and predictive insights
+                See when parking is busiest and find the best times to visit different areas
               </Typography>
-              <Chip
-                label="🔄 Auto-refresh every 5 minutes"
-                color="info"
-                variant="outlined"
-                size="small"
-                sx={{ 
-                  fontWeight: 500,
-                  background: alpha(colors.info, 0.1),
-                  borderColor: colors.info,
-                }}
-              />
             </Box>
           </Fade>
         </Box>
@@ -728,27 +702,14 @@ const DataInsightsPage: React.FC = () => {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              Intelligent Insights & Trends
+              Quick Parking Tips
             </Typography>
           </Fade>
                       <Fade in timeout={1000}>
               <Box>
                 <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto', mb: 2 }}>
-                  Data-driven analysis to help you understand parking patterns and optimize your experience
+                  Simple tips to help you find parking faster and avoid busy times
                 </Typography>
-                {parkingMetrics && (
-                  <Chip
-                    label={`Last updated: ${parkingMetrics.lastUpdated}`}
-                    color="info"
-                    variant="outlined"
-                    size="small"
-                    sx={{ 
-                      fontWeight: 500,
-                      background: alpha(colors.info, 0.1),
-                      borderColor: colors.info,
-                    }}
-                  />
-                )}
               </Box>
             </Fade>
         </Box>
@@ -839,92 +800,7 @@ const DataInsightsPage: React.FC = () => {
 
 
 
-      {/* Enhanced CTA Section */}
-      <Box
-        sx={{
-          background: `linear-gradient(135deg, ${colors.secondary[600]} 0%, ${colors.secondary[800]} 100%)`,
-          py: { xs: 8, md: 12 },
-          mt: { xs: 6, md: 8 },
-          position: 'relative',
-          overflow: 'visible',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            opacity: 0.3,
-          },
-        }}
-      >
-        <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 5 } }}>
-          <Box sx={{ textAlign: 'center', color: 'white', position: 'relative', zIndex: 1 }}>
-            <Fade in timeout={800}>
-              <Typography variant="h3" component="h2" fontWeight="bold" gutterBottom>
-                Ready to Access Real-Time Parking Intelligence?
-              </Typography>
-            </Fade>
-            <Fade in timeout={1000}>
-              <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, maxWidth: 600, mx: 'auto' }}>
-                Join thousands of Melbourne residents who've already discovered the power of data-driven parking decisions
-              </Typography>
-            </Fade>
-            <Fade in timeout={1200}>
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-                <Chip
-                  icon={<DataUsage />}
-                  label="Explore Live Data"
-                  variant="filled"
-                  sx={{
-                    bgcolor: 'white',
-                    color: colors.secondary[700],
-                    px: 3,
-                    py: 1.5,
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    borderRadius: 3,
-                    transition: 'all 0.3s ease-in-out',
-                    cursor: 'pointer',
-                    '&:hover': {
-                      bgcolor: colors.neutral[100],
-                      transform: 'translateY(-3px) scale(1.02)',
-                      boxShadow: '0 12px 35px rgba(0,0,0,0.2)',
-                    },
-                    '&:active': {
-                      transform: 'translateY(-1px) scale(0.98)',
-                    },
-                  }}
-                />
-                <Chip
-                  icon={<FlashOn />}
-                  label="Get Smart Alerts"
-                  variant="outlined"
-                  sx={{
-                    borderColor: 'white',
-                    color: 'white',
-                    px: 3,
-                    py: 1.5,
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    borderWidth: 2,
-                    borderRadius: 3,
-                    transition: 'all 0.3s ease-in-out',
-                    cursor: 'pointer',
-                    '&:hover': {
-                      bgcolor: alpha('#FFFFFF', 0.1),
-                      borderColor: 'white',
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0 8px 25px rgba(255,255,255,0.2)',
-                    },
-                  }}
-                />
-              </Box>
-            </Fade>
-          </Box>
-        </Container>
-      </Box>
+
     </Box>
   );
 };
